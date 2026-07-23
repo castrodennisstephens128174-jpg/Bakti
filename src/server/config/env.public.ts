@@ -15,7 +15,7 @@ const PASSPHRASE_BY_NETWORK: Record<string, string> = {
 };
 
 const HORIZON_BY_NETWORK: Record<string, string> = {
-  testnet: 'https://horizon.stellar.org',
+  testnet: 'https://horizon-testnet.stellar.org',
   public: 'https://horizon.stellar.org',
   futurenet: 'https://horizon-futurenet.stellar.org',
 };
@@ -34,7 +34,11 @@ export const publicEnv = {
   /** Deployed bakti-escrow contract backing the on-chain allowance schedule. */
   contractId:
     process.env.NEXT_PUBLIC_BAKTI_CONTRACT_ID ??
-    'CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ',
+    'CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR',
+  /** Soroban RPC URL — used by the client for Soroban RPC calls (Freighter signing). */
+  sorobanRpcUrl:
+    process.env.NEXT_PUBLIC_SOROBAN_RPC_URL ??
+    'https://soroban-rpc.public.stellar.org',
 } as const;
 
 export type PublicEnv = typeof publicEnv;

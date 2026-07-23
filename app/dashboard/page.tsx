@@ -13,7 +13,7 @@ import {
   PayoutStatusBadge,
   SimulationNote,
 } from '@/ui/components/ui';
-import { fmtAmount, fmtAsset, ordinal, shortKey } from '@/ui/lib/format';
+import { fmtAmount, ordinal, shortKey } from '@/ui/lib/format';
 import { sign, WalletError } from '@/ui/wallet/stellarClient';
 import { useWallet } from '@/ui/wallet/WalletProvider';
 
@@ -32,11 +32,11 @@ type Allowance = {
 };
 
 const CORRIDORS = [
-  'Philippines · MoneyGram',
-  'Indonesia · Hana pickup',
-  'Vietnam · MoneyGram',
-  'Malaysia · Hana pickup',
-  'Thailand · MoneyGram',
+  'Philippines · Cash pickup',
+  'Indonesia · Cash pickup',
+  'Vietnam · Cash pickup',
+  'Malaysia · Cash pickup',
+  'Thailand · Cash pickup',
 ];
 
 async function api(path: string, method = 'GET', body?: unknown) {
@@ -368,6 +368,9 @@ function CreateForm({
               </option>
             ))}
           </select>
+          <p className="mt-1.5 text-xs text-ink-soft">
+            Reference code produced by the connected anchor (demo until a live SEP-24 anchor signs).
+          </p>
         </label>
 
         <label className="block sm:col-span-2">

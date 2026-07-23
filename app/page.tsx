@@ -2,9 +2,11 @@ import {
   ArrowRight,
   BadgeCheck,
   CalendarClock,
+  Globe,
   HandCoins,
   MapPin,
   ShieldCheck,
+  Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Header } from '@/ui/components/Header';
@@ -70,7 +72,7 @@ export default function LandingPage() {
                 {
                   icon: ShieldCheck,
                   t: 'The anchor off-ramps',
-                  d: 'Funds settle to a MoneyGram or Hana cash-pickup reference.',
+                  d: 'Funds settle to an anchor cash-pickup reference (demo on mainnet until a live anchor signs).',
                 },
                 {
                   icon: MapPin,
@@ -116,7 +118,7 @@ export default function LandingPage() {
             {
               icon: MapPin,
               title: 'Cash where they are',
-              body: 'The SEP-24 off-ramp turns USDC into a MoneyGram or Hana pickup code — dignity for parents who never touch crypto.',
+              body: 'The SEP-24 off-ramp turns USDC into an anchor cash-pickup reference — dignity for parents who never touch crypto.',
             },
           ].map((f) => (
             <div key={f.title} className="card p-5">
@@ -127,6 +129,47 @@ export default function LandingPage() {
               <p className="mt-1.5 text-sm text-ink-soft">{f.body}</p>
             </div>
           ))}
+        </section>
+
+        <section className="card mt-6 p-7">
+          <h2 className="font-display text-xl font-bold text-ink">The problem</h2>
+          <p className="mt-3 text-sm text-ink-soft">
+            OFW remittances into the Philippines topped <strong className="text-ink">$38 billion in 2024</strong> (World Bank / KNOMAD).
+            The average cost of sending $200 is still <strong className="text-ink">~6.4%</strong> (WB Remittance Prices Q4 2024).
+            Workers send one-off transfers; parents plan around an income that arrives unpredictably.
+            Missed months mean parents skip medicine or bills. Traditional standing orders require a bank account on both sides — most OFWs and their parents do not have one.
+          </p>
+        </section>
+
+        <section className="card mt-6 p-7">
+          <h2 className="font-display text-xl font-bold text-ink">Why Stellar</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            {[
+              {
+                icon: Zap,
+                title: 'Fast, cheap settlement',
+                body: '3–5 second finality. Transaction fee ~0.00001 XLM. No waiting days for a wire to clear.',
+              },
+              {
+                icon: Globe,
+                title: 'Native USDC on-chain',
+                body: 'USDC issued by Circle, natively on Stellar. No bridged assets, no counterparty risk from wrapping.',
+              },
+              {
+                icon: ShieldCheck,
+                title: 'Open standards',
+                body: 'SEP-7 pay links, SEP-10 auth, SEP-23 muxed attribution, SEP-24 off-ramp standard. No proprietary lock-in.',
+              },
+            ].map((f) => (
+              <div key={f.title}>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+                  <f.icon className="h-4 w-4" />
+                </div>
+                <h3 className="mt-3 font-semibold text-ink">{f.title}</h3>
+                <p className="mt-1 text-sm text-ink-soft">{f.body}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="card mt-6 p-7">
@@ -146,12 +189,12 @@ export default function LandingPage() {
               {
                 n: '3',
                 t: 'Sign the month',
-                d: 'One tap sends the allowance in XLM or USDC. The anchor issues a pickup code.',
+                d: 'One tap sends the allowance in XLM or USDC. Anchor issues a pickup reference (demo until live).',
               },
               {
                 n: '4',
                 t: 'They collect',
-                d: 'Your parent takes the reference to a pickup point and walks out with cash.',
+                d: 'Your parent takes the reference to a pickup point and walks out with local cash.',
               },
             ].map((s) => (
               <li key={s.n}>

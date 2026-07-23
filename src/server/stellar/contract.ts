@@ -7,7 +7,7 @@ import {
   scValToNative,
   type Transaction,
   TransactionBuilder,
-  xdr,
+  type xdr,
 } from '@stellar/stellar-sdk';
 import { toStroops } from '@/server/lib/amount';
 import { AppError } from '@/server/lib/http';

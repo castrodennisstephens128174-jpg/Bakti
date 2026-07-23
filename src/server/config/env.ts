@@ -11,17 +11,17 @@ const envSchema = z.object({
   STELLAR_NETWORK: z.enum(['testnet', 'public', 'futurenet']).default('public'),
   NEXT_PUBLIC_STELLAR_NETWORK: z.enum(['testnet', 'public', 'futurenet']).default('public'),
   STELLAR_HORIZON_URL: z.string().url().default('https://horizon.stellar.org'),
-  STELLAR_NETWORK_PASSPHRASE: z.string().default('Test SDF Network ; September 2015'),
+  STELLAR_NETWORK_PASSPHRASE: z.string().default('Public Global Stellar Network ; September 2015'),
 
-  SOROBAN_RPC_URL: z.string().url().default('https://soroban-rpc.creit.tech'),
+  SOROBAN_RPC_URL: z.string().url().default('https://soroban-rpc.public.stellar.org'),
 
   // Deployed bakti-escrow Soroban contract that backs the on-chain allowance schedule.
   SOROBAN_BAKTI_CONTRACT_ID: z
     .string()
-    .default('CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ'),
+    .default('CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR'),
   NEXT_PUBLIC_BAKTI_CONTRACT_ID: z
     .string()
-    .default('CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ'),
+    .default('CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR'),
   BAKTI_ADMIN_PUBLIC_KEY: z
     .string()
     .default('GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47'),

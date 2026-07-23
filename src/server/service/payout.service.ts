@@ -36,21 +36,13 @@ export function currentPeriod(d: Date = new Date()): string {
   return `${y}-${m}`;
 }
 
-const CORRIDOR_PREFIX: Record<string, string> = {
-  hana: 'HANA',
-  moneygram: 'MGRAM',
-};
-
 /**
- * Simulated off-ramp cash-pickup reference. On mainnet this comes from the
- * SEP-24 anchor; on testnet Bakti generates a demo code so the flow is
- * end-to-end visible. The UI labels this leg as a testnet simulation.
+ * Demo off-ramp reference. On mainnet a live SEP-24 anchor replaces this with
+ * its own `transaction_id`. Corridor is stored for display only.
  */
-export function makePickupRef(corridor: string, period: string): string {
-  const key = corridor.toLowerCase().includes('moneygram') ? 'moneygram' : 'hana';
-  const prefix = CORRIDOR_PREFIX[key];
+export function makePickupRef(_corridor: string, period: string): string {
   const suffix = randomBytes(3).toString('hex').toUpperCase();
-  return `${prefix}-${period.replace('-', '')}-${suffix}`;
+  return `BAKTI-${period.replace('-', '')}-${suffix}`;
 }
 
 export const payoutService = {

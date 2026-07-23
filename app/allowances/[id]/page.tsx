@@ -308,9 +308,8 @@ export default function AllowanceDetailPage() {
 
           <div className="mt-6">
             <SimulationNote>
-              Payments are real on Stellar mainnet. The MoneyGram / Hana cash-pickup step is a
-              mainnet simulation of a SEP-24 anchor off-ramp — the reference code below is what the
-              anchor would issue.
+              Payments are real on Stellar mainnet. The anchor off-ramp is a demo — the reference
+              code below is what a live SEP-24 anchor would issue once Bakti signs a partnership.
             </SimulationNote>
           </div>
         </div>

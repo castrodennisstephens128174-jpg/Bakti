@@ -7,7 +7,7 @@ export function toStroops(decimal: string): bigint {
   if (cleaned === '' || cleaned === '.') return 0n;
   const neg = cleaned.startsWith('-');
   const [whole, frac = ''] = cleaned.replace(/^-/, '').split('.');
-  const fracPadded = (frac + '0000000').slice(0, 7);
+  const fracPadded = (`${frac}0000000`).slice(0, 7);
   const value = BigInt(whole || '0') * STROOPS + BigInt(fracPadded || '0');
   return neg ? -value : value;
 }

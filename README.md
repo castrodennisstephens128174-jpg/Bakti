@@ -10,9 +10,9 @@
 
 # 🫶 Bakti — a monthly allowance your parents collect as cash
 
-**Turn easy-to-forget remittances into a steady, provable monthly income for the elderly parents back home. You sign one Stellar payment a month; they walk into a MoneyGram or Hana pickup and take home local cash — no wallet, no crypto on their side.**
+**Turn easy-to-forget remittances into a steady, provable monthly income for the elderly parents back home. You sign one Stellar payment a month; they walk into a cash pickup point with a reference code and take home local money — no wallet, no crypto on their side.**
 
-![Stellar](https://img.shields.io/badge/Stellar-Testnet-0284c7)
+![Stellar](https://img.shields.io/badge/Stellar-Public-0284c7)
 ![Soroban](https://img.shields.io/badge/Soroban-BaktiEscrow-7c3aed)
 ![SEP-10](https://img.shields.io/badge/Auth-SEP--10-075985)
 ![SEP-24](https://img.shields.io/badge/Off--ramp-SEP--24-0369a1)

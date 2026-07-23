@@ -1,6 +1,15 @@
 # Bakti Allowance Escrow — Deployment Record
 
-## Testnet (LIVE)
+## Mainnet
+
+- **Contract ID:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
+- **Explorer:** https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
+- **Soroban RPC:** `https://soroban-rpc.public.stellar.org`
+- **Network passphrase:** `Public Global Stellar Network ; September 2015`
+
+Cadence: **60 ledgers ≈ 5 min** — testnet/demo cadence only. Production = 518_400 ledgers (≈30 days).
+
+## Testnet
 
 - Contract ID: `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
 - Admin: `GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47` (deployer)
