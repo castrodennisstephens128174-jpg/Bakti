@@ -59,6 +59,14 @@ def parse_slides(path: str) -> list[dict]:
                 if current:
                     slides.append(current)
                 current = {"type": "section", "title": "Why Stellar", "lines": []}
+            elif line.startswith("# FLOW"):
+                if current:
+                    slides.append(current)
+                current = {"type": "section", "title": "Flow", "lines": []}
+            elif line.startswith("# LIVE PROOF"):
+                if current:
+                    slides.append(current)
+                current = {"type": "section", "title": "Live Proof", "lines": []}
             elif line.startswith("# WHY US"):
                 if current:
                     slides.append(current)
