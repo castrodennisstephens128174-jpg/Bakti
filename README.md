@@ -2,7 +2,7 @@
 
 ## 🌐 Mainnet (LIVE)
 
-- **Live app:** https://bakti-stellar.vercel.app
+- **Live app:** https://bakti-sooty.vercel.app
 - **Network:** Stellar public (mainnet)
 - **Soroban contract:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
 - **Explorer:** https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
