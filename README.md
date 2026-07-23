@@ -6,6 +6,7 @@
 - **Network:** Stellar public (mainnet)
 - **Soroban contract:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
 - **Explorer:** https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
+- **Pitch deck:** [Download Bakti.pptx](https://github.com/castrodennisstephens128174-jpg/Bakti/raw/main/slides/Bakti.pptx) · 9 slides / 3 min
 
 # Bakti — a monthly allowance your parents collect as cash
 
