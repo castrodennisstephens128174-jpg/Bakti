@@ -9,9 +9,15 @@ describe('amount conversion', () => {
     expect(fromStroops(toStroops('123.4567891'))).toBe('123.4567891');
   });
 
-  it('clamps to 7 decimal places', () => {
-    expect(toStroops('0.00000009')).toBe(0n);
+  it('accepts up to 7 decimal places and rejects higher precision', () => {
     expect(toStroops('0.0000001')).toBe(1n);
+    expect(() => toStroops('0.00000009')).toThrow(/at most 7 fractional digits/i);
+  });
+
+  it('rejects malformed decimal input', () => {
+    for (const value of ['abc', '1.2.3', '--1', '1e3', '12x']) {
+      expect(() => toStroops(value)).toThrow(/decimal/i);
+    }
   });
 
   it('handles separators and empty input', () => {

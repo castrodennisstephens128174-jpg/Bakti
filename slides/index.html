@@ -4,25 +4,28 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Bakti · Pitch Deck · Hop Stellar 2026</title>
-<link rel="stylesheet" href="https://unpkg.com/primeicons@7/primeicons.css" />
-<link rel="stylesheet" href="https://unpkg.com/primevue@4/resources/themes/aura-light-blue/theme.css" />
 <style>
   :root {
-    --brand: #0284c7;
+    --brand: #0369a1;
+    --brand-soft: #e6f3fb;
+    --brand-line: #9dcbea;
     --ink: #0b1b2b;
     --ink-soft: #51617a;
     --accent: #fdf1e0;
     --mist: #f8f5f0;
+    --line: #dbe3ee;
+    --white: #fff;
   }
   * { box-sizing: border-box; }
   html, body {
     margin: 0;
     height: 100%;
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: Manrope, Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
     color: var(--ink);
     background: var(--mist);
     overflow: hidden;
   }
+  button, a { font: inherit; }
   #deck {
     width: 100vw;
     height: 100vh;
@@ -33,17 +36,18 @@
   .slide {
     width: min(1280px, 95vw);
     height: min(720px, 92vh);
-    background: #fff;
+    background: var(--white);
+    border: 1px solid var(--line);
     border-radius: 18px;
     box-shadow: 0 18px 50px -20px rgba(11, 27, 43, 0.35);
-    padding: 56px 72px;
+    padding: 52px 68px 58px;
     display: none;
     flex-direction: column;
     position: relative;
     overflow: hidden;
   }
-  .slide.active { display: flex; animation: fade .35s ease; }
-  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .slide.active { display: flex; animation: fade .28s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
   .slide::before {
     content: "";
     position: absolute;
@@ -53,422 +57,252 @@
   }
   .slide-num {
     position: absolute;
-    top: 28px;
-    right: 36px;
+    top: 25px;
+    right: 34px;
     font-size: 12px;
     color: var(--ink-soft);
     letter-spacing: .12em;
     text-transform: uppercase;
   }
-  h1 { font-size: 48px; margin: 0 0 12px; font-weight: 700; line-height: 1.1; }
-  h2 { font-size: 32px; margin: 0 0 18px; font-weight: 700; }
-  .kicker { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin: 0 0 8px; font-weight: 600; }
-  .lede { font-size: 22px; color: var(--ink-soft); max-width: 70ch; line-height: 1.45; }
-  .stats { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 32px; }
-  .stat {
-    background: var(--accent);
-    border-radius: 14px;
-    padding: 24px 28px;
-  }
-  .stat .num { font-size: 44px; font-weight: 700; color: var(--ink); }
-  .stat .lbl { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; flex: 1; min-height: 0; }
-  .row.reverse { grid-template-columns: 1fr 1fr; }
-  .chart-wrap { display: flex; align-items: center; justify-content: center; min-height: 0; }
-  .chart-wrap canvas { max-height: 100%; }
-  .flow-svg { width: 100%; height: 100%; }
-  .flow-node { fill: var(--accent); stroke: var(--brand); stroke-width: 2; }
-  .flow-node.brand { fill: var(--brand); }
-  .flow-node text { font-family: inherit; font-size: 14px; fill: var(--ink); font-weight: 600; text-anchor: middle; }
-  .flow-node.brand text { fill: #fff; }
-  .flow-arrow { stroke: var(--ink); stroke-width: 2; fill: none; marker-end: url(#arrow); }
-  .flow-label { font-size: 11px; fill: var(--ink-soft); text-anchor: middle; font-family: inherit; }
+  h1, h2 { font-family: Fraunces, Georgia, serif; letter-spacing: -.02em; }
+  h1 { font-size: 58px; margin: 0 0 14px; line-height: 1.04; }
+  h2 { font-size: 36px; margin: 0 0 20px; line-height: 1.12; }
+  h3 { margin: 0; font-size: 17px; }
+  p { margin: 0; }
+  .kicker { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 9px; font-weight: 750; }
+  .lede { font-size: 22px; color: var(--ink-soft); max-width: 74ch; line-height: 1.48; }
+  .small { font-size: 13px; color: var(--ink-soft); line-height: 1.48; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex: 1; min-height: 0; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { border: 1px solid var(--line); border-radius: 16px; padding: 20px; background: var(--white); }
+  .soft { background: var(--accent); border-color: transparent; }
+  .current { border: 2px solid var(--brand-line); background: var(--brand-soft); }
+  .future { border: 2px dashed var(--brand-line); background: rgba(230, 243, 251, .35); }
+  .card-title { display: flex; align-items: center; gap: 8px; font-weight: 750; font-size: 16px; }
+  .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 750; background: var(--brand-soft); color: var(--brand); }
+  .future .tag { background: var(--white); border: 1px dashed var(--brand-line); }
+  ul.clean { list-style: none; padding: 0; margin: 14px 0 0; }
+  ul.clean li { position: relative; padding-left: 20px; margin: 9px 0; color: var(--ink-soft); line-height: 1.38; font-size: 15px; }
+  ul.clean li::before { content: "•"; color: var(--brand); font-weight: 900; position: absolute; left: 4px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
+  .stat { background: var(--accent); border-radius: 16px; padding: 22px; min-width: 0; }
+  .stat .num { font-family: Fraunces, Georgia, serif; font-size: 40px; font-weight: 750; letter-spacing: -.02em; }
+  .stat .lbl { font-size: 13px; color: var(--ink-soft); line-height: 1.4; margin-top: 4px; }
   .source {
     position: absolute;
-    bottom: 24px;
-    left: 72px;
-    font-size: 11px;
+    bottom: 20px;
+    left: 68px;
+    right: 68px;
+    font-size: 10.5px;
     color: var(--ink-soft);
-    letter-spacing: .04em;
+    line-height: 1.35;
   }
-  .nav {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    display: flex;
-    gap: 8px;
-    z-index: 100;
+  .quote { font-family: Fraunces, Georgia, serif; font-size: 31px; line-height: 1.35; }
+  .persona { display: grid; grid-template-columns: 1.1fr .9fr; gap: 34px; align-items: center; flex: 1; }
+  .portrait {
+    height: 100%; min-height: 320px; border-radius: 24px; background:
+      radial-gradient(circle at 35% 35%, #fff 0 10%, transparent 11%),
+      radial-gradient(circle at 65% 35%, #fff 0 10%, transparent 11%),
+      linear-gradient(140deg, #c7e5f7, #fdf1e0);
+    display: grid; place-items: center; border: 1px solid var(--line);
   }
-  .nav button {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    border: 1px solid rgba(11, 27, 43, 0.15);
-    background: #fff;
-    color: var(--ink);
-    cursor: pointer;
-    box-shadow: 0 4px 12px -4px rgba(0,0,0,.1);
-    transition: transform .15s;
+  .portrait-mark { width: 160px; height: 160px; border-radius: 50%; background: var(--brand); position: relative; }
+  .portrait-mark::before { content: ""; position: absolute; width: 96px; height: 76px; border-radius: 48% 48% 42% 42%; background: var(--accent); left: 32px; top: 28px; }
+  .portrait-mark::after { content: "MARIA"; position: absolute; left: 0; right: 0; bottom: -44px; text-align: center; letter-spacing: .18em; color: var(--ink-soft); font-size: 12px; font-weight: 800; }
+  .matrix { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .matrix th, .matrix td { border-bottom: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+  .matrix th { color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+  .matrix td:first-child { width: 30%; font-weight: 700; color: var(--ink); }
+  .flow-wrap { flex: 1; display: grid; align-items: center; }
+  .flow { display: grid; grid-template-columns: 1fr 44px 1fr 44px 1fr 44px 1fr; align-items: stretch; gap: 6px; }
+  .node { border: 2px solid var(--brand-line); background: var(--white); border-radius: 18px; padding: 18px 14px; min-height: 126px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+  .node strong { font-size: 17px; }
+  .node span { margin-top: 7px; font-size: 12px; color: var(--ink-soft); line-height: 1.4; }
+  .arrow { display: grid; place-items: center; color: var(--brand); font-size: 28px; font-weight: 700; }
+  .planned-flow { margin-top: 22px; border: 2px dashed var(--brand-line); border-radius: 18px; padding: 17px 20px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--ink-soft); text-align: center; }
+  .planned-flow strong { color: var(--ink); }
+  .proof { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; overflow-wrap: anywhere; color: var(--ink-soft); }
+  .nav { position: fixed; bottom: 22px; right: 22px; display: flex; gap: 8px; z-index: 100; }
+  .nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(11,27,43,.16); background: var(--white); color: var(--ink); cursor: pointer; box-shadow: 0 4px 12px -4px rgba(0,0,0,.16); }
+  .nav button:hover, .nav button:focus-visible { border-color: var(--brand); outline: 3px solid rgba(3,105,161,.16); }
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(3,105,161,.15); z-index: 100; }
+  .progress-bar { height: 100%; background: var(--brand); transition: width .28s; }
+  @media (max-width: 900px) {
+    .slide { padding: 42px 36px 52px; }
+    h1 { font-size: 43px; }
+    h2 { font-size: 30px; }
+    .lede { font-size: 18px; }
+    .grid-2, .persona { gap: 18px; }
+    .stat .num { font-size: 31px; }
+    .source { left: 36px; right: 36px; }
   }
-  .nav button:hover { transform: translateY(-1px); }
-  .progress {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: rgba(2, 132, 199, 0.15);
-    z-index: 100;
-  }
-  .progress-bar {
-    height: 100%;
-    background: var(--brand);
-    transition: width .35s;
-  }
-  .pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 10px;
-    background: var(--accent);
-    color: var(--ink);
-    border-radius: 999px;
-    font-size: 12px; font-weight: 600;
-    margin-right: 6px;
-  }
-  .pill i { color: var(--brand); font-size: 12px; }
-  .links { font-size: 13px; color: var(--ink-soft); margin-top: 16px; }
-  .links a { color: var(--brand); text-decoration: none; }
-  .links a:hover { text-decoration: underline; }
+  @media (prefers-reduced-motion: reduce) { .slide.active { animation: none; } .progress-bar { transition: none; } }
 </style>
 </head>
 <body>
-<div class="progress"><div class="progress-bar" id="progress"></div></div>
-<div id="deck">
+<div class="progress" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<main id="deck" aria-label="Bakti pitch deck">
 
-  <!-- 1 TITLE -->
-  <section class="slide active" data-slide="1">
+  <section class="slide active" data-slide="1" aria-labelledby="s1-title">
     <span class="slide-num">1 / 9</span>
-    <p class="kicker">Hop Stellar · APAC Hackathon 2026 · Track A</p>
-    <h1>A monthly allowance your parents collect as cash.</h1>
-    <p class="lede" style="margin-top: 24px;">You sign one Stellar payment a month.<br/>They walk into a pickup point and take home local money. No wallet, no crypto on their side.</p>
-    <div class="stats">
-      <div class="stat"><div class="num">$25</div><div class="lbl">Average allowance size</div></div>
-      <div class="stat"><div class="num">$0.0000027</div><div class="lbl">Stellar network fee per tx</div></div>
-      <div class="stat"><div class="num">3 sec</div><div class="lbl">On-chain settlement</div></div>
+    <p class="kicker">Hop Stellar 2026 · Product pitch</p>
+    <h1 id="s1-title">Bakti</h1>
+    <p class="lede" style="font-size:30px;color:var(--ink);font-family:Fraunces,Georgia,serif;">Plan salary-day support. Verify the transfer.</p>
+    <p class="lede" style="margin-top:18px;">Filipino workers in Malaysia → family in the Philippines</p>
+    <div class="grid-2" style="margin-top:34px;flex:0;">
+      <div class="card current"><span class="tag">CURRENT</span><h3 style="margin-top:12px;">Stellar testnet prototype</h3><p class="small" style="margin-top:8px;">Support-plan records, signed XLM escrow releases, direct XLM/USDC payments, and on-chain verification.</p></div>
+      <div class="card future"><span class="tag">PLANNED</span><h3 style="margin-top:12px;">Licensed PHP cash-out</h3><p class="small" style="margin-top:8px;">Anchor authentication, hosted SEP-24, KYC, provider routing/status, and provider-confirmed collection.</p></div>
     </div>
-    <div class="source">Live on Stellar mainnet · bakti-stellar.vercel.app</div>
+    <div class="source">Current recipient must have a Stellar address. No MoneyGram partnership or connected cash route.</div>
   </section>
 
-  <!-- 2 MOMENT -->
-  <section class="slide" data-slide="2">
+  <section class="slide" data-slide="2" aria-labelledby="s2-title">
     <span class="slide-num">2 / 9</span>
-    <p class="kicker">The moment</p>
-    <h2>"I always meant to send money to Ayah."</h2>
-    <div class="row" style="align-items: center;">
+    <p class="kicker">Human problem / target persona</p>
+    <h2 id="s2-title">“I want support to be ready around salary day.”</h2>
+    <div class="persona">
       <div>
-        <p class="lede" style="font-size: 26px; line-height: 1.5; color: var(--ink);">
-          Dewi is an Indonesian caregiver in Singapore. Some months she remembers. Some months, between double shifts, the money slips away. When she forgets, her father stretches his medicine.
-        </p>
-        <p class="lede" style="margin-top: 24px; color: var(--brand); font-weight: 600;">
-          Bakti isn't a transfer. It's a standing allowance that lands every month, in trust.
-        </p>
+        <span class="tag">ILLUSTRATIVE PERSONA · NOT A CLAIMED INTERVIEW</span>
+        <p class="quote" style="margin-top:22px;">Maria is a Filipino service worker in Kuala Lumpur. She wants to set aside support for her mother, remember the commitment, and know where the transfer went.</p>
+        <p class="lede" style="margin-top:24px;color:var(--brand);font-weight:700;">Job: make family support intentional, legible, and verifiable.</p>
+        <p class="small" style="margin-top:16px;">Today Maria still needs her mother's Stellar address and signs every transfer. Bakti does not send automatically.</p>
       </div>
-      <div class="chart-wrap">
-        <canvas id="chart-skip-months"></canvas>
-      </div>
+      <div class="portrait" role="img" aria-label="Abstract illustration representing Maria, an illustrative persona"><div class="portrait-mark"></div></div>
     </div>
-    <div class="source">Source: Bakti user interview, Singapore, 2025 (n=12)</div>
   </section>
 
-  <!-- 3 PROBLEM -->
-  <section class="slide" data-slide="3">
+  <section class="slide" data-slide="3" aria-labelledby="s3-title">
     <span class="slide-num">3 / 9</span>
-    <p class="kicker">The problem</p>
-    <h2>Remittances reach wallets.<br/>They don't reach habits.</h2>
-    <div class="row" style="align-items: center;">
-      <div class="chart-wrap">
-        <canvas id="chart-gap"></canvas>
-      </div>
-      <div>
-        <p class="lede">SEA diaspora sends <strong>&gt;$100B</strong> home each year. Much of it from children supporting elderly parents.</p>
-        <ul class="lede" style="padding-left: 20px; line-height: 1.7;">
-          <li>Ad-hoc: depends on sender remembering.</li>
-          <li>Apps charge opaque fees; no clean audit.</li>
-          <li>Recipients are often elderly. Can't use a wallet app.</li>
-          <li>A missed month = skipped medicine or groceries.</li>
-        </ul>
-      </div>
+    <p class="kicker">Corridor evidence</p>
+    <h2 id="s3-title">A large national flow, with a measured Malaysia signal</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="num">US$39.619B</div><div class="lbl">Philippines personal remittances · 2025 preliminary</div></div>
+      <div class="stat"><div class="num">US$35.634B</div><div class="lbl">Philippines cash remittances · 2025 preliminary</div></div>
+      <div class="stat"><div class="num">US$675.153M</div><div class="lbl">Malaysia-attributed Philippine cash remittances · 2025 provisional</div></div>
     </div>
-    <div class="source">Source: World Bank Migration &amp; Remittances data (KNOMAD, 2024)</div>
+    <div class="card" style="margin-top:22px;">
+      <strong>Jan–May 2026 preliminary</strong>
+      <p class="lede" style="font-size:17px;margin-top:8px;">US$15.735B personal · US$14.110B cash · US$279.807M Malaysia-attributed cash</p>
+      <p class="small" style="margin-top:12px;">Use these as a corridor signal, not TAM. BSP source-country attribution reflects the immediate source of funds, not necessarily true origin.</p>
+    </div>
+    <div class="source">Source: Bangko Sentral ng Pilipinas · https://www.bsp.gov.ph/statistics/external/ofw.aspx · https://www.bsp.gov.ph/statistics/external/ofw2.aspx</div>
   </section>
 
-  <!-- 4 MARKET -->
-  <section class="slide" data-slide="4">
+  <section class="slide" data-slide="4" aria-labelledby="s4-title">
     <span class="slide-num">4 / 9</span>
-    <p class="kicker">Market</p>
-    <h2>Philippines remittances — $38.6B (2024)</h2>
-    <div class="row">
-      <div class="chart-wrap">
-        <canvas id="chart-ph-growth"></canvas>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="chart-top-sources"></canvas>
-      </div>
-    </div>
-    <div class="source">Sources: Bangko Sentral ng Pilipinas (2024); +3% YoY</div>
+    <p class="kicker">Customer and job</p>
+    <h2 id="s4-title">One narrow customer; one clear job to be done</h2>
+    <table class="matrix" aria-label="Target customer and job-to-be-done table">
+      <tbody>
+        <tr><td>Customer</td><td>Filipino worker in Malaysia with a Stellar wallet</td></tr>
+        <tr><td>Recipient today</td><td>Family member in the Philippines with a Stellar address</td></tr>
+        <tr><td>Trigger</td><td>Salary day or another chosen planning date</td></tr>
+        <tr><td>Functional job</td><td>Store recipient + amount + date, then sign a transfer</td></tr>
+        <tr><td>Emotional job</td><td>Feel responsible without pretending the transfer is automatic</td></tr>
+        <tr><td>Evidence job</td><td>Open a transaction hash and verify the destination</td></tr>
+        <tr><td>Research next</td><td>Recipient cash preference, funding rail, provider trust, compliance path</td></tr>
+      </tbody>
+    </table>
   </section>
 
-  <!-- 5 COST -->
-  <section class="slide" data-slide="5">
+  <section class="slide" data-slide="5" aria-labelledby="s5-title">
     <span class="slide-num">5 / 9</span>
-    <p class="kicker">Why it costs so much</p>
-    <h2>6.5% global avg · a $25 allowance loses $1.63 to fees.</h2>
-    <div class="row" style="align-items: center;">
-      <div class="chart-wrap">
-        <canvas id="chart-cost-regions"></canvas>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="chart-rails"></canvas>
-      </div>
+    <p class="kicker">Product today vs next</p>
+    <h2 id="s5-title">Do not confuse on-chain proof with cash delivery</h2>
+    <div class="grid-2">
+      <div class="card current"><span class="tag">TODAY · WORKING</span><ul class="clean"><li>Freighter + custom signed manageData session, not SEP-10</li><li>Support-plan records; reminder day is metadata only</li><li>XLM escrow/release with 60-ledger demo cadence</li><li>Direct XLM/USDC to entered recipient address</li><li>Horizon/RPC verification, SEP-7 link, recipient watcher</li><li>Status ends at <strong>Verified on-chain</strong></li></ul></div>
+      <div class="card future"><span class="tag">NEXT · PLANNED</span><ul class="clean"><li>Licensed provider onboarding, KYB/compliance, agreements</li><li>SEP-1 + provider SEP-10 + hosted SEP-24</li><li>KYC, quote/limits, approved deposit routing</li><li>Provider transaction status and reference</li><li>PHP cash-out and provider-confirmed collection</li><li>No current MoneyGram partnership or route</li></ul></div>
     </div>
-    <div class="source">Sources: World Bank Remittance Prices Worldwide (Q4 2024) · stellar.org/developers</div>
   </section>
 
-  <!-- 6 SOLUTION -->
-  <section class="slide" data-slide="6">
+  <section class="slide" data-slide="6" aria-labelledby="s6-title">
     <span class="slide-num">6 / 9</span>
-    <p class="kicker">Solution</p>
-    <h2>Standing allowance. Local cash. Fixed day.</h2>
-    <div class="row" style="align-items: center;">
-      <div>
-        <p class="lede"><span class="pill"><i class="pi pi-pencil"></i> Sign</span> Sender signs one schedule in Freighter.</p>
-        <p class="lede" style="margin-top: 18px;"><span class="pill"><i class="pi pi-lock"></i> Escrow</span> Soroban holds funds, releases 1 month per call.</p>
-        <p class="lede" style="margin-top: 18px;"><span class="pill"><i class="pi pi-arrow-right-arrow-left"></i> Off-ramp</span> SEP-24 anchor issues cash-pickup reference.</p>
-        <p class="lede" style="margin-top: 18px;"><span class="pill"><i class="pi pi-money-bill"></i> Pickup</span> Parent collects local cash. Non-custodial end-to-end.</p>
+    <p class="kicker">One simple flow</p>
+    <h2 id="s6-title">Solid is current. Dashed is planned.</h2>
+    <div class="flow-wrap">
+      <div class="flow" role="img" aria-label="Current Bakti flow from sender through Bakti and Stellar to recipient wallet">
+        <div class="node"><strong>Sender</strong><span>Filipino worker in Malaysia</span></div><div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><strong>Bakti plan</strong><span>Recipient + amount + planning date</span></div><div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><strong>Stellar</strong><span>Direct payment or XLM escrow release</span></div><div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><strong>Recipient wallet</strong><span>Entered Stellar address</span></div>
       </div>
-      <div class="chart-wrap">
-        <svg class="flow-svg" viewBox="0 0 480 480" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#0b1b2b"/>
-            </marker>
-          </defs>
-          <rect class="flow-node" x="120" y="20" width="240" height="60" rx="10"/>
-          <text x="240" y="56">Sender (Dewi)</text>
-          <text class="flow-label" x="240" y="74">signs schedule</text>
-
-          <rect class="flow-node brand" x="120" y="130" width="240" height="60" rx="10"/>
-          <text x="240" y="166">Soroban BaktiEscrow</text>
-          <text class="flow-label" x="240" y="184">releases 1 month/call</text>
-
-          <rect class="flow-node" x="120" y="240" width="240" height="60" rx="10"/>
-          <text x="240" y="276">SEP-24 Anchor</text>
-          <text class="flow-label" x="240" y="294">USDC → local fiat</text>
-
-          <rect class="flow-node" x="120" y="350" width="240" height="60" rx="10"/>
-          <text x="240" y="386">MoneyGram pickup</text>
-          <text class="flow-label" x="240" y="404">parent collects cash</text>
-
-          <line class="flow-arrow" x1="240" y1="80" x2="240" y2="125"/>
-          <line class="flow-arrow" x1="240" y1="190" x2="240" y2="235"/>
-          <line class="flow-arrow" x1="240" y1="300" x2="240" y2="345"/>
-        </svg>
-      </div>
+      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Provider-approved deposit → licensed anchor → KYC → PHP cash-out → family member</strong></div>
+      <p class="small" style="text-align:center;margin-top:14px;">No provider destination, pickup reference, or automatic monthly scheduler is wired today.</p>
     </div>
   </section>
 
-  <!-- 7 WHY STELLAR -->
-  <section class="slide" data-slide="7">
+  <section class="slide" data-slide="7" aria-labelledby="s7-title">
     <span class="slide-num">7 / 9</span>
-    <p class="kicker">Why Stellar</p>
-    <h2>The only chain where the last mile ends in cash.</h2>
-    <div class="stats">
-      <div class="stat"><div class="num">$0.0000027</div><div class="lbl">Per transaction · stellar.org/developers</div></div>
-      <div class="stat"><div class="num">3 sec</div><div class="lbl">On-chain settlement</div></div>
-      <div class="stat"><div class="num">100%</div><div class="lbl">Non-custodial · audited on-chain</div></div>
-      <div class="stat"><div class="num">USDC native</div><div class="lbl">Circle-issued · no bridged assets</div></div>
+    <p class="kicker">Why Stellar; why the provider path</p>
+    <h2 id="s7-title">Verifiable rails now; regulated last mile next</h2>
+    <div class="grid-2">
+      <div class="card current"><h3>Why Stellar for this prototype</h3><ul class="clean"><li>Freighter keeps signing with the sender</li><li>Horizon and Soroban RPC make transfers inspectable</li><li>Soroban demonstrates pre-funded XLM release rules</li><li>Anchors define how Stellar assets connect to off-chain rails</li><li>SEP-24 is hosted and interactive; it requires anchor authentication and KYC</li></ul></div>
+      <div class="card future"><h3>MoneyGram Ramps as a target path</h3><ul class="clean"><li>Not a Bakti partner or current feature</li><li>Requires allowlisting, SEP-1, SEP-10, SEP-24</li><li>Requires KYC fields, testing/certification, KYB/compliance, agreements</li><li>Published off-ramp range: <strong>5–2,500 USDC</strong></li><li>Malaysia and Philippines listed cash-out only; not proof of Malaysian salary cash-in</li></ul></div>
     </div>
-    <div class="row" style="margin-top: 32px; align-items: center;">
-      <div class="chart-wrap">
-        <canvas id="chart-stellar-vs"></canvas>
-      </div>
-      <div>
-        <p class="lede"><span class="pill"><i class="pi pi-shield"></i> SEP-10</span> auth per family</p>
-        <p class="lede" style="margin-top: 12px;"><span class="pill"><i class="pi pi-id-card"></i> SEP-23</span> muxed account attribution</p>
-        <p class="lede" style="margin-top: 12px;"><span class="pill"><i class="pi pi-link"></i> SEP-24</span> standardized off-ramp</p>
-      </div>
-    </div>
-    <div class="source">Source: stellar.org/developers · stellar.org/case-studies/moneygram</div>
+    <div class="source">Sources: https://developers.stellar.org/docs/learn/fundamentals/anchors · Stellar SEP-24 guide · https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps</div>
   </section>
 
-  <!-- 8 LIVE PROOF -->
-  <section class="slide" data-slide="8">
+  <section class="slide" data-slide="8" aria-labelledby="s8-title">
     <span class="slide-num">8 / 9</span>
-    <p class="kicker">Live proof</p>
-    <h2>Not a mockup. A real mainnet payout.</h2>
-    <div class="stats">
-      <div class="stat"><div class="num">bakti-sooty.vercel.app</div><div class="lbl">Live app · mainnet</div></div>
-      <div class="stat"><div class="num">CBVAZDK…CTHR</div><div class="lbl">Soroban contract · mainnet</div></div>
-      <div class="stat"><div class="num">cfa17a93…419d2</div><div class="lbl">Verified release tx · stellar.expert</div></div>
+    <p class="kicker">Business model + GTM</p>
+    <h2 id="s8-title">Hypotheses to test — not forecasts</h2>
+    <div class="grid-2">
+      <div class="card soft"><span class="tag">UNVALIDATED BUSINESS MODEL</span><ul class="clean"><li>Transparent sender service fee within a licensed provider quote</li><li>Provider referral/revenue share where permitted</li><li>Employer, cooperative, or worker-community distribution</li><li>No validated price, take rate, margin, or unit economics</li></ul></div>
+      <div class="card"><span class="tag">GTM EXPERIMENTS</span><ul class="clean"><li>Interview Filipino workers in Malaysia and family recipients</li><li>Test planning/reminder value before automation</li><li>Map compliant Malaysia funding and Philippines payout partners</li><li>Run testnet usability studies for signing and address safety</li><li>Seek provider sandbox/certification conversations without claiming partnership</li></ul></div>
     </div>
-    <div class="links" style="margin-top: 36px;">
-      <div>→ <a href="https://bakti-sooty.vercel.app" target="_blank">Open the app</a></div>
-      <div style="margin-top: 6px;">→ <a href="https://stellar.expert/explorer/public/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2" target="_blank">Verify the release transaction</a></div>
-      <div style="margin-top: 6px;">→ <a href="https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR" target="_blank">Inspect the contract</a></div>
-    </div>
-    <div class="source">Source: Stellar public network · mainnet</div>
   </section>
 
-  <!-- 9 ASK -->
-  <section class="slide" data-slide="9">
+  <section class="slide" data-slide="9" aria-labelledby="s9-title">
     <span class="slide-num">9 / 9</span>
-    <p class="kicker">The ask</p>
-    <h2>Pilot an anchor. Open one corridor.</h2>
-    <div class="stats">
-      <div class="stat"><div class="num"><i class="pi pi-handshake" style="color: var(--brand); font-size: 40px;"></i></div><div class="lbl">Pilot anchor partner for SEP-24 (cash_pickup type)</div></div>
-      <div class="stat"><div class="num"><i class="pi pi-users" style="color: var(--brand); font-size: 40px;"></i></div><div class="lbl">Intro to one PH diaspora organization in the Gulf</div></div>
-      <div class="stat"><div class="num"><i class="pi pi-file-shield" style="color: var(--brand); font-size: 40px;"></i></div><div class="lbl">Funding for anchor integration legal review</div></div>
+    <p class="kicker">Build status + ask</p>
+    <h2 id="s9-title">A working testnet core, with an honest last-mile gap</h2>
+    <div class="grid-2">
+      <div class="card current"><span class="tag">BUILT</span><ul class="clean"><li>Verified testnet escrow contract</li><li>Freighter-signed testnet release transaction</li><li>Direct payment verification and support-plan UI</li><li>Current endpoints stop at Verified on-chain</li></ul><p class="proof" style="margin-top:14px;">Contract: CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ</p><p class="proof" style="margin-top:8px;">Tx: cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2</p></div>
+      <div class="card future"><span class="tag">ASK</span><ul class="clean"><li>Customer-discovery introductions in Malaysia</li><li>Licensed anchor/provider technical and compliance review</li><li>Feedback on the planning job before adding automation</li><li>Help mapping a compliant Malaysia funding → Philippines payout path</li></ul><p class="small" style="margin-top:16px;"><strong>Not built:</strong> SEP-24, MoneyGram API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling.</p></div>
     </div>
-    <p class="lede" style="margin-top: 36px;">
-      Contact: GitHub issues · <strong>castrodennisstephens128174-jpg/Bakti</strong>
-    </p>
-    <div class="source">Thank you · Hop Stellar 2026</div>
+    <div class="source">Testnet proof: https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2</div>
   </section>
 
-</div>
-
-<div class="nav">
-  <button onclick="prev()" aria-label="Previous"><i class="pi pi-chevron-left"></i></button>
-  <button onclick="next()" aria-label="Next"><i class="pi pi-chevron-right"></i></button>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</main>
+<nav class="nav" aria-label="Slide navigation">
+  <button type="button" id="prev" aria-label="Previous slide">←</button>
+  <button type="button" id="next" aria-label="Next slide">→</button>
+</nav>
 <script>
-const BRAND = '#0284c7';
-const INK = '#0b1b2b';
-const INK_SOFT = '#51617a';
-const ACCENT = '#fdf1e0';
-const TOTAL = 9;
-let current = 1;
+  const TOTAL = 9;
+  let current = 1;
+  const progress = document.getElementById('progress');
+  const slides = Array.from(document.querySelectorAll('.slide'));
 
-function show(n) {
-  if (n < 1) n = 1;
-  if (n > TOTAL) n = TOTAL;
-  current = n;
-  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-  document.querySelector(`[data-slide="${n}"]`).classList.add('active');
-  document.getElementById('progress').style.width = (n / TOTAL * 100) + '%';
-}
-function next() { show(current + 1); }
-function prev() { show(current - 1); }
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === ' ') next();
-  if (e.key === 'ArrowLeft') prev();
-});
-
-const chartFont = { family: 'Inter, system-ui, sans-serif' };
-Chart.defaults.font.family = chartFont.family;
-Chart.defaults.color = INK_SOFT;
-
-// 2 — skipped months
-new Chart(document.getElementById('chart-skip-months'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Sent on time', 'Skipped or late'],
-    datasets: [{ data: [58, 42], backgroundColor: [BRAND, ACCENT], borderWidth: 0 }]
-  },
-  options: { plugins: { title: { display: true, text: '% of months care workers actually send', font: { size: 14 } }, legend: { position: 'bottom' } }, cutout: '65%' }
-});
-
-// 3 — gap between intent and execution
-new Chart(document.getElementById('chart-gap'), {
-  type: 'bar',
-  data: {
-    labels: ['Intended', 'Actually sent'],
-    datasets: [{ data: [12, 7], backgroundColor: [BRAND, ACCENT], borderRadius: 8 }]
-  },
-  options: {
-    plugins: { title: { display: true, text: 'Allowances per year (median OFW, n=12)', font: { size: 14 } }, legend: { display: false } },
-    scales: { y: { beginAtZero: true, max: 12 } }
+  function show(n) {
+    current = Math.min(TOTAL, Math.max(1, n));
+    slides.forEach((slide) => {
+      const active = Number(slide.dataset.slide) === current;
+      slide.classList.toggle('active', active);
+      slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+    });
+    progress.style.width = `${(current / TOTAL) * 100}%`;
+    history.replaceState(null, '', `#${current}`);
   }
-});
 
-// 4 — PH personal remittances
-new Chart(document.getElementById('chart-ph-growth'), {
-  type: 'line',
-  data: {
-    labels: ['2020', '2021', '2022', '2023', '2024'],
-    datasets: [{
-      label: 'USD billions',
-      data: [34.9, 37.2, 38.1, 37.2, 38.6],
-      borderColor: BRAND,
-      backgroundColor: 'rgba(2,132,199,0.1)',
-      fill: true,
-      tension: 0.3,
-      pointRadius: 5,
-      pointBackgroundColor: BRAND
-    }]
-  },
-  options: {
-    plugins: { title: { display: true, text: 'PH personal remittances (BSP)', font: { size: 14 } }, legend: { display: false } },
-    scales: { y: { beginAtZero: false, min: 32 } }
-  }
-});
-
-// 4 — top source countries
-new Chart(document.getElementById('chart-top-sources'), {
-  type: 'bar',
-  data: {
-    labels: ['USA', 'Saudi', 'UAE', 'Singapore', 'HK'],
-    datasets: [{ data: [15, 7, 5, 3, 3], backgroundColor: BRAND, borderRadius: 6 }]
-  },
-  options: {
-    indexAxis: 'y',
-    plugins: { title: { display: true, text: 'Top source countries → PH (USD B, 2024)', font: { size: 14 } }, legend: { display: false } }
-  }
-});
-
-// 5 — cost by region
-new Chart(document.getElementById('chart-cost-regions'), {
-  type: 'bar',
-  data: {
-    labels: ['South Asia', 'LatAm', 'East Asia', 'Global avg', 'MEA', 'Sub-Saharan'],
-    datasets: [{ data: [5.2, 5.7, 6.1, 6.5, 6.6, 7.9], backgroundColor: [BRAND, BRAND, BRAND, ACCENT, BRAND, BRAND], borderRadius: 6 }]
-  },
-  options: {
-    plugins: { title: { display: true, text: 'Avg cost to send $200 (Q4 2024)', font: { size: 14 } }, legend: { display: false } },
-    scales: { y: { ticks: { callback: v => v + '%' } } }
-  }
-});
-
-// 5 — fee by rail
-new Chart(document.getElementById('chart-rails'), {
-  type: 'bar',
-  data: {
-    labels: ['Stellar (on-chain)', 'Wise', 'Remitly', 'Western Union', 'SWIFT'],
-    datasets: [{ data: [0.0000027, 1.5, 3, 5, 7], backgroundColor: [BRAND, ACCENT, ACCENT, ACCENT, ACCENT], borderRadius: 6 }]
-  },
-  options: {
-    plugins: { title: { display: true, text: 'Cost per transfer (%)', font: { size: 14 } }, legend: { display: false } },
-    scales: { y: { type: 'logarithmic', ticks: { callback: v => v + '%' } } }
-  }
-});
-
-// 7 — Stellar vs others
-new Chart(document.getElementById('chart-stellar-vs'), {
-  type: 'bar',
-  data: {
-    labels: ['Stellar', 'Wise', 'SWIFT', 'Western Union'],
-    datasets: [{
-      label: 'Cost per $100 sent',
-      data: [0.0000003, 1.5, 6, 5],
-      backgroundColor: [BRAND, ACCENT, ACCENT, ACCENT],
-      borderRadius: 6
-    }]
-  },
-  options: {
-    plugins: { title: { display: true, text: 'Network + service fee comparison', font: { size: 14 } }, legend: { display: false } },
-    scales: { y: { type: 'logarithmic' } }
-  }
-});
-
-show(1);
+  function next() { show(current + 1); }
+  function prev() { show(current - 1); }
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+      event.preventDefault();
+      next();
+    }
+    if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+      event.preventDefault();
+      prev();
+    }
+    if (event.key === 'Home') show(1);
+    if (event.key === 'End') show(TOTAL);
+  });
+  const initial = Number(location.hash.slice(1));
+  show(Number.isInteger(initial) && initial >= 1 && initial <= TOTAL ? initial : 1);
 </script>
 </body>
 </html>

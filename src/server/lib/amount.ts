@@ -5,9 +5,12 @@ export const STROOPS = 10_000_000n;
 export function toStroops(decimal: string): bigint {
   const cleaned = String(decimal).replace(/[, _]/g, '').trim();
   if (cleaned === '' || cleaned === '.') return 0n;
+  if (!/^-?(?:\d+(?:\.\d{0,7})?|\.\d{1,7})$/.test(cleaned)) {
+    throw new Error('Amount must be a decimal with at most 7 fractional digits');
+  }
   const neg = cleaned.startsWith('-');
   const [whole, frac = ''] = cleaned.replace(/^-/, '').split('.');
-  const fracPadded = (`${frac}0000000`).slice(0, 7);
+  const fracPadded = `${frac}0000000`.slice(0, 7);
   const value = BigInt(whole || '0') * STROOPS + BigInt(fracPadded || '0');
   return neg ? -value : value;
 }

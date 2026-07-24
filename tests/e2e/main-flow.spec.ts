@@ -17,7 +17,7 @@ async function ensureOneAllowance(page: Page) {
     data: {
       recipientName: 'Seed Parent',
       recipientAddress: Keypair.random().publicKey(),
-      corridor: 'Indonesia · Hana pickup',
+      corridor: 'Malaysia → Philippines · research corridor',
       asset: 'XLM',
       monthlyAmount: '4',
       dayOfMonth: 5,
@@ -33,7 +33,8 @@ test.describe('landing', () => {
     await expect(cta).toBeVisible();
     const box = await cta.boundingBox();
     expect(box).not.toBeNull();
-    expect(box!.y).toBeLessThan(720);
+    if (!box) throw new Error('CTA has no bounding box');
+    expect(box.y).toBeLessThan(720);
   });
 
   test('has no accessibility violations', async ({ page }) => {
@@ -53,7 +54,8 @@ test.describe('mobile 375px', () => {
     const cta = page.getByTestId('cta-button');
     await expect(cta).toBeVisible();
     const box = await cta.boundingBox();
-    expect(box!.y).toBeLessThan(780);
+    if (!box) throw new Error('CTA has no bounding box');
+    expect(box.y).toBeLessThan(780);
   });
 });
 

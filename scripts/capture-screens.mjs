@@ -39,16 +39,16 @@ async function main() {
   // Create-allowance form open
   await dash.getByTestId('new-allowance-button').click();
   await dash.getByTestId('create-allowance-form').waitFor({ timeout: 8000 });
-  await dash.getByTestId('recipient-name').fill('Nenek Wati (Grandma)');
+  await dash.getByTestId('recipient-name').fill('Tita Wati');
   await dash.getByTestId('monthly-amount').fill('5');
   await dash.waitForTimeout(400);
   await shot(dash, '03-create-allowance.jpg');
 
-  // Allowance detail — the Bapak Bambang plan with a real collected payout
+  // Support-plan detail with an on-chain payment record
   const list = await (await desk.request.get(`${BASE}/api/allowances`)).json();
-  const bambang = list.data.find((a) => a.recipientName.includes('Bambang')) ?? list.data[0];
+  const plan = list.data.find((a) => a.recipientName.includes('Rosa')) ?? list.data[0];
   const detail = await desk.newPage();
-  await detail.goto(`${BASE}/allowances/${bambang.id}`, { waitUntil: 'domcontentloaded' });
+  await detail.goto(`${BASE}/allowances/${plan.id}`, { waitUntil: 'domcontentloaded' });
   await detail.getByTestId('payout-list').waitFor({ timeout: 15000 });
   await detail.waitForTimeout(900);
   await shot(detail, '04-allowance-detail.jpg', true);

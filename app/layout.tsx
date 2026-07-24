@@ -15,11 +15,11 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3005'),
   title: {
-    default: 'Bakti — a dignified monthly allowance for the parents back home',
+    default: 'Bakti — plan family support on Stellar',
     template: '%s · Bakti',
   },
   description:
-    'Bakti turns easy-to-forget remittances into a steady monthly allowance for elderly parents. Set the amount and the day once, sign each month on Stellar, and they collect local cash — no smartphone, no crypto needed on their side.',
+    'A testnet prototype for Filipino workers in Malaysia to plan family support and send verifiable XLM or USDC payments to a recipient Stellar address. Licensed cash-out integration is planned, not connected.',
   icons: { icon: '/icon.svg' },
 };
 

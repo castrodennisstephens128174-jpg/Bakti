@@ -1,10 +1,9 @@
-import { randomBytes } from 'node:crypto';
 import { env } from '@/server/config/env';
 import { allowanceRepo } from '@/server/db/repos/allowance.repo';
 import { payoutRepo } from '@/server/db/repos/payout.repo';
-import type { Payout, PayoutStatus } from '@/server/db/schema';
+import type { AllowanceStatus, Payout, PayoutStatus } from '@/server/db/schema';
 import { AppError } from '@/server/lib/http';
-import { buildReleaseXdr, submitSorobanSigned } from '@/server/stellar';
+import { buildReleaseXdr, submitSorobanSigned, validateSignedRelease } from '@/server/stellar';
 import { verifyAllowancePayment } from '@/server/stellar/horizon';
 
 export type PayoutAction = 'send' | 'settle' | 'collect' | 'fail';
@@ -17,9 +16,8 @@ const PAYOUT_TRANSITIONS: Record<PayoutAction, Partial<Record<PayoutStatus, Payo
 };
 
 /**
- * Payout lifecycle guard: scheduled -> sent -> settled -> collected, with a
- * fail branch off scheduled/sent. Returns the next status for a valid action,
- * throws CONFLICT otherwise (backwards moves, touching terminal states).
+ * Payout lifecycle guard. `settled` and `collected` remain available for a
+ * future provider adapter, but current direct-payment endpoints stop at `sent`.
  */
 export function nextPayoutStatus(current: PayoutStatus, action: PayoutAction): PayoutStatus {
   const next = PAYOUT_TRANSITIONS[action]?.[current];
@@ -29,24 +27,24 @@ export function nextPayoutStatus(current: PayoutStatus, action: PayoutAction): P
   return next;
 }
 
-/** Current allowance period as YYYY-MM (payouts are one-per-month). */
+/** Current allowance period as YYYY-MM. This is record grouping, not scheduling. */
 export function currentPeriod(d: Date = new Date()): string {
   const y = d.getUTCFullYear();
   const m = String(d.getUTCMonth() + 1).padStart(2, '0');
   return `${y}-${m}`;
 }
 
-/**
- * Demo off-ramp reference. On mainnet a live SEP-24 anchor replaces this with
- * its own `transaction_id`. Corridor is stored for display only.
- */
-export function makePickupRef(_corridor: string, period: string): string {
-  const suffix = randomBytes(3).toString('hex').toUpperCase();
-  return `BAKTI-${period.replace('-', '')}-${suffix}`;
+function assertAllowanceCanSend(status: AllowanceStatus): void {
+  if (status === 'paused') {
+    throw new AppError('CONFLICT', 'This allowance is paused', 409);
+  }
+  if (status === 'ended') {
+    throw new AppError('CONFLICT', 'This allowance has ended', 409);
+  }
 }
 
 export const payoutService = {
-  /** Ensure a scheduled payout exists for the current period; return it. */
+  /** Ensure a scheduled record exists for the current period; return it. */
   async ensureScheduled(allowanceId: string, publicKey: string): Promise<Payout> {
     const allowance = await allowanceRepo.findOwned(allowanceId, publicKey);
     if (!allowance) throw new AppError('NOT_FOUND', 'Allowance not found', 404);
@@ -66,20 +64,18 @@ export const payoutService = {
   },
 
   /**
-   * Record a real, on-chain allowance payment. Verifies the transaction against
-   * Horizon (right asset, amount, recipient), then walks the scheduled payout
-   * to sent and immediately to settled with a cash-pickup reference.
+   * Record a direct, on-chain allowance payment. Horizon verifies the asset,
+   * amount, sender, and recipient before the payout is marked `sent`. No cash
+   * pickup or provider settlement is inferred from ledger confirmation.
    */
   async recordPayment(
     allowanceId: string,
     publicKey: string,
-    data: { txHash: string; amount: string },
+    data: { txHash: string },
   ): Promise<Payout> {
     const allowance = await allowanceRepo.findOwned(allowanceId, publicKey);
     if (!allowance) throw new AppError('NOT_FOUND', 'Allowance not found', 404);
-    if (allowance.status === 'ended') {
-      throw new AppError('CONFLICT', 'This allowance has ended', 409);
-    }
+    assertAllowanceCanSend(allowance.status);
 
     const duplicate = await payoutRepo.findByTxHash(data.txHash);
     if (duplicate) {
@@ -91,36 +87,27 @@ export const payoutService = {
       asset: allowance.asset,
       from: publicKey,
       to: allowance.recipientAddress,
-      amount: data.amount,
+      amount: allowance.monthlyAmount,
     });
 
     const scheduled = await payoutService.ensureScheduled(allowanceId, publicKey);
-    const period = scheduled.period;
-
     nextPayoutStatus(scheduled.status, 'send');
-    const memo = `Bakti allowance ${period}`;
-    await payoutRepo.update(scheduled.id, {
+    return payoutRepo.update(scheduled.id, {
       status: 'sent',
       txHash: data.txHash,
-      memo,
+      pickupRef: null,
+      memo: `Bakti allowance ${scheduled.period}`,
     });
-
-    nextPayoutStatus('sent', 'settle');
-    const pickupRef = makePickupRef(allowance.corridor, period);
-    return payoutRepo.update(scheduled.id, { status: 'settled', pickupRef });
   },
 
   /**
-   * Build the UNSIGNED `release` invoke for a contract-backed allowance. The
-   * caller (here the sender, but the contract permits anyone) signs it; the
-   * contract pays the recipient one month from the pre-funded escrow.
+   * Build the unsigned `release` invoke for a contract-backed XLM allowance.
+   * The current sender signs it; the contract pays the recorded recipient.
    */
   async buildRelease(allowanceId: string, publicKey: string): Promise<{ xdr: string }> {
     const allowance = await allowanceRepo.findOwned(allowanceId, publicKey);
     if (!allowance) throw new AppError('NOT_FOUND', 'Allowance not found', 404);
-    if (allowance.status === 'ended') {
-      throw new AppError('CONFLICT', 'This allowance has ended', 409);
-    }
+    assertAllowanceCanSend(allowance.status);
     if (!allowance.scheduleId) {
       throw new AppError('CONFLICT', 'This allowance is not backed by an on-chain schedule', 409);
     }
@@ -129,9 +116,9 @@ export const payoutService = {
   },
 
   /**
-   * Submit a signed `release` invoke (the RPC confirms it landed on-chain), then
-   * walk the scheduled payout to sent -> settled with a cash-pickup reference.
-   * The release tx hash is the on-chain proof of the contract call.
+   * Submit a signed Soroban release. RPC confirmation proves the contract call
+   * landed, so the payout is marked `sent` with its transaction hash. Provider
+   * settlement is a separate, currently unimplemented integration.
    */
   async recordRelease(
     allowanceId: string,
@@ -140,35 +127,37 @@ export const payoutService = {
   ): Promise<Payout> {
     const allowance = await allowanceRepo.findOwned(allowanceId, publicKey);
     if (!allowance) throw new AppError('NOT_FOUND', 'Allowance not found', 404);
+    assertAllowanceCanSend(allowance.status);
     if (!allowance.scheduleId) {
       throw new AppError('CONFLICT', 'This allowance is not backed by an on-chain schedule', 409);
     }
 
-    const { hash } = await submitSorobanSigned(data.signedXdr);
-
+    const tx = validateSignedRelease(data.signedXdr, {
+      caller: publicKey,
+      scheduleId: allowance.scheduleId,
+    });
+    const { hash } = await submitSorobanSigned(tx);
     const duplicate = await payoutRepo.findByTxHash(hash);
     if (duplicate) return duplicate;
 
     const scheduled = await payoutService.ensureScheduled(allowanceId, publicKey);
-    const period = scheduled.period;
-
     nextPayoutStatus(scheduled.status, 'send');
-    await payoutRepo.update(scheduled.id, {
+    return payoutRepo.update(scheduled.id, {
       status: 'sent',
       txHash: hash,
-      memo: `Bakti allowance ${period} (contract release)`,
+      pickupRef: null,
+      memo: `Bakti allowance ${scheduled.period} (contract release)`,
     });
-
-    nextPayoutStatus('sent', 'settle');
-    const pickupRef = makePickupRef(allowance.corridor, period);
-    return payoutRepo.update(scheduled.id, { status: 'settled', pickupRef });
   },
 
-  /** Sender confirms the parent collected the cash: settled -> collected. */
+  /** Manual collection claims are disabled until a provider adapter confirms them. */
   async markCollected(payoutId: string, publicKey: string): Promise<Payout> {
     const payout = await payoutRepo.findOwned(payoutId, publicKey);
     if (!payout) throw new AppError('NOT_FOUND', 'Payout not found', 404);
-    const next = nextPayoutStatus(payout.status, 'collect');
-    return payoutRepo.setStatus(payoutId, next);
+    throw new AppError(
+      'CONFLICT',
+      'Collection cannot be confirmed manually; no payout provider is connected',
+      409,
+    );
   },
 };

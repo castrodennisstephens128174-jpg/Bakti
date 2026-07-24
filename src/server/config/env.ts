@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+const TESTNET_CONTRACT_ID = 'CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ';
+const TESTNET_HORIZON_URL = 'https://horizon-testnet.stellar.org';
+const TESTNET_PASSPHRASE = 'Test SDF Network ; September 2015';
+const TESTNET_RPC_URL = 'https://soroban-testnet.stellar.org';
+
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
@@ -8,20 +13,16 @@ const envSchema = z.object({
 
   DRIZZLE_DATABASE_URL: z.string().url(),
 
-  STELLAR_NETWORK: z.enum(['testnet', 'public', 'futurenet']).default('public'),
-  NEXT_PUBLIC_STELLAR_NETWORK: z.enum(['testnet', 'public', 'futurenet']).default('public'),
-  STELLAR_HORIZON_URL: z.string().url().default('https://horizon.stellar.org'),
-  STELLAR_NETWORK_PASSPHRASE: z.string().default('Public Global Stellar Network ; September 2015'),
+  STELLAR_NETWORK: z.enum(['testnet', 'public', 'futurenet']).default('testnet'),
+  NEXT_PUBLIC_STELLAR_NETWORK: z.enum(['testnet', 'public', 'futurenet']).default('testnet'),
+  STELLAR_HORIZON_URL: z.string().url().default(TESTNET_HORIZON_URL),
+  STELLAR_NETWORK_PASSPHRASE: z.string().default(TESTNET_PASSPHRASE),
 
-  SOROBAN_RPC_URL: z.string().url().default('https://soroban-rpc.public.stellar.org'),
+  SOROBAN_RPC_URL: z.string().url().default(TESTNET_RPC_URL),
 
-  // Deployed bakti-escrow Soroban contract that backs the on-chain allowance schedule.
-  SOROBAN_BAKTI_CONTRACT_ID: z
-    .string()
-    .default('CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR'),
-  NEXT_PUBLIC_BAKTI_CONTRACT_ID: z
-    .string()
-    .default('CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR'),
+  // Verified testnet Bakti escrow deployment. Explicit environment values still override it.
+  SOROBAN_BAKTI_CONTRACT_ID: z.string().default(TESTNET_CONTRACT_ID),
+  NEXT_PUBLIC_BAKTI_CONTRACT_ID: z.string().default(TESTNET_CONTRACT_ID),
   BAKTI_ADMIN_PUBLIC_KEY: z
     .string()
     .default('GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47'),
@@ -34,8 +35,7 @@ const envSchema = z.object({
     .string()
     .default('GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5'),
 
-  // Anchor G-account that receives allowance deposits for off-ramp cash pickup.
-  // On testnet this is a demo collection wallet; SEP-23 muxes it per allowance.
+  // Reserved for a future anchor adapter. It is not a current payment destination.
   ANCHOR_COLLECTION_PUBLIC_KEY: z
     .string()
     .default('GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5'),
@@ -62,10 +62,10 @@ if (!parsed.success) {
 
 const rawEnv = parsed.data;
 
-/** Resolved USDC issuer for the active Stellar network. */
+/** Resolved USDC issuer for the configured network. Testnet is the supported default. */
 export const USDC_ASSET_ISSUER_VALUE: string = rawEnv.USDC_ASSET_ISSUER_TESTNET;
 
-/** Native XLM Stellar Asset Contract (SAC) id — the escrow contract's token. */
+/** Native XLM Stellar Asset Contract (SAC) id used by the verified testnet deployment. */
 export const NATIVE_SAC_ID_VALUE: string = rawEnv.NATIVE_SAC_ID_TESTNET;
 
 export const env = rawEnv;

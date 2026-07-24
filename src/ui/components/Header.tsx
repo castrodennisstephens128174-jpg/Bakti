@@ -7,8 +7,8 @@ import { ConnectButton } from './ConnectButton';
 import { Wordmark } from './Logo';
 
 const NAV = [
-  { href: '/dashboard', label: 'My allowances' },
-  { href: '/stats', label: 'Stats' },
+  { href: '/dashboard', label: 'Support plans' },
+  { href: '/stats', label: 'App activity' },
 ];
 
 export function Header() {

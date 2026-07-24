@@ -72,7 +72,7 @@ export function Footer() {
   return (
     <footer className="mt-20 border-t border-line/70">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-5 py-7 text-sm text-ink-soft sm:flex-row">
-        <p>Bakti · a monthly allowance for the parents back home · Stellar mainnet</p>
+        <p>Bakti · family support planning prototype · Stellar testnet by default</p>
         <div className="flex items-center gap-4">
           <Link href="/stats" className="hover:text-ink">
             Live stats

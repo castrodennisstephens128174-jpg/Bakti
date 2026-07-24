@@ -233,7 +233,7 @@ async function friendbot(pubkey: string): Promise<void> {
   if (!res.ok && res.status !== 400) throw new Error(`friendbot failed: ${res.status}`);
 }
 
-test('real Freighter: SEP-10 connect + on-chain monthly allowance -> real tx hash', async () => {
+test('real Freighter: signed session + on-chain support payment -> real tx hash', async () => {
   test.setTimeout(360_000);
   const recipient = Keypair.random();
   await friendbot(recipient.publicKey());
@@ -251,11 +251,7 @@ test('real Freighter: SEP-10 connect + on-chain monthly allowance -> real tx has
 
   const label = await createXlmAllowance(page, recipient.publicKey());
 
-  await page
-    .getByTestId('allowance-row')
-    .filter({ hasText: label })
-    .first()
-    .click();
+  await page.getByTestId('allowance-row').filter({ hasText: label }).first().click();
   await expect(page.getByTestId('send-button')).toBeVisible({ timeout: 30_000 });
 
   const txHref = await sendAllowanceForTxHash(page);
@@ -264,12 +260,11 @@ test('real Freighter: SEP-10 connect + on-chain monthly allowance -> real tx has
   await pageShot(page, '10-live-payout.jpg');
 
   await page.goto(`${BASE_URL}/stats`, { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Bakti in numbers')).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText('Prototype database activity')).toBeVisible({ timeout: 20_000 });
 
   const txHash = (txHref ?? '').split('/tx/')[1];
   expect(txHash).toMatch(/^[0-9a-f]{64}$/);
-  // biome-ignore lint/suspicious/noConsole: surface the real tx hash for the report
-  console.log('PROD_TX_HASH=' + txHash);
+  console.log(`PROD_TX_HASH=${txHash}`);
 });
 
 test('mobile landing renders', async () => {

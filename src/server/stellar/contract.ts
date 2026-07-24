@@ -2,10 +2,11 @@ import {
   Account,
   Address,
   Contract,
+  Keypair,
   nativeToScVal,
   rpc,
   scValToNative,
-  type Transaction,
+  Transaction,
   TransactionBuilder,
   type xdr,
 } from '@stellar/stellar-sdk';
@@ -41,6 +42,150 @@ function baktiContract(): Contract {
 }
 
 export const BAKTI_CONTRACT_ID = contractIds.bakti;
+
+type ExpectedContractArg =
+  | { type: 'address'; value: string }
+  | { type: 'i128'; value: bigint }
+  | { type: 'u32'; value?: number }
+  | { type: 'u64'; value: bigint };
+
+type ContractInvocationIntent = {
+  source: string;
+  contractId: string;
+  method: string;
+  args: ExpectedContractArg[];
+};
+
+function invalidSignedIntent(message: string): never {
+  throw new AppError('INVALID_INPUT', message, 400);
+}
+
+function scValMatches(actual: xdr.ScVal, expected: ExpectedContractArg): boolean {
+  const switchName = actual.switch().name;
+  if (switchName !== `scv${expected.type[0].toUpperCase()}${expected.type.slice(1)}`) return false;
+
+  let native: unknown;
+  try {
+    native = scValToNative(actual);
+  } catch {
+    return false;
+  }
+
+  if (expected.type === 'address') return native === expected.value;
+  if (expected.type === 'i128' || expected.type === 'u64') return native === expected.value;
+  if (!Number.isInteger(native) || Number(native) < 0 || Number(native) > 0xffff_ffff) return false;
+  return expected.value === undefined || native === expected.value;
+}
+
+/**
+ * Decode a signed Soroban transaction and bind it to a server-owned contract
+ * intent before RPC submission. The source account signature is checked against
+ * the configured network passphrase, then the single contract invocation and
+ * each typed argument are matched exactly.
+ */
+export function validateSignedContractInvocation(
+  signedXdr: string,
+  intent: ContractInvocationIntent,
+): Transaction {
+  let decoded: ReturnType<typeof TransactionBuilder.fromXDR>;
+  try {
+    decoded = TransactionBuilder.fromXDR(signedXdr, getNetworkPassphrase());
+  } catch {
+    invalidSignedIntent('Signed transaction could not be decoded.');
+  }
+  if (!(decoded instanceof Transaction)) {
+    invalidSignedIntent('Signed transaction must be a standard Soroban transaction.');
+  }
+  const tx = decoded as Transaction;
+
+  if (tx.source !== intent.source) {
+    invalidSignedIntent('Signed transaction source does not match the authenticated wallet.');
+  }
+
+  const sourceKey = Keypair.fromPublicKey(intent.source);
+  const sourceHint = sourceKey.signatureHint();
+  const txHash = tx.hash();
+  const hasValidSourceSignature = tx.signatures.some(
+    (signature) =>
+      signature.hint().equals(sourceHint) && sourceKey.verify(txHash, signature.signature()),
+  );
+  if (!hasValidSourceSignature) {
+    invalidSignedIntent('Signed transaction is missing a valid source signature.');
+  }
+
+  if (tx.operations.length !== 1) {
+    invalidSignedIntent('Signed transaction must contain exactly one contract invocation.');
+  }
+  const operation = tx.operations[0];
+  if (operation.type !== 'invokeHostFunction') {
+    invalidSignedIntent('Signed transaction must contain exactly one contract invocation.');
+  }
+  if (operation.source && operation.source !== intent.source) {
+    invalidSignedIntent('Contract invocation source does not match the authenticated wallet.');
+  }
+  if (operation.func.switch().name !== 'hostFunctionTypeInvokeContract') {
+    invalidSignedIntent('Signed transaction must invoke the configured Bakti contract.');
+  }
+
+  const invocation = operation.func.invokeContract();
+  if (Address.fromScAddress(invocation.contractAddress()).toString() !== intent.contractId) {
+    invalidSignedIntent('Signed transaction targets a different contract.');
+  }
+  if (invocation.functionName().toString() !== intent.method) {
+    invalidSignedIntent(`Signed transaction must invoke ${intent.method}.`);
+  }
+
+  const args = invocation.args();
+  if (args.length !== intent.args.length) {
+    invalidSignedIntent(`Signed ${intent.method} arguments do not match the requested action.`);
+  }
+  for (let index = 0; index < args.length; index++) {
+    if (!scValMatches(args[index], intent.args[index])) {
+      invalidSignedIntent(`Signed ${intent.method} arguments do not match the requested action.`);
+    }
+  }
+
+  return tx;
+}
+
+export function validateSignedCreateSchedule(
+  signedXdr: string,
+  params: { sender: string; recipient: string; monthlyAmountStroops: bigint; months: number },
+): Transaction {
+  return validateSignedContractInvocation(signedXdr, {
+    source: params.sender,
+    contractId: contractIds.bakti,
+    method: 'create_schedule',
+    args: [
+      { type: 'address', value: params.sender },
+      { type: 'address', value: params.recipient },
+      { type: 'i128', value: params.monthlyAmountStroops },
+      { type: 'u32', value: params.months },
+      { type: 'u32' },
+    ],
+  });
+}
+
+export function validateSignedRelease(
+  signedXdr: string,
+  params: { caller: string; scheduleId: string },
+): Transaction {
+  let scheduleId: bigint;
+  try {
+    scheduleId = BigInt(params.scheduleId);
+  } catch {
+    invalidSignedIntent('Stored escrow schedule id is invalid.');
+  }
+  return validateSignedContractInvocation(signedXdr, {
+    source: params.caller,
+    contractId: contractIds.bakti,
+    method: 'release',
+    args: [
+      { type: 'u64', value: scheduleId },
+      { type: 'address', value: params.caller },
+    ],
+  });
+}
 
 const accountLocks = new Map<string, Promise<unknown>>();
 
@@ -103,8 +248,7 @@ export async function buildCreateScheduleXdr(params: {
   if (!Address.fromString(params.sender)) {
     throw new AppError('INVALID_INPUT', 'Invalid sender address.', 400);
   }
-  const firstDueLedger =
-    params.firstDueLedger ?? (await currentLedger()) + FIRST_DUE_LEDGER_LAG;
+  const firstDueLedger = params.firstDueLedger ?? (await currentLedger()) + FIRST_DUE_LEDGER_LAG;
 
   const op = baktiContract().call(
     'create_schedule',
@@ -139,16 +283,10 @@ export async function buildReleaseXdr(params: {
   return assembleForSigning(params.caller, op);
 }
 
-/** Submit a signed Soroban invoke, poll until it lands, and return hash + return value. */
+/** Submit a validated Soroban invoke, poll until it lands, and return hash + return value. */
 export async function submitSorobanSigned(
-  signedXdr: string,
+  tx: Transaction,
 ): Promise<{ hash: string; returnValue: xdr.ScVal | undefined }> {
-  let tx: Transaction;
-  try {
-    tx = TransactionBuilder.fromXDR(signedXdr, getNetworkPassphrase()) as Transaction;
-  } catch {
-    throw new AppError('INVALID_INPUT', 'Signed transaction could not be decoded.', 400);
-  }
   const source = tx.source;
   return withAccountLock(source, async () => {
     const srv = server();
@@ -183,9 +321,9 @@ export async function submitSorobanSigned(
 
 /** Submit a signed `create_schedule` and return the tx hash + the new schedule_id. */
 export async function submitCreateSchedule(
-  signedXdr: string,
+  tx: Transaction,
 ): Promise<{ hash: string; scheduleId: string }> {
-  const { hash, returnValue } = await submitSorobanSigned(signedXdr);
+  const { hash, returnValue } = await submitSorobanSigned(tx);
   if (!returnValue) {
     throw new AppError('INTERNAL', 'create_schedule returned no schedule id.', 502);
   }
@@ -234,10 +372,9 @@ export type ScheduleStatus = {
 /** Read a schedule's running state from the contract (no signature). */
 export async function readScheduleStatus(scheduleId: string): Promise<ScheduleStatus> {
   const idScv = nativeToScVal(BigInt(scheduleId), { type: 'u64' });
-  const [monthly, months, released, nextDue] = await simulateNative<[bigint, number, number, number]>(
-    'schedule_status',
-    idScv,
-  );
+  const [monthly, months, released, nextDue] = await simulateNative<
+    [bigint, number, number, number]
+  >('schedule_status', idScv);
   return {
     monthlyAmountStroops: BigInt(monthly).toString(),
     months: Number(months),

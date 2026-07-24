@@ -1,90 +1,90 @@
-# Bakti Allowance Escrow — Deployment Record
+# Bakti Escrow — Verified Testnet Deployment
 
-## Mainnet
+## Release status
 
-- **Contract ID:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
-- **Explorer:** https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
-- **Soroban RPC:** `https://soroban-rpc.public.stellar.org`
-- **Network passphrase:** `Public Global Stellar Network ; September 2015`
+The verified deployment documented here is on **Stellar testnet**.
 
-Cadence: **60 ledgers ≈ 5 min** — testnet/demo cadence only. Production = 518_400 ledgers (≈30 days).
+A contract ID previously presented in project materials as mainnet — `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR` — has not been verified by this repository's deployment record. Treat it as **unverified and not release proof**. The recorded `cfa17...` transaction is testnet.
 
-## Testnet
+## Verified testnet configuration
 
+- Network: Stellar testnet
 - Contract ID: `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
-- Admin: `GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47` (deployer)
-- Escrow token (SAC): native XLM `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
+- Explorer: https://stellar.expert/explorer/testnet/contract/CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ
+- Admin/deployer: `GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47`
+- Native XLM SAC: `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
 - Network passphrase: `Test SDF Network ; September 2015`
+- Horizon: `https://horizon-testnet.stellar.org`
 - Soroban RPC: `https://soroban-testnet.stellar.org`
 
-Explorer: https://stellar.expert/explorer/testnet/contract/CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ
+## Recorded testnet transactions
 
-### Deploy + verification transactions (real, on-chain)
-- deploy (create contract): `375280f4a1395e12a12f5be99629e8e4242d4d40cc18e17f9a27fd2e1ecc0626`
-- initialize: `27e9aad1588de27bf15935fb134e1fe3460e299fd2ff9a0aa9babe597b29009e`
-  (`get_token` reads back the native XLM SAC; `get_admin` reads the deployer)
-- create_schedule (escrow 2 XLM, months=2) — schedule_id `0`, recipient
-  `GB742LFQAX3KRRFIOWYQB2HEG6426XZOE3TDRTVAASE3N5NFEXPJNLCO`
-- release (period 1, contract -> recipient 1 XLM), via `stellar contract invoke`:
-  `0ea8338a79799b49c08ffaa757599d6ca4bd9ea3d364f5165b7175461587c52e`
-  https://stellar.expert/explorer/testnet/tx/0ea8338a79799b49c08ffaa757599d6ca4bd9ea3d364f5165b7175461587c52e
-- release (real Freighter browser signature, real-Freighter e2e run, contract -> recipient 3 XLM):
-  `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`
-  https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
-  (Horizon-verified: `invoke_host_function` op, asset_balance_changes shows the contract
-  paying `GC5J5N53SWVTOVXV3BZSEUYDP7VEUVCY6QJRJN5MZDANANYS6MMGRTNV` — matches the e2e recipient.)
+- Contract deploy: `375280f4a1395e12a12f5be99629e8e4242d4d40cc18e17f9a27fd2e1ecc0626`
+- Initialize: `27e9aad1588de27bf15935fb134e1fe3460e299fd2ff9a0aa9babe597b29009e`
+- Release, period 1: `0ea8338a79799b49c08ffaa757599d6ca4bd9ea3d364f5165b7175461587c52e`
+  - https://stellar.expert/explorer/testnet/tx/0ea8338a79799b49c08ffaa757599d6ca4bd9ea3d364f5165b7175461587c52e
+- Freighter-signed release: `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`
+  - https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
+
+The Freighter-signed transaction contains an `invoke_host_function` operation and testnet asset balance changes showing the contract paying the recorded recipient. It proves an XLM contract release on testnet. It does not prove mainnet operation, provider settlement, cash pickup, or collection.
+
+## Contract behavior
+
+| Method | Authorization | Effect |
+|---|---|---|
+| `initialize(admin, token)` | admin | One-time configuration of admin and escrow SAC token |
+| `create_schedule(sender, recipient, monthly_amount, months, first_due_ledger) -> u64` | sender | Transfers `monthly_amount × months` from sender to contract and stores a schedule |
+| `release(schedule_id, caller) -> u32` | caller/keeper | If due, transfers one period from contract to recorded recipient and advances the ledger deadline |
+| `schedule_status(schedule_id)` | view | Returns amount, periods, releases, and next due ledger |
+| `get_schedule(schedule_id)` | view | Returns the stored schedule |
+| `get_admin()` / `get_token()` | view | Returns configuration |
+
+`release` is permissionless: any caller may pay the transaction fee and trigger a due release, but funds always go to the recipient stored at schedule creation.
+
+The deployed contract is initialized with the native XLM SAC, so this escrow deployment supports XLM. The app's USDC flow is a separate classic payment to the entered recipient address.
 
 ## Demo cadence
 
-`LEDGERS_PER_PERIOD = 60` (~5 minutes at ~5s/ledger). This is a SHORT
-testnet-demo cadence so a live demo can release a second period within minutes,
-NOT a real 30-day month. A production deploy would set this to ~30 days of
-ledgers (30 * 17_280 = 518_400). Documented in lib.rs and docs/technical-flow.txt.
+`LEDGERS_PER_PERIOD = 60` is a deliberately short test/demo interval. It is not a calendar month and does not use the app's `dayOfMonth` field.
 
-## Entrypoints
+The app does not run an automatic keeper or monthly scheduler. The current UI asks the sender to sign each release.
 
-| Method | Auth | Effect |
-|---|---|---|
-| `initialize(admin, token)` | admin | one-time; records admin + escrow SAC token |
-| `create_schedule(sender, recipient, monthly_amount, months, first_due_ledger) -> u64` | sender | escrows `monthly_amount * months` (SAC transfer sender -> contract) up front; stores the schedule; returns schedule_id |
-| `release(schedule_id, caller) -> u32` | caller (ANY — permissionless keeper) | requires ledger >= next_due (else NotDueYet) and periods_released < months (else AllReleased); SAC transfer contract -> recipient of one month; advances next_due by LEDGERS_PER_PERIOD; returns the period number just released |
-| `schedule_status(schedule_id) -> (i128,u32,u32,u32)` | — (view) | (monthly_amount, months, periods_released, next_due_ledger) |
-| `get_schedule(schedule_id) -> Schedule` | — (view) | full schedule row |
-| `get_admin() / get_token()` | — (view) | config |
+A production deployment would need an explicitly reviewed cadence and operational model; merely replacing 60 with an approximate month is not a complete production-readiness decision.
 
-`release` is permissionless: any wallet can trigger a due period (a keeper
-pattern), but the recipient recorded at create time is always the fund
-destination regardless of who calls. The funds move from the contract's own
-escrow, not from the caller.
+## Reproduce on testnet
 
-Contract binds a SINGLE token at `initialize` (native XLM SAC), so the on-chain
-escrow path serves XLM allowances. USDC allowances keep the classic Stellar
-payment path (see docs/technical-flow.txt).
-
-## Tests
-
-`cd source-code/contracts && make test` → 9 passed; 0 failed. Covers all 6 spec
-cases (escrow-on-create, NotDueYet, release pays recipient, AllReleased,
-permissionless caller, status after 2 releases) plus initialize-twice, bad-input,
-and unknown-schedule guards.
-
-## Reproduce
+From the repository root:
 
 ```bash
-cd source-code/contracts
-make test                              # 9 passed; 0 failed
+cd contracts
+make test
 stellar contract build --optimize
-stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/bakti_escrow.optimized.wasm \
-  --source deployer --network testnet
-stellar contract invoke --id <ID> --source deployer --network testnet -- \
-  initialize --admin GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47 \
+./scripts/deploy.sh testnet
+```
+
+Then initialize the returned contract ID with the verified network-specific admin and native testnet XLM SAC:
+
+```bash
+stellar contract invoke \
+  --id <TESTNET_CONTRACT_ID> \
+  --source deployer \
+  --network testnet \
+  -- initialize \
+  --admin GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47 \
   --token CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC
 ```
 
-## Mainnet
+Never commit deployer secret keys.
 
-- Contract ID: (not deployed) — switch via `./scripts/deploy.sh public`, set
-  `STELLAR_NETWORK=public` and `SOROBAN_RPC_URL=https://soroban.stellar.org`
-  in `.env.local`, re-`initialize` with the mainnet native XLM SAC, and set
-  `LEDGERS_PER_PERIOD` to ~30 days of ledgers before shipping real allowances.
+## Mainnet requirements
+
+There is no verified mainnet release proof in this document. Before claiming mainnet deployment:
+
+1. Review contract code, cadence, upgrade strategy, storage/TTL behavior, authorization, incident handling, and operations.
+2. Build and deploy against the public network with a controlled deployment identity.
+3. Initialize with the correct public-network native XLM SAC.
+4. Record and independently verify deploy, initialize, create, and release transactions.
+5. Configure all application network, RPC, Horizon, contract, and asset-issuer values together.
+6. Update this record with the verified evidence.
+
+Until those steps are complete, project materials must describe Bakti's contract proof as testnet only.

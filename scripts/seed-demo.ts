@@ -1,13 +1,9 @@
 /**
- * Seed Bakti with a realistic Southeast-Asian persona.
+ * Seed Bakti with a Malaysia → Philippines research-corridor persona.
  *
- * Persona: Dewi Lestari — an Indonesian caregiver working in Singapore who
- * sends a steady monthly allowance home to her parents in Malang, East Java.
- *
- * The demo sender is the shared testnet wallet (also what Freighter signs with),
- * so connecting that wallet shows this data. One allowance receives a REAL
- * on-chain testnet payment so the detail view shows a genuine settled payout
- * with a clickable stellar.expert link — no fabricated success states.
+ * The optional real payment is a Stellar testnet XLM transfer to a generated
+ * recipient account. It is recorded only as `sent`; no provider settlement or
+ * cash collection is created.
  */
 import {
   Asset,
@@ -22,10 +18,10 @@ import {
 import { allowanceRepo } from '@/server/db/repos/allowance.repo';
 import { sessionRepo } from '@/server/db/repos/auth.repo';
 import { payoutRepo } from '@/server/db/repos/payout.repo';
-import { makePickupRef } from '@/server/service/payout.service';
 
-const HORIZON = process.env.STELLAR_HORIZON_URL ?? 'https://horizon.stellar.org';
+const HORIZON = process.env.STELLAR_HORIZON_URL ?? 'https://horizon-testnet.stellar.org';
 const PASSPHRASE = process.env.STELLAR_NETWORK_PASSPHRASE ?? Networks.TESTNET;
+const RESEARCH_CORRIDOR = 'Malaysia → Philippines · research corridor';
 
 const SENDER_PUBLIC =
   process.env.DEMO_SENDER_PUBLIC ?? 'GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47';
@@ -60,49 +56,44 @@ async function sendRealPayment(to: string, amount: string, memo: string): Promis
 }
 
 async function main() {
-  console.log('Seeding Bakti demo data for', SENDER_PUBLIC);
+  console.log('Seeding Bakti testnet demo data for', SENDER_PUBLIC);
 
   await sessionRepo.insert({
     publicKey: SENDER_PUBLIC,
     expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),
   });
 
-  const bambang = Keypair.random();
-  const sriwahyuni = Keypair.random();
-  const budi = Keypair.random();
-  await Promise.all([friendbot(bambang.publicKey()), friendbot(sriwahyuni.publicKey())]).catch(
-    () => {},
-  );
+  const rosa = Keypair.random();
+  const miguel = Keypair.random();
+  const ana = Keypair.random();
+  await Promise.all([friendbot(rosa.publicKey()), friendbot(miguel.publicKey())]).catch(() => {});
 
   const plans = [
     {
-      recipientName: 'Bapak Bambang (Ayah)',
-      recipientAddress: bambang.publicKey(),
-      corridor: 'Indonesia · Hana pickup',
+      recipientName: 'Nanay Rosa',
+      recipientAddress: rosa.publicKey(),
       asset: 'XLM' as const,
       monthlyAmount: '4',
-      dayOfMonth: 5,
-      note: 'For Ayah — medicine and market money',
+      dayOfMonth: 25,
+      note: 'Salary-day support planning demo',
       real: true,
     },
     {
-      recipientName: 'Ibu Sri Wahyuni (Ibu)',
-      recipientAddress: sriwahyuni.publicKey(),
-      corridor: 'Indonesia · Hana pickup',
+      recipientName: 'Tatay Miguel',
+      recipientAddress: miguel.publicKey(),
       asset: 'XLM' as const,
       monthlyAmount: '3',
-      dayOfMonth: 5,
-      note: 'For Ibu — groceries',
+      dayOfMonth: 25,
+      note: 'Groceries support planning demo',
       real: false,
     },
     {
-      recipientName: 'Om Budi (Uncle)',
-      recipientAddress: budi.publicKey(),
-      corridor: 'Indonesia · MoneyGram',
+      recipientName: 'Ate Ana',
+      recipientAddress: ana.publicKey(),
       asset: 'USDC' as const,
       monthlyAmount: '10',
       dayOfMonth: 12,
-      note: 'Helping with the family shop',
+      note: 'Direct USDC transfer planning demo',
       real: false,
     },
   ];
@@ -112,7 +103,7 @@ async function main() {
       publicKey: SENDER_PUBLIC,
       recipientName: plan.recipientName,
       recipientAddress: plan.recipientAddress,
-      corridor: plan.corridor,
+      corridor: RESEARCH_CORRIDOR,
       asset: plan.asset,
       monthlyAmount: plan.monthlyAmount,
       dayOfMonth: plan.dayOfMonth,
@@ -133,13 +124,13 @@ async function main() {
           asset: plan.asset,
           amount: plan.monthlyAmount,
           period: period(-1),
-          status: 'collected',
+          status: 'sent',
           txHash,
-          pickupRef: makePickupRef(plan.corridor, period(-1)),
+          pickupRef: null,
           memo: `Bakti allowance ${period(-1)}`,
           network: 'testnet',
         });
-        console.log('  real payment recorded (collected):', txHash);
+        console.log('  verified testnet payment recorded:', txHash);
       } catch (e) {
         console.warn('  real payment skipped:', (e as Error).message);
       }
@@ -155,7 +146,7 @@ async function main() {
       memo: `Bakti allowance ${period(0)}`,
       network: 'testnet',
     });
-    console.log('  allowance created:', plan.recipientName);
+    console.log('  support plan created:', plan.recipientName);
   }
 
   console.log('Seed complete.');

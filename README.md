@@ -1,186 +1,222 @@
-<div align="center">
+# Bakti
 
-## Mainnet (LIVE)
+Bakti is a Stellar testnet prototype for **Filipino workers in Malaysia planning salary-day support for family in the Philippines**. It keeps a recipient, amount, and reminder date in one plan, then lets the sender sign a direct Stellar payment or release pre-funded XLM from a Soroban escrow.
 
-- **Live app:** https://bakti-sooty.vercel.app
-- **Network:** Stellar public (mainnet)
-- **Soroban contract:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
-- **Explorer:** https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
-- **Pitch deck:** [Open web deck](https://github.com/castrodennisstephens128174-jpg/Bakti/blob/main/slides/index.html) · 9 slides / 3 min · [Download Bakti.pptx](https://github.com/castrodennisstephens128174-jpg/Bakti/raw/main/slides/Bakti.pptx) (backup)
+**Current boundary:** the recipient needs a Stellar address. Bakti does not yet connect to a licensed cash-out provider, perform KYC, or deliver Philippine pesos.
 
-# Bakti — a monthly allowance your parents collect as cash
+## Problem and target user
 
-**Turn easy-to-forget remittances into a steady, provable monthly income for the parents back home. You sign one Stellar payment a month; they walk into a cash pickup point with a reference code and take home local money — no wallet, no crypto on their side.**
+The target user is a Filipino worker in Malaysia who wants family support to be deliberate and easy to verify rather than an ad-hoc transfer remembered late in the month. The family member may ultimately prefer cash, but the present prototype stops at the recipient's Stellar wallet.
 
-Stellar APAC Hackathon 2026 · Track A
+The product hypothesis is that salary-day planning, a persistent family-support record, and verifiable payment evidence can reduce uncertainty for the sender. This has not yet been validated through a claimed interview sample or production pilot.
 
-<img src="screen-shot/01-landing.jpg" width="780" alt="Bakti landing" />
-<img src="screen-shot/02-dashboard.jpg" width="390" alt="Dashboard" /> <img src="screen-shot/04-allowance-detail.jpg" width="390" alt="Allowance detail" />
-<img src="screen-shot/05-stats.jpg" width="390" alt="Stats" /> <img src="screen-shot/06-mobile.jpg" width="250" alt="Mobile" />
+## Why research the Malaysia → Philippines corridor
 
-</div>
+Bangko Sentral ng Pilipinas (BSP) reports:
 
----
+- **2025 preliminary personal remittances:** US$39.619B; **cash remittances:** US$35.634B; both +3.3%.
+- **Jan–May 2026 preliminary:** personal remittances US$15.735B; cash remittances US$14.110B.
+- **Malaysia-attributed Philippine cash remittances:** US$661.182M in 2024, US$675.153M in 2025 provisional, and US$279.807M in Jan–May 2026 provisional.
 
-## The moment
+The Malaysia figure is a **corridor signal, not Bakti's TAM**. BSP attributes cash remittances to the immediate source of funds, which may differ from the worker's true location or origin of the remittance. Further customer, channel, compliance, and provider research is required.
 
-"I always meant to send money to Ayah."
+Sources: [BSP OFW remittances](https://www.bsp.gov.ph/statistics/external/ofw.aspx) and [BSP cash remittances by source](https://www.bsp.gov.ph/statistics/external/ofw2.aspx).
 
-Dewi is an Indonesian caregiver in Singapore. Some months she remembers to send money home to her parents in Malang. Some months she forgets — between double shifts, it slips away. When she forgets, her father stretches his medicine.
+## Solution
 
-He does not use crypto. He uses the corner pickup shop.
+### Today
 
-Bakti: Dewi does not want a transfer. She wants a standing allowance she can trust to land every month.
+`Sender → Bakti support plan → Stellar transfer/escrow release → recipient Stellar wallet`
 
-## The problem
+1. Connect Freighter.
+2. Sign Bakti's custom `manageData` challenge to create an app session.
+3. Save a family member, recipient Stellar address, amount, asset, and reminder day.
+4. For XLM, pre-fund a fixed number of periods in the Bakti Soroban escrow and sign a release when desired.
+5. For USDC, sign a direct classic Stellar payment when desired.
+6. Record the transaction as **Verified on-chain** after Horizon or Soroban RPC confirmation.
 
-Remittances reach the wallet. They do not reach the habit.
+The reminder day is planning metadata only. No scheduler automatically sends or releases funds. The contract's `LEDGERS_PER_PERIOD = 60` is a short demo cadence, not a calendar month.
 
-SEA takes in over $100 billion a year in remittances — much of it children supporting elderly parents. The average cost of sending $200 globally is still **6.4%** (WB Remittance Prices Q4 2024).
+### Target product
 
-Support is ad-hoc: it depends on the sender remembering in a busy month. Apps charge opaque fees. No clean audit of what landed. The recipient is often elderly and cannot use a wallet or an app. A missed month is not abstract — it is skipped medicine or groceries.
+`Sender → Stellar → licensed anchor/provider → KYC and provider workflow → PHP cash-out → family member`
 
-## The market
+The target last mile is a certified SEP-24 integration with MoneyGram Ramps or another licensed anchor. It is not currently connected.
 
-- **Philippines 2024 inflow: ~$38 billion USD** (World Bank / KNOMAD). Forecast 2025: $38.3 billion. Trajectory toward $40 billion by 2026.
-- **Top sources into PH:** Saudi Arabia, UAE, USA, Singapore, Hong Kong, Qatar, Kuwait, Japan, UK, Canada.
-- **Malaysia sends $10-12 billion a year** to PH, ID, BD, NP, IN workers. MY-PH is the densest single intra-Asia remittance lane.
-- Global average cost of sending $200: **6.4%** (WB Q4 2024). Bakti target: **2% or less** once live anchor signs.
+## Current product vs target product
 
-## The solution
+| Capability | Current prototype | Target product |
+|---|---|---|
+| Wallet | Freighter connection and signing | Production wallet support and recovery UX |
+| App session | Custom signed `manageData` challenge | Standards review; provider-specific SEP-10 where required |
+| Planning | Recipient, amount, asset, reminder day, pause/end state | Validated salary-day support workflow and notifications |
+| XLM | Soroban escrow and signed release | Production-reviewed contract parameters and operations |
+| USDC | Direct payment to entered recipient address | Provider-approved deposit routing where applicable |
+| Verification | Horizon verification and Soroban RPC confirmation | On-chain plus provider transaction/status reconciliation |
+| Payment link | SEP-7 direct pay URI to recipient | Provider-aware payment/deposit instructions if certified |
+| Live watcher | Horizon recipient-payment watcher | Provider webhook/polling plus user notifications |
+| Provider/KYC | Not implemented | Hosted SEP-24 flow, authentication, KYC, quote/status |
+| Cash-out | Not implemented | Licensed PHP cash-out and provider reference |
+| Collection | Not implemented | Provider-confirmed collection status |
+| Scheduling | No automatic scheduler | Only after legal, operational, and user validation |
 
-Set it once. Sign one payment a month. They collect cash.
+## Implemented
 
-**Step 1 — Add a parent.** Name, Stellar address, corridor, amount, payout day.
+- Freighter wallet access and transaction signing.
+- Custom signed `manageData` session challenge. **This is not SEP-10.**
+- Postgres allowance/support-plan records with active, paused, and ended states.
+- XLM Soroban escrow via `create_schedule` and signed `release`.
+- Direct XLM or testnet USDC payments to a recipient Stellar address.
+- Horizon verification of direct payment sender, recipient, asset, and amount.
+- Soroban RPC simulation, submission, and confirmation.
+- SEP-7 direct payment URI.
+- Best-effort Horizon SSE watcher for payments to the recipient account.
+- Transaction hashes linked to the configured network explorer.
 
-**Step 2 — Sign the month.** One XLM or USDC payment, signed in your own wallet.
+## Not implemented
 
-**Step 3 — Anchor off-ramps.** A cash-pickup reference is issued. Currently demo; a live SEP-24 anchor partnership is in progress.
+- SEP-24.
+- Anchor SEP-10 authentication.
+- MoneyGram API or hosted webview.
+- MoneyGram partnership, certification, or commercial agreement.
+- KYC/KYB/compliance workflows.
+- Provider quote, fees, limits, status, webhooks, or deposit routing.
+- A provider-approved anchor or muxed payment destination.
+- Pickup reference or fiat cash pickup.
+- Provider-confirmed settlement or collection.
+- Automatic monthly scheduling.
+- Production mainnet release proof.
 
-**Step 4 — They collect.** Local cash in hand — no wallet, no crypto on their side.
+The code retains `settled` and `collected` status types for a future provider adapter, but current payment endpoints stop at `sent` / **Verified on-chain**. Manual collection confirmation is rejected.
 
-Non-custodial the whole way: Bakti never holds your keys or your funds.
+## MoneyGram integration requirements
 
-## Why Stellar
+MoneyGram Ramps supports USDC on/off-ramp flows through Stellar, but integration requires more than sending an asset to an address. Its published path includes:
 
-**The only chain where this ends in cash.** Anchors and SEP-24 provide a real, standardized path from stablecoin to local cash pickup.
+- Commercial onboarding, KYB/compliance review, agreements, and domain allowlisting.
+- SEP-1 metadata.
+- SEP-10 authentication for the anchor flow.
+- Hosted SEP-24 deposit/withdrawal interaction.
+- Required KYC fields.
+- Testing and certification.
+- Provider transaction status and operational handling.
 
-- **Sub-cent fees** — a $25 allowance is not eaten by the rails.
-- **USDC on Stellar** — natively issued by Circle. No bridged assets. No counterparty risk.
-- **Soroban BaktiEscrow** — permissionless keeper release. Non-custodial. Auditable on-chain.
-- **SEP-23 muxed accounts** — one anchor collection account, per-family attribution, no memos.
-- **SEP-10** — wallet auth built into the protocol.
+MoneyGram publishes off-ramp limits of **5–2,500 USDC**. Its linked availability sheet lists Malaysia and the Philippines as **cash-out only**; this does not establish Malaysian salary cash-in or an implemented Malaysia → Philippines route for Bakti.
+
+Source: [Integrate MoneyGram Ramps](https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps).
+
+Stellar anchors connect on-chain assets with off-chain rails. SEP-24 is an anchor-hosted interactive deposit/withdrawal flow and requires the anchor's authentication and KYC process. Sources: [Stellar anchors](https://developers.stellar.org/docs/learn/fundamentals/anchors) and [SEP-24 getting started](https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started).
 
 ## Architecture
 
-**Client:** React + Freighter wallet signs `create_schedule` and each release.
+```text
+Next.js client
+  ├─ Freighter wallet access
+  ├─ custom signed session challenge
+  ├─ direct XLM/USDC transaction signing
+  └─ Soroban escrow/release signing
 
-**Contract:** BaktiEscrow on Soroban — pre-funds the full run, releases one month per call.
+Next.js server
+  ├─ session and plan APIs
+  ├─ Horizon payment verification
+  ├─ Soroban RPC assembly/submission
+  └─ Postgres persistence via Drizzle
 
-**Off-ramp:** SEP-24 anchor issues pickup reference; SEP-23 attributes it per family.
+Stellar testnet
+  ├─ classic payments to recipient address
+  └─ Bakti XLM escrow contract
 
-Tech: Next.js 16, React 19, TypeScript, Stellar SDK, Soroban, Rust, Drizzle, Postgres.
-
-## Live proof
-
-Not a mockup. A real mainnet payout.
-
-- **Live app:** https://bakti-sooty.vercel.app
-- **Soroban contract (mainnet):** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
-- **On-chain release tx:** `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`
-- **Verify:** stellar.expert/explorer/public/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
-
-## Anchor integration
-
-SEP-24: standardized off-ramp. Bakti is the SEP-24 wallet client. SEP-10: user signs the challenge; Bakti server exchanges it for an anchor JWT. POST /withdraw/interactive sends destination (muxed), asset, amount. GET /transaction polls until status=completed; pickup_ref = transaction_id.
-
-**Target anchor:** Coins.ph (Philippines, Bangko Sentral ng Pilipinas registered VASP). Off-ramp is demo until a live SEP-24 anchor signs.
-
-## Go-to-market
-
-1. **Philippines first.** Coins.ph ecosystem + OFW Facebook groups + diaspora orgs + remittance clinics in Saudi Arabia and UAE.
-2. **Malaysia to Philippines second.** Existing high-volume corridor, mature, competitive.
-3. **Indonesia, Vietnam, Thailand.** Expansion once anchor coverage confirmed per corridor.
-
-## Business model
-
-Target: take rate on the on-ramp leg once a fiat partner signs. Anchor referral fee for driving users to SEP-24 partners. Bakti never holds funds — non-custodial by design.
-
-## Anchor integration plan
-
-SEP-24 minimum endpoints: GET /info, POST /withdraw/interactive, GET /transaction + SEP-10 web auth. Cash_pickup type must be listed in /info. Bakti needs: transaction_id as the pickup reference. One anchor account with SEP-23 muxed attribution per family. No memos required from sender wallets.
-
-## Highlights
-
-- **Non-custodial** — you sign every payment in your own wallet. Bakti never holds keys or funds.
-- **Provable, not opaque** — every payout is a real Stellar transaction, verified against Horizon, linked on stellar.expert.
-- **Cash at the other end** — the SEP-24 off-ramp turns USDC/XLM into a cash-pickup reference. No crypto on the receiver side.
-- **SEP-23 muxed attribution** — one anchor account, unique deposit reference per family.
-- **SEP-7 pay link** — pay a month by QR from any Stellar wallet.
-- **XLM-first, USDC opt-in** — one-tap changeTrust enables USDC. No stranded at op_no_trust.
-- **Predictable** — a fixed plan with a fixed day, so support never gets forgotten.
-
-## On-chain primitives
-
-| Primitive | Role |
-| --- | --- |
-| BaktiEscrow (Soroban) | create_schedule escrows the full run; release is permissionless keeper call paying one period |
-| SEP-10 | Wallet login via signed challenge |
-| Payment (USDC classic) | Monthly allowance, signed once, verified against Horizon |
-| Horizon verification | Server re-derives and confirms each payout on-chain |
-| Soroban RPC | Server assembles/submits contract invokes, polls to SUCCESS |
-| SEP-23 muxed accounts | Per-allowance attribution on one anchor collection account |
-| SEP-24 | Off-ramp to cash-pickup reference (demo mode; live anchor TBD) |
-| SEP-7 | Payment request URI for QR pay from any wallet |
-| Horizon SSE | Live settlement indicator |
-
-Cadence note: `LEDGERS_PER_PERIOD = 60` (~5 minutes on testnet) — this is a demo cadence only. Production would use `518_400` ledgers (~30 days).
-
-## FRONTEND → CONTRACT WIRING
-
-```
-POST /api/allowances/escrow-intent           -> buildEscrow    -> create_schedule (build)
-POST /api/allowances (signedXdr)             -> createEscrowed  -> create_schedule (submit)
-POST /api/allowances/:id/release-intent      -> buildRelease    -> release (build)
-POST /api/allowances/:id/payouts (signedXdr) -> recordRelease   -> release (submit)
+Future provider adapter (not implemented)
+  └─ SEP-1 + SEP-10 + SEP-24 + KYC + quote/status + PHP cash-out
 ```
 
-Key files: `src/server/stellar/contract.ts`, `src/server/service/allowance.service.ts`, `src/server/service/payout.service.ts`, `contracts/bakti-escrow/src/lib.rs`.
+Key files:
 
-## Tech stack
+- `src/server/service/payout.service.ts` — payment verification and honest status boundary.
+- `src/server/service/allowance.service.ts` — plan lifecycle and escrow creation.
+- `src/server/service/auth.service.ts` — custom `manageData` challenge/session.
+- `src/server/stellar/contract.ts` — Soroban transaction assembly and submission.
+- `src/server/stellar/horizon.ts` — classic payment verification.
+- `app/allowances/[id]/page.tsx` — direct pay tools, watcher, and planned last-mile panel.
+- `contracts/bakti-escrow/src/lib.rs` — XLM escrow contract.
 
-- **Soroban / Rust** — bakti-escrow contract, soroban-sdk 22
-- **Next.js 16** (App Router) + **React 19** + **TypeScript** strict
-- **@stellar/stellar-sdk** (Horizon + Soroban RPC) + **Freighter** for signing
-- **Drizzle ORM** on **Postgres**
-- **Tailwind CSS v4** + **Manrope + Fraunces** type + **lucide-react**
-- **Vitest** (unit) + **Playwright** (e2e)
-- Network-aware: flip `NEXT_PUBLIC_STELLAR_NETWORK` from testnet to public to go mainnet.
+## Business-model hypotheses — unvalidated
 
-## Docs & slides
+- A sender-paid planning/service fee bundled transparently with a licensed provider quote.
+- Provider referral or revenue share where permitted by contracts and regulation.
+- Employer or worker-community distribution paid by an institution rather than the recipient.
 
-- `docs/SUBMISSION.md` — problem, market, solution, business model, GTM, why Stellar
-- `docs/design.md` — UX principles, screen flow, status machine
-- `docs/technical-flow.md` — end-to-end technical flow with file references
-- `docs/description.md` — one-paragraph product blurb
-- `slides/Bakti.pptx` — pitch deck (11 slides, 16:9)
-- `contracts/DEPLOYMENT.md` — contract deployment record
+No price, take rate, unit economics, or provider margin has been validated.
 
-## Quick start
+## GTM experiments
+
+1. Interview Filipino workers in Malaysia around salary-day support behavior, recipient preferences, trust, and wallet constraints.
+2. Test a no-money planning/reminder prototype before claiming a scheduling product.
+3. Map regulated Malaysia funding options and Philippine payout providers with counsel and provider teams.
+4. Seek a provider sandbox/certification conversation; do not market MoneyGram as a partner.
+5. Run a small testnet usability study measuring plan creation, successful signing, and transaction comprehension.
+
+## Limitations and security
+
+- Prototype defaults to Stellar testnet; assets have no production value.
+- The app is not a bank, money transmitter, anchor, KYC provider, or cash-pickup service.
+- The sender controls the wallet and signs every on-chain action; Bakti must never receive secret keys.
+- XLM escrow pre-funds the contract. `release` is permissionless, but always pays the recorded recipient.
+- `LEDGERS_PER_PERIOD = 60` is intentionally short for demonstrations.
+- `dayOfMonth` does not control the contract and does not trigger a job.
+- USDC uses the official Stellar testnet issuer `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`.
+- A mainnet-looking contract ID previously shown in project materials is unverified and is not release proof.
+- Existing database rows may contain legacy local `settled`/`collected` demo states; the UI labels them honestly and new endpoints do not create them.
+
+## Verified testnet proof
+
+- **Contract:** `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
+- **Contract explorer:** [Stellar Expert testnet](https://stellar.expert/explorer/testnet/contract/CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ)
+- **Freighter-signed release transaction:** `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`
+- **Transaction explorer:** [Stellar Expert testnet](https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2)
+
+This proves a testnet contract release, not mainnet operation, provider settlement, or cash collection. See `contracts/DEPLOYMENT.md` for the deployment record.
+
+## Setup
+
+Requirements: Node.js, pnpm, PostgreSQL, Freighter, and a funded testnet wallet.
 
 ```bash
 pnpm install
 cp .env.example .env.local
-# set DRIZZLE_DATABASE_URL and a 32+ char SESSION_SECRET in .env.local
-pnpm run db:push
-pnpm run seed        # Indonesian persona + one real testnet payout
-pnpm run dev         # http://localhost:3005
+# Set DRIZZLE_DATABASE_URL and a unique 32+ character SESSION_SECRET.
+pnpm db:push
+pnpm dev
 ```
 
----
+Optional demo data:
 
-<div align="center">
+```bash
+pnpm seed
+```
 
-**Bakti — a dignified monthly allowance for the parents back home. Built on Stellar.**
+A real seeded testnet payment is attempted only if `DEMO_SENDER_SECRET` is explicitly supplied. Never commit secrets.
 
-</div>
+## Test and build
+
+```bash
+pnpm lint
+pnpm test
+pnpm build
+python3 slides/build_deck.py
+```
+
+Contract tests:
+
+```bash
+cd contracts
+make test
+```
+
+## Sources
+
+- BSP, Overseas Filipino Workers' Remittances: https://www.bsp.gov.ph/statistics/external/ofw.aspx
+- BSP, Cash Remittances by Country Source: https://www.bsp.gov.ph/statistics/external/ofw2.aspx
+- Stellar, Anchors: https://developers.stellar.org/docs/learn/fundamentals/anchors
+- Stellar Anchor Platform, SEP-24: https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
+- MoneyGram, Integrate MoneyGram Ramps: https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps

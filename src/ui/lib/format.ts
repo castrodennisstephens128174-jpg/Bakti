@@ -50,9 +50,9 @@ export function ordinal(n: number): string {
 }
 
 export const PAYOUT_LABEL: Record<PayoutStatus, string> = {
-  scheduled: 'Due now',
-  sent: 'Sent on-chain',
-  settled: 'Cash ready',
-  collected: 'Collected',
+  scheduled: 'Ready to send',
+  sent: 'Verified on-chain',
+  settled: 'Provider confirmed',
+  collected: 'Collection confirmed',
   failed: 'Failed',
 };

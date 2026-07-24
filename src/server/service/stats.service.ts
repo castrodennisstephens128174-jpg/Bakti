@@ -1,7 +1,7 @@
 import { statsRepo } from '@/server/db/repos/stats.repo';
 
 export const statsService = {
-  /** Public, real interaction counts drawn from sessions + core entities. */
+  /** Public app-database counts; not provider reports or market traction. */
   async global() {
     const c = await statsRepo.counts();
     return {

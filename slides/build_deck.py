@@ -1,244 +1,312 @@
 #!/usr/bin/env python3
-"""Build Bakti.pptx from slides/slides.md source."""
+"""Build the nine-slide Bakti pitch deck from slides/slides.md."""
 
-import os
+from pathlib import Path
 from pptx import Presentation
-from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.util import Inches, Pt
 
-SLIDE_W = Inches(13.33)
+BASE = Path(__file__).resolve().parent
+SOURCE = BASE / "slides.md"
+OUTPUT = BASE / "Bakti.pptx"
+
+SLIDE_W = Inches(13.333)
 SLIDE_H = Inches(7.5)
 
-# Brand palette from app/globals.css tokens
-BRAND_BLUE = RGBColor(0x02, 0x84, 0xC7)   # --color-brand-700
-INK       = RGBColor(0x0B, 0x1B, 0x2B)   # --color-ink
-INK_SOFT  = RGBColor(0x51, 0x61, 0x7A)   # --color-ink-soft
-ACCENT    = RGBColor(0xFD, 0xF1, 0xE0)   # --color-accent-50 / warm bg
-MIST      = RGBColor(0xF8, 0xF5, 0xF0)   # --color-mist
-WHITE     = RGBColor(0xFF, 0xFF, 0xFF)
+BRAND = RGBColor(0x03, 0x69, 0xA1)
+BRAND_SOFT = RGBColor(0xE6, 0xF3, 0xFB)
+BRAND_LINE = RGBColor(0x9D, 0xCB, 0xEA)
+INK = RGBColor(0x0B, 0x1B, 0x2B)
+INK_SOFT = RGBColor(0x51, 0x61, 0x7A)
+ACCENT = RGBColor(0xFD, 0xF1, 0xE0)
+LINE = RGBColor(0xDB, 0xE3, 0xEE)
+WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 
-# Fonts (Manrope + Fraunces from next/font/google)
 FONT_HEAD = "Fraunces"
 FONT_BODY = "Manrope"
 
+HEADERS = ["TITLE", "PERSONA", "EVIDENCE", "CUSTOMER", "PRODUCT", "FLOW", "WHY", "MODEL", "STATUS"]
 
-def parse_slides(path: str) -> list[dict]:
-    slides = []
+
+def parse_source(path: Path) -> list[dict]:
+    slides: list[dict] = []
     current: dict | None = None
-    with open(path) as f:
-        for raw in f:
-            line = raw.rstrip()
-            if not line:
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("# Bakti Pitch") or line.startswith("# Exactly"):
+            continue
+        if line.startswith("# "):
+            header = line[2:].strip()
+            if header not in HEADERS:
                 continue
-            if line.startswith("# TITLE"):
-                if current:
-                    slides.append(current)
-                current = {"type": "title", "lines": []}
-            elif line.startswith("# THE MOMENT"):
-                if current:
-                    slides.append(current)
-                current = {"type": "moment", "lines": []}
-            elif line.startswith("# PROBLEM"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Problem", "lines": []}
-            elif line.startswith("# MARKET"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Market", "lines": []}
-            elif line.startswith("# CUSTOMER"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Customer", "lines": []}
-            elif line.startswith("# SOLUTION"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Solution", "lines": []}
-            elif line.startswith("# WHY STELLAR"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Why Stellar", "lines": []}
-            elif line.startswith("# FLOW"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Flow", "lines": []}
-            elif line.startswith("# LIVE PROOF"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Live Proof", "lines": []}
-            elif line.startswith("# WHY US"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Why Us / Why Now", "lines": []}
-            elif line.startswith("# BUSINESS MODEL"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Business Model", "lines": []}
-            elif line.startswith("# GO-TO-MARKET"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Go-to-Market", "lines": []}
-            elif line.startswith("# ANCHOR INTEGRATION"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Anchor Integration", "lines": []}
-            elif line.startswith("# TRACTION"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Traction", "lines": []}
-            elif line.startswith("# ROADMAP"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "Roadmap", "lines": []}
-            elif line.startswith("# THE ASK"):
-                if current:
-                    slides.append(current)
-                current = {"type": "section", "title": "The Ask", "lines": []}
-            elif line.startswith("# "):
-                # Section dividers we don't treat as slides
-                if current:
-                    slides.append(current)
-                    current = None
-            else:
-                if current is not None:
-                    current["lines"].append(line)
+            if current:
+                slides.append(current)
+            current = {"type": header.lower(), "lines": []}
+        elif current:
+            current["lines"].append(line)
     if current:
         slides.append(current)
+    if len(slides) != 9:
+        raise ValueError(f"Expected exactly 9 slides, found {len(slides)}")
     return slides
 
 
-def add_slide(prs: Presentation) -> object:
-    layout = prs.slide_layouts[6]  # blank
-    return prs.slides.add_slide(layout)
+def add_blank(prs: Presentation):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    slide.background.fill.solid()
+    slide.background.fill.fore_color.rgb = WHITE
+    add_rect(slide, 0, 0, SLIDE_W, Inches(0.07), BRAND, BRAND)
+    return slide
 
 
-def set_bg(slide, color: RGBColor):
-    fill = slide.background.fill
-    fill.solid()
-    fill.fore_color.rgb = color
-
-
-def add_rect(slide, left, top, width, height, fill_color=None, line_color=None):
-    shape = slide.shapes.add_shape(1, left, top, width, height)  # MSO_SHAPE_TYPE.RECTANGLE
-    if fill_color:
-        shape.fill.solid()
-        shape.fill.fore_color.rgb = fill_color
-    else:
-        shape.fill.background()
-    if line_color:
-        shape.line.color.rgb = line_color
-    else:
-        shape.line.fill.background()
+def add_rect(slide, left, top, width, height, fill, line=LINE, radius=False, dashed=False):
+    shape_type = MSO_SHAPE.ROUNDED_RECTANGLE if radius else MSO_SHAPE.RECTANGLE
+    shape = slide.shapes.add_shape(shape_type, left, top, width, height)
+    shape.fill.solid()
+    shape.fill.fore_color.rgb = fill
+    shape.line.color.rgb = line
+    shape.line.width = Pt(1.2)
+    if dashed:
+        shape.line.dash_style = 4
     return shape
 
 
-def add_text(slide, text, left, top, width, height,
-             font_size=18, bold=False, color=INK, align=PP_ALIGN.LEFT,
-             font_name=FONT_BODY, wrap=True):
-    txBox = slide.shapes.add_textbox(left, top, width, height)
-    tf = txBox.text_frame
-    tf.word_wrap = wrap
-    p = tf.paragraphs[0]
+def add_text(
+    slide,
+    text,
+    left,
+    top,
+    width,
+    height,
+    size=18,
+    color=INK,
+    bold=False,
+    font=FONT_BODY,
+    align=PP_ALIGN.LEFT,
+    valign=MSO_ANCHOR.TOP,
+    margin=0,
+):
+    box = slide.shapes.add_textbox(left, top, width, height)
+    frame = box.text_frame
+    frame.clear()
+    frame.word_wrap = True
+    frame.margin_left = Inches(margin)
+    frame.margin_right = Inches(margin)
+    frame.margin_top = Inches(margin)
+    frame.margin_bottom = Inches(margin)
+    frame.vertical_anchor = valign
+    p = frame.paragraphs[0]
     p.alignment = align
     run = p.add_run()
     run.text = text
-    run.font.size = Pt(font_size)
+    run.font.name = font
+    run.font.size = Pt(size)
     run.font.bold = bold
     run.font.color.rgb = color
-    run.font.name = font_name
-    return txBox
+    return box
 
 
-def build_title_slide(slide, data):
-    set_bg(slide, WHITE)
-    # Accent band at top
-    add_rect(slide, 0, 0, SLIDE_W, Inches(0.15), fill_color=BRAND_BLUE)
-    # Bottom band
-    add_rect(slide, 0, Inches(6.5), SLIDE_W, Inches(1.0), fill_color=BRAND_BLUE)
+def add_rich_lines(slide, lines, left, top, width, height, size=16, bullet=True):
+    box = slide.shapes.add_textbox(left, top, width, height)
+    frame = box.text_frame
+    frame.clear()
+    frame.word_wrap = True
+    for index, line in enumerate(lines):
+        p = frame.paragraphs[0] if index == 0 else frame.add_paragraph()
+        p.level = 0
+        p.space_after = Pt(7)
+        p.line_spacing = 1.05
+        p.text = ("• " if bullet else "") + line
+        p.font.name = FONT_BODY
+        p.font.size = Pt(size)
+        p.font.color.rgb = INK_SOFT
+    return box
 
+
+def add_header(slide, kicker, title, num):
+    add_text(slide, kicker.upper(), Inches(0.72), Inches(0.34), Inches(10.5), Inches(0.32), 11, BRAND, True)
+    add_text(slide, title, Inches(0.72), Inches(0.73), Inches(11.8), Inches(0.72), 27, INK, True, FONT_HEAD)
+    add_text(slide, f"{num} / 9", Inches(11.95), Inches(0.32), Inches(0.62), Inches(0.25), 9, INK_SOFT, False, FONT_BODY, PP_ALIGN.RIGHT)
+
+
+def add_tag(slide, text, left, top, width, future=False):
+    add_rect(slide, left, top, width, Inches(0.34), WHITE if future else BRAND_SOFT, BRAND_LINE, radius=True, dashed=future)
+    add_text(slide, text, left, top + Inches(0.02), width, Inches(0.25), 9, BRAND, True, FONT_BODY, PP_ALIGN.CENTER)
+
+
+def build_title(slide, data, num):
     lines = data["lines"]
-    # Line 0 = title, line 1 = subtitle
-    title = lines[0] if len(lines) > 0 else "Bakti"
-    subtitle = lines[1] if len(lines) > 1 else ""
-
-    add_text(slide, title,
-             Inches(0.8), Inches(1.8), Inches(11.5), Inches(2.0),
-             font_size=52, bold=True, color=BRAND_BLUE, align=PP_ALIGN.LEFT,
-             font_name=FONT_HEAD)
-
-    add_text(slide, subtitle,
-             Inches(0.8), Inches(3.8), Inches(11.5), Inches(1.0),
-             font_size=22, bold=False, color=INK_SOFT, align=PP_ALIGN.LEFT,
-             font_name=FONT_BODY)
-
-
-def build_moment_slide(slide, data):
-    set_bg(slide, ACCENT)
-    add_rect(slide, 0, 0, SLIDE_W, Inches(0.12), fill_color=BRAND_BLUE)
-    add_rect(slide, 0, Inches(6.5), SLIDE_W, Inches(1.0), fill_color=BRAND_BLUE)
-
-    add_text(slide, "THE MOMENT",
-             Inches(0.8), Inches(0.5), Inches(11.5), Inches(0.6),
-             font_size=14, bold=True, color=BRAND_BLUE, font_name=FONT_BODY)
-
-    body = "\n\n".join(data["lines"])
-    add_text(slide, body,
-             Inches(0.8), Inches(1.2), Inches(11.5), Inches(5.0),
-             font_size=24, bold=False, color=INK, font_name=FONT_BODY)
+    add_text(slide, "HOP STELLAR 2026 · PRODUCT PITCH", Inches(0.75), Inches(0.7), Inches(8), Inches(0.3), 12, BRAND, True)
+    add_text(slide, lines[0], Inches(0.75), Inches(1.15), Inches(8.5), Inches(1.0), 54, BRAND, True, FONT_HEAD)
+    add_text(slide, lines[1], Inches(0.75), Inches(2.15), Inches(11), Inches(0.65), 27, INK, True, FONT_HEAD)
+    add_text(slide, lines[2], Inches(0.75), Inches(2.95), Inches(11), Inches(0.45), 18, INK_SOFT)
+    add_rect(slide, Inches(0.75), Inches(3.8), Inches(5.75), Inches(1.65), BRAND_SOFT, BRAND_LINE, radius=True)
+    add_tag(slide, "CURRENT", Inches(1.02), Inches(4.03), Inches(1.0))
+    add_text(slide, "Stellar testnet prototype", Inches(1.02), Inches(4.5), Inches(5), Inches(0.32), 18, INK, True)
+    add_text(slide, "Signed XLM escrow releases, direct payments, and on-chain verification.", Inches(1.02), Inches(4.9), Inches(5), Inches(0.42), 13, INK_SOFT)
+    add_rect(slide, Inches(6.82), Inches(3.8), Inches(5.75), Inches(1.65), WHITE, BRAND_LINE, radius=True, dashed=True)
+    add_tag(slide, "PLANNED", Inches(7.09), Inches(4.03), Inches(1.0), True)
+    add_text(slide, "Licensed PHP cash-out", Inches(7.09), Inches(4.5), Inches(5), Inches(0.32), 18, INK, True)
+    add_text(slide, "Provider SEP-24, KYC, routing/status, and confirmed collection.", Inches(7.09), Inches(4.9), Inches(5), Inches(0.42), 13, INK_SOFT)
+    add_text(slide, lines[3], Inches(0.75), Inches(6.75), Inches(11.8), Inches(0.25), 10, INK_SOFT)
+    add_text(slide, f"{num} / 9", Inches(11.95), Inches(0.32), Inches(0.62), Inches(0.25), 9, INK_SOFT, False, FONT_BODY, PP_ALIGN.RIGHT)
 
 
-def build_section_slide(slide, data):
-    set_bg(slide, WHITE)
-    add_rect(slide, 0, 0, Inches(0.2), SLIDE_H, fill_color=BRAND_BLUE)
-    add_rect(slide, 0, Inches(6.8), SLIDE_W, Inches(0.7), fill_color=BRAND_BLUE)
-
-    title = data.get("title", "")
-    add_text(slide, title.upper(),
-             Inches(0.7), Inches(0.35), Inches(12.0), Inches(0.7),
-             font_size=18, bold=True, color=BRAND_BLUE, font_name=FONT_BODY)
-
-    lines = data["lines"]
-    # Split into two columns if many lines
-    if len(lines) <= 6:
-        body = "\n".join(f"• {l}" for l in lines)
-        add_text(slide, body,
-                 Inches(0.7), Inches(1.1), Inches(12.0), Inches(5.4),
-                 font_size=18, bold=False, color=INK, font_name=FONT_BODY)
-    else:
-        half = (len(lines) + 1) // 2
-        col1 = "\n".join(f"• {l}" for l in lines[:half])
-        col2 = "\n".join(f"• {l}" for l in lines[half:])
-        add_text(slide, col1,
-                 Inches(0.7), Inches(1.1), Inches(5.9), Inches(5.4),
-                 font_size=17, bold=False, color=INK, font_name=FONT_BODY)
-        add_text(slide, col2,
-                 Inches(6.8), Inches(1.1), Inches(5.9), Inches(5.4),
-                 font_size=17, bold=False, color=INK, font_name=FONT_BODY)
+def build_persona(slide, data, num):
+    add_header(slide, data["lines"][0], "“I want support to be ready around salary day.”", num)
+    add_tag(slide, data["lines"][1].upper(), Inches(0.75), Inches(1.62), Inches(3.2))
+    body = data["lines"][2:]
+    add_text(slide, body[0], Inches(0.75), Inches(2.2), Inches(7.2), Inches(1.75), 23, INK, False, FONT_HEAD)
+    add_text(slide, body[1], Inches(0.75), Inches(4.2), Inches(7.2), Inches(0.78), 16, INK_SOFT)
+    add_text(slide, body[2], Inches(0.75), Inches(5.25), Inches(7.2), Inches(0.55), 19, BRAND, True)
+    add_rect(slide, Inches(8.65), Inches(1.6), Inches(3.9), Inches(4.9), ACCENT, LINE, radius=True)
+    circle = slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(9.75), Inches(2.45), Inches(1.7), Inches(1.7))
+    circle.fill.solid(); circle.fill.fore_color.rgb = BRAND; circle.line.fill.background()
+    face = slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(10.05), Inches(2.72), Inches(1.1), Inches(0.85))
+    face.fill.solid(); face.fill.fore_color.rgb = ACCENT; face.line.fill.background()
+    add_text(slide, "MARIA", Inches(9.35), Inches(4.55), Inches(2.5), Inches(0.4), 12, INK_SOFT, True, FONT_BODY, PP_ALIGN.CENTER)
+    add_text(slide, "Illustrative persona", Inches(9.35), Inches(5.02), Inches(2.5), Inches(0.35), 13, INK, True, FONT_BODY, PP_ALIGN.CENTER)
+    add_text(slide, "Not a claimed interview", Inches(9.35), Inches(5.42), Inches(2.5), Inches(0.35), 11, INK_SOFT, False, FONT_BODY, PP_ALIGN.CENTER)
 
 
-def build_deck(slides_md: str, output_path: str):
+def build_evidence(slide, data, num):
+    add_header(slide, data["lines"][0], "A large national flow, with a measured Malaysia signal", num)
+    stats = data["lines"][1:4]
+    for i, line in enumerate(stats):
+        value, label = [part.strip() for part in line.split("|", 1)]
+        left = Inches(0.75 + i * 4.08)
+        add_rect(slide, left, Inches(1.7), Inches(3.75), Inches(1.75), ACCENT, ACCENT, radius=True)
+        add_text(slide, value, left + Inches(0.22), Inches(1.98), Inches(3.3), Inches(0.55), 25, INK, True, FONT_HEAD)
+        add_text(slide, label, left + Inches(0.22), Inches(2.62), Inches(3.3), Inches(0.6), 12, INK_SOFT)
+    add_rect(slide, Inches(0.75), Inches(3.8), Inches(11.82), Inches(1.6), WHITE, LINE, radius=True)
+    add_text(slide, data["lines"][4], Inches(1.0), Inches(4.12), Inches(11.2), Inches(0.5), 16, INK, True)
+    add_text(slide, data["lines"][5], Inches(1.0), Inches(4.73), Inches(11.2), Inches(0.42), 13, INK_SOFT)
+    add_text(slide, data["lines"][6], Inches(0.75), Inches(6.65), Inches(11.8), Inches(0.25), 8.5, INK_SOFT)
+
+
+def build_customer(slide, data, num):
+    add_header(slide, data["lines"][0], "One narrow customer; one clear job to be done", num)
+    rows = data["lines"][1:]
+    top = 1.62
+    for idx, line in enumerate(rows):
+        key, value = [part.strip() for part in line.split("|", 1)]
+        fill = BRAND_SOFT if idx % 2 == 0 else WHITE
+        add_rect(slide, Inches(0.75), Inches(top + idx * 0.67), Inches(11.82), Inches(0.58), fill, LINE, radius=True)
+        add_text(slide, key, Inches(0.98), Inches(top + 0.13 + idx * 0.67), Inches(2.45), Inches(0.28), 12, INK, True)
+        add_text(slide, value, Inches(3.22), Inches(top + 0.13 + idx * 0.67), Inches(9.0), Inches(0.3), 12, INK_SOFT)
+
+
+def split_sections(lines: list[str]) -> tuple[list[str], list[str]]:
+    marker = lines.index("NEXT — PLANNED")
+    return lines[1:marker], lines[marker + 1:]
+
+
+def build_product(slide, data, num):
+    add_header(slide, data["lines"][0], "Do not confuse on-chain proof with cash delivery", num)
+    current, future = split_sections(data["lines"][1:])
+    add_rect(slide, Inches(0.75), Inches(1.65), Inches(5.72), Inches(4.75), BRAND_SOFT, BRAND_LINE, radius=True)
+    add_tag(slide, "TODAY · WORKING", Inches(1.02), Inches(1.9), Inches(1.62))
+    add_rich_lines(slide, current, Inches(1.02), Inches(2.48), Inches(5.05), Inches(3.6), 13.5)
+    add_rect(slide, Inches(6.85), Inches(1.65), Inches(5.72), Inches(4.75), WHITE, BRAND_LINE, radius=True, dashed=True)
+    add_tag(slide, "NEXT · PLANNED", Inches(7.12), Inches(1.9), Inches(1.6), True)
+    add_rich_lines(slide, future, Inches(7.12), Inches(2.48), Inches(5.05), Inches(3.6), 13.5)
+
+
+def build_flow(slide, data, num):
+    add_header(slide, data["lines"][0], "Solid is current. Dashed is planned.", num)
+    labels = [
+        ("Sender", "Filipino worker\nin Malaysia"),
+        ("Bakti plan", "Recipient + amount\n+ planning date"),
+        ("Stellar", "Direct payment or\nXLM escrow release"),
+        ("Recipient wallet", "Entered Stellar\naddress"),
+    ]
+    for idx, (title, subtitle) in enumerate(labels):
+        left = 0.72 + idx * 3.14
+        add_rect(slide, Inches(left), Inches(2.05), Inches(2.25), Inches(1.55), WHITE, BRAND_LINE, radius=True)
+        add_text(slide, title, Inches(left + 0.12), Inches(2.37), Inches(2.0), Inches(0.3), 16, INK, True, FONT_BODY, PP_ALIGN.CENTER)
+        add_text(slide, subtitle, Inches(left + 0.12), Inches(2.82), Inches(2.0), Inches(0.55), 11, INK_SOFT, False, FONT_BODY, PP_ALIGN.CENTER)
+        if idx < 3:
+            add_text(slide, "→", Inches(left + 2.31), Inches(2.53), Inches(0.75), Inches(0.4), 25, BRAND, True, FONT_BODY, PP_ALIGN.CENTER)
+    add_rect(slide, Inches(0.75), Inches(4.25), Inches(11.82), Inches(1.2), WHITE, BRAND_LINE, radius=True, dashed=True)
+    add_tag(slide, "PLANNED", Inches(1.0), Inches(4.52), Inches(1.0), True)
+    add_text(slide, data["lines"][2], Inches(2.2), Inches(4.48), Inches(9.95), Inches(0.48), 14, INK, True)
+    add_text(slide, data["lines"][3], Inches(0.95), Inches(5.75), Inches(11.4), Inches(0.35), 12, INK_SOFT, False, FONT_BODY, PP_ALIGN.CENTER)
+    add_text(slide, data["lines"][4], Inches(0.95), Inches(6.15), Inches(11.4), Inches(0.35), 12, INK_SOFT, False, FONT_BODY, PP_ALIGN.CENTER)
+
+
+def build_why(slide, data, num):
+    add_header(slide, data["lines"][0], "Verifiable rails now; regulated last mile next", num)
+    left_lines = data["lines"][1:6]
+    right_lines = data["lines"][6:8]
+    add_rect(slide, Inches(0.75), Inches(1.65), Inches(5.72), Inches(4.8), BRAND_SOFT, BRAND_LINE, radius=True)
+    add_text(slide, "WHY STELLAR NOW", Inches(1.02), Inches(1.96), Inches(2.5), Inches(0.3), 12, BRAND, True)
+    add_rich_lines(slide, left_lines, Inches(1.02), Inches(2.42), Inches(5.05), Inches(3.55), 13.5)
+    add_rect(slide, Inches(6.85), Inches(1.65), Inches(5.72), Inches(4.8), WHITE, BRAND_LINE, radius=True, dashed=True)
+    add_text(slide, "PROVIDER PATH", Inches(7.12), Inches(1.96), Inches(2.5), Inches(0.3), 12, BRAND, True)
+    add_rich_lines(slide, right_lines, Inches(7.12), Inches(2.42), Inches(5.05), Inches(3.55), 12.5)
+    add_text(slide, data["lines"][8], Inches(0.75), Inches(6.68), Inches(11.8), Inches(0.22), 8.5, INK_SOFT)
+
+
+def build_model(slide, data, num):
+    add_header(slide, data["lines"][0], "Hypotheses to test — not forecasts", num)
+    lines = data["lines"][1:]
+    marker = lines.index("GTM EXPERIMENTS")
+    model = lines[1:marker]
+    gtm = lines[marker + 1:]
+    add_rect(slide, Inches(0.75), Inches(1.65), Inches(5.72), Inches(4.8), ACCENT, ACCENT, radius=True)
+    add_tag(slide, "UNVALIDATED BUSINESS MODEL", Inches(1.02), Inches(1.92), Inches(2.38))
+    add_rich_lines(slide, model, Inches(1.02), Inches(2.48), Inches(5.05), Inches(3.45), 14)
+    add_rect(slide, Inches(6.85), Inches(1.65), Inches(5.72), Inches(4.8), WHITE, LINE, radius=True)
+    add_tag(slide, "GTM EXPERIMENTS", Inches(7.12), Inches(1.92), Inches(1.72))
+    add_rich_lines(slide, gtm, Inches(7.12), Inches(2.48), Inches(5.05), Inches(3.45), 13.5)
+
+
+def build_status(slide, data, num):
+    add_header(slide, data["lines"][0], "A working testnet core, with an honest last-mile gap", num)
+    lines = data["lines"][1:]
+    not_built = lines.index("NOT BUILT")
+    ask = lines.index("ASK")
+    built = lines[1:not_built]
+    missing = lines[not_built + 1:ask]
+    asks = lines[ask + 1:-1]
+    proof = lines[-1]
+    add_rect(slide, Inches(0.75), Inches(1.65), Inches(5.72), Inches(4.85), BRAND_SOFT, BRAND_LINE, radius=True)
+    add_tag(slide, "BUILT", Inches(1.02), Inches(1.92), Inches(0.78))
+    add_rich_lines(slide, built[:3], Inches(1.02), Inches(2.42), Inches(5.05), Inches(1.92), 12.2)
+    add_text(slide, built[0].split(": ", 1)[1], Inches(1.02), Inches(4.45), Inches(5.05), Inches(0.55), 9.5, INK_SOFT, False, "Menlo")
+    add_text(slide, built[1].split(": ", 1)[1], Inches(1.02), Inches(5.2), Inches(5.05), Inches(0.55), 9.5, INK_SOFT, False, "Menlo")
+    add_rect(slide, Inches(6.85), Inches(1.65), Inches(5.72), Inches(4.85), WHITE, BRAND_LINE, radius=True, dashed=True)
+    add_tag(slide, "ASK", Inches(7.12), Inches(1.92), Inches(0.72), True)
+    add_rich_lines(slide, asks, Inches(7.12), Inches(2.42), Inches(5.05), Inches(2.05), 13.2)
+    add_text(slide, "NOT BUILT", Inches(7.12), Inches(4.68), Inches(1.3), Inches(0.3), 11, BRAND, True)
+    add_text(slide, missing[0], Inches(7.12), Inches(5.08), Inches(5.05), Inches(0.65), 11.5, INK_SOFT)
+    add_text(slide, proof, Inches(0.75), Inches(6.72), Inches(11.8), Inches(0.25), 8.5, INK_SOFT)
+
+
+def build_deck():
+    data = parse_source(SOURCE)
     prs = Presentation()
     prs.slide_width = SLIDE_W
     prs.slide_height = SLIDE_H
-
-    slides = parse_slides(slides_md)
-    for data in slides:
-        slide = add_slide(prs)
-        kind = data["type"]
-        if kind == "title":
-            build_title_slide(slide, data)
-        elif kind == "moment":
-            build_moment_slide(slide, data)
-        else:
-            build_section_slide(slide, data)
-
-    prs.save(output_path)
-    size = os.path.getsize(output_path)
-    print(f"Built {output_path} — {len(slides)} slides, {size // 1024} KB")
+    builders = {
+        "title": build_title,
+        "persona": build_persona,
+        "evidence": build_evidence,
+        "customer": build_customer,
+        "product": build_product,
+        "flow": build_flow,
+        "why": build_why,
+        "model": build_model,
+        "status": build_status,
+    }
+    for num, item in enumerate(data, start=1):
+        slide = add_blank(prs)
+        builders[item["type"]](slide, item, num)
+    prs.save(OUTPUT)
+    print(f"Built {OUTPUT} — {len(prs.slides)} slides — {OUTPUT.stat().st_size // 1024} KB")
 
 
 if __name__ == "__main__":
-    src = os.path.join(os.path.dirname(__file__), "slides.md")
-    out = os.path.join(os.path.dirname(__file__), "Bakti.pptx")
-    build_deck(src, out)
+    build_deck()

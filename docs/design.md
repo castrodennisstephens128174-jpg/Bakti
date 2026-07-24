@@ -1,78 +1,110 @@
-# Bakti — Design
+# Bakti — Product and UX Design
 
-## UX Principles
+## Product boundary
 
-1. **Sender-first.** The product is operated by a working adult abroad who has a
-   Stellar wallet and may be comfortable with DeFi. Crypto literacy is assumed
-   on the send side, zero assumed on the receive side.
-2. **Receiver dignity.** The parent never touches a wallet, a seed phrase, or a
-   blockchain concept. The only artifact they receive is a short reference code
-   and a pickup point name.
-3. **No sign-up.** The app is wallet-gated only. No email, no password, no KYC
-   for the sender (KYC lives with the wallet provider, not Bakti).
-4. **Provable, not opaque.** Every payment is a real Stellar transaction. The
-   sender can link to stellar.expert and show the exact receipt.
+Bakti currently serves a sender with a Stellar wallet. It helps that person record a family support plan and sign a transfer to a recipient Stellar address.
 
-## Screen Flow
+The intended research corridor is **Malaysia → Philippines**. The initial target user is a Filipino worker in Malaysia planning salary-day support for a family member in the Philippines.
 
+The current experience does not hide the missing last mile:
+
+- The recipient must have a Stellar address.
+- No licensed anchor or MoneyGram integration is connected.
+- No KYC, quote, provider deposit route, pickup reference, PHP cash-out, or provider collection status exists.
+- The selected day is a reminder/planning field only.
+
+## UX principles
+
+1. **Start with the human job.** Name the worker, family member, support amount, and planning date before explaining blockchain.
+2. **Keep current and planned flows visually distinct.** Implemented paths use solid cards/lines; provider steps use dashed treatment and “Not connected” labels.
+3. **Never turn ledger confirmation into a cash claim.** “Verified on-chain” means the Stellar transaction was confirmed, nothing more.
+4. **Show the actual destination.** Current transfers go to the entered recipient Stellar address.
+5. **Ask for signatures honestly.** Freighter signs a custom session challenge and each escrow/payment action.
+6. **Treat dates as metadata.** Copy must not imply that Bakti schedules or sends monthly payments automatically.
+7. **Keep evidence inspectable.** Transaction hashes link to the configured network explorer.
+
+## Screen flow
+
+```text
+Landing (public)
+  → Dashboard / support plans (wallet session required for data)
+      → Create support plan
+          - family member
+          - recipient Stellar address
+          - Malaysia → Philippines research corridor
+          - XLM escrow or direct USDC plan
+          - reminder day (planning only)
+      → Support plan detail
+          - sign XLM release or direct transfer
+          - SEP-7 direct pay link
+          - recipient Horizon watcher
+          - planned last-mile integration panel
+          - payment records and tx proof
+  → Prototype database activity (public)
 ```
-Landing (/, public)
-  → Dashboard (/dashboard, wallet-gated)
-      → Create Allowance (inline form)
-      → Allowance Detail (/allowances/:id)
-          → Pay this month (signed release OR direct payment)
-          → Confirm collected
-      → Stats (/stats, public)
-```
 
-## Payout Status Machine
+## Status language
 
-```
-scheduled ──send──▶ sent ──settle──▶ settled ──collect──▶ collected
-     │                │
-     └─────fail───────┘
-```
+| Stored status | Visible label | Meaning |
+|---|---|---|
+| `scheduled` | Ready to send | An app record exists; no transfer is automatic |
+| `sent` | Verified on-chain | Horizon or Soroban RPC confirmed the transaction |
+| `settled` | Provider confirmed | Reserved/legacy until a provider adapter exists |
+| `collected` | Collection confirmed | Reserved/legacy until provider collection evidence exists |
+| `failed` | Failed | An attempted flow was recorded as failed |
 
-Allowed transitions are enforced by `nextPayoutStatus()` in
-`src/server/service/payout.service.ts`. Invalid transitions throw CONFLICT (409).
+Manual “confirm collected” UI is removed. The endpoint rejects manual collection claims.
 
-## Allowance Status Machine
+## Allowance lifecycle
 
-```
+```text
 active ──pause──▶ paused ──resume──▶ active
-   │
-   └───end──▶ ended
+   │                 │
+   └──────end────────┘
 ```
 
-Enforced by `nextAllowanceStatus()` in
-`src/server/service/allowance.service.ts`.
+Paused and ended plans cannot build or record a send/release.
 
-## Corridors
+## Asset behavior
 
-Stored as free-text in `allowances.corridor`. Displayed in the dashboard select.
-Corridor list is hard-coded in `app/dashboard/page.tsx` as `CORRIDORS`.
+### XLM
 
-Current corridors (demo, anchor TBD):
+- Creating the plan signs `create_schedule` and pre-funds `amount × periods` in the Soroban contract.
+- Each release requires a signed contract invocation through the app.
+- `LEDGERS_PER_PERIOD = 60` is a demonstration interval, not a month.
 
-- Philippines · Cash pickup
-- Indonesia · Cash pickup
-- Vietnam · Cash pickup
-- Malaysia · Cash pickup
-- Thailand · Cash pickup
+### USDC
 
-## Token / Asset
+- Creating the plan stores metadata only.
+- “Send now” creates a direct classic payment to the recipient address.
+- The default issuer is the official Stellar testnet USDC issuer.
 
-- **XLM** — escrowed via the BaktiEscrow Soroban contract.
-- **USDC** — classic Horizon payment. USDC asset issuer is
-  `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`.
+## Session behavior
 
-## Wallet
+Bakti creates a transaction containing `manageData("bakti_auth", nonce)`. Freighter signs it, and the server verifies the signature and nonce before minting an app session.
 
-Freighter is the primary wallet. SEP-7 deep links open Freighter (or any
-SEP-7-aware wallet). Passphrase is pinned to the app's network, not the
-wallet's active network.
+This is custom authentication, not SEP-10. A future anchor integration will need that anchor's SEP-10 flow separately.
 
-## Cadence
+## Last-mile panel
 
-Testnet: 60 ledgers ≈ 5 minutes per period. This is a demo cadence only.
-Production would use `30 * 17_280 = 518_400` ledgers (approximately 30 days).
+The allowance detail screen should always explain that the following are planned:
+
+1. Provider onboarding, commercial/compliance approval, and allowlisting.
+2. SEP-1 and anchor SEP-10.
+3. Hosted SEP-24 and KYC.
+4. Provider quote/limits where applicable.
+5. Provider-approved deposit routing.
+6. Status, reference, cash-out, and collection confirmation.
+
+MoneyGram Ramps may be named only as a target path, never as a partner or existing route.
+
+## Metrics page
+
+All numbers are app database counts. The page distinguishes:
+
+- public keys/session rows,
+- support-plan records,
+- payment records,
+- legacy local collection acknowledgements.
+
+It must not call them user traction, live provider results, or verified cash pickup.

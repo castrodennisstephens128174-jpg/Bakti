@@ -19,9 +19,9 @@ type PaymentOp = {
  * Verify a REAL on-chain allowance payment: transaction `txHash` must be
  * successful, sourced from `from`, and contain a payment of the expected
  * asset/amount to `to`. Amounts are read from Horizon and never trusted from
- * the client. `to` may be a muxed (M...) address; Horizon reports the muxed
- * form on `to_muxed` while `to` holds the underlying G-account, so we match the
- * base account. Returns nothing on success; throws on any mismatch.
+ * the client. Current app flows pay the entered recipient G-account directly;
+ * no anchor or muxed deposit destination is implied. Returns nothing on success
+ * and throws on any mismatch.
  */
 export async function verifyAllowancePayment(params: {
   txHash: string;

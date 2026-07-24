@@ -3,8 +3,8 @@
  *
  *   network.ts  — passphrase / Horizon / explorer slug / asset resolution
  *   horizon.ts  — verify a real on-chain allowance payment from Horizon
- *   muxed.ts    — SEP-23 muxed attribution for the anchor's cash-pickup account
- *   payuri.ts   — SEP-7 payment request URI (QR pay from any SEP-7 wallet)
+ *   muxed.ts    — unused muxed-address helper retained for future provider work
+ *   payuri.ts   — SEP-7 direct payment request URI for the recipient address
  */
 
 export * from './contract';

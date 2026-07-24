@@ -2,7 +2,7 @@
   "name": "bakti",
   "version": "1.0.0",
   "private": true,
-  "description": "Bakti — a dignified monthly allowance for the parents back home, sent on Stellar and collected as local cash.",
+  "description": "Bakti — a testnet prototype for planning family support and sending verifiable Stellar payments to a recipient address.",
   "scripts": {
     "dev": "next dev -p ${PORT:-3005}",
     "build": "next build",

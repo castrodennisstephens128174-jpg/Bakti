@@ -30,7 +30,7 @@ export const allowances = pgTable(
     escrowTxHash: text('escrow_tx_hash'),
     status: allowanceStatusEnum('status').notNull().default('active'),
     note: text('note'),
-    network: text('network').notNull().default('public'),
+    network: text('network').notNull().default('testnet'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({ ownerIdx: index('allowances_owner_idx').on(t.publicKey) }),

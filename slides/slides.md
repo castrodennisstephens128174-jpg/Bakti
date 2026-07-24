@@ -1,71 +1,96 @@
-# Bakti Pitch Deck — slides.md (source)
-# Format: one line = one slide. 9 slides · 3 minutes · Hop Stellar 2026
+# Bakti Pitch Deck
+# Exactly 9 slides · Hop Stellar 2026
 
 # TITLE
-Bakti | A monthly allowance your parents collect cash.
-Hop Stellar · APAC Hackathon 2026 · Track A · Payments & Commerce
+Bakti
+Plan salary-day support. Verify the transfer.
+Filipino workers in Malaysia → family in the Philippines
+Stellar testnet prototype · licensed cash-out is the next integration
 
-# THE MOMENT
-"I always meant to send money to Ayah."
-Dewi is an Indonesian caregiver in Singapore. Some months she remembers. Some months — between double shifts, the money slips away. When she forgets, her father stretches his medicine.
-He doesn't use crypto. He uses the corner pickup shop.
-Bakti isn't about transfer. It's about a standing allowance that lands every month, in trust.
+# PERSONA
+Human problem / target persona
+Illustrative persona — not a claimed interview
+Maria is a Filipino service worker in Kuala Lumpur. Around salary day she wants to set aside support for her mother in the Philippines, remember the commitment, and know where the transfer went.
+Today she still needs her mother's Stellar address. Maria signs every transfer; Bakti does not send automatically.
+Job: make family support intentional, legible, and verifiable.
 
-# PROBLEM
-Remittances reach wallets. They don't reach habits.
-SEA diaspora sends >$100B/year home — much of it from children supporting elderly parents.
-Support today is ad-hoc: depends on the sender remembering in a busy month.
-Apps charge opaque fees; no clean audit when money lands.
-Recipients are often elderly and cannot operate a wallet app.
-A missed month is not abstract — it means skipped medicine or groceries.
-Source: World Bank Migration & Remittances data (KNOMAD, 2024).
+# EVIDENCE
+Corridor evidence — signal, not TAM
+US$39.619B | Philippines personal remittances, 2025 preliminary
+US$35.634B | Philippines cash remittances, 2025 preliminary
+US$675.153M | Malaysia-attributed Philippine cash remittances, 2025 provisional
+Jan–May 2026: US$15.735B personal; US$14.110B cash; US$279.807M Malaysia-attributed cash.
+BSP source-country attribution is the immediate source of funds, not necessarily true origin.
+Source: BSP https://www.bsp.gov.ph/statistics/external/ofw.aspx and https://www.bsp.gov.ph/statistics/external/ofw2.aspx
 
-# MARKET
-Philippines 2024: $38.6B personal remittances (Bangko Sentral ng Pilipinas).
-+3% YoY. Cash remittances alone: $35.6B.
-Top sources: Saudi Arabia, UAE, USA, Singapore, Hong Kong, UK.
-Global average cost to send $200: ~6.5% (World Bank Remittance Prices Worldwide, 2024).
-Malaysia is a top-10 outbound corridor; MY→PH flows through MoneyGram rails into PH cash-pickup.
-Sources: bsp.gov.ph · remittanceprices.worldbank.org
+# CUSTOMER
+Customer and job to be done
+Customer | Filipino worker in Malaysia with a Stellar wallet
+Recipient today | Family member with a Stellar address in the Philippines
+Trigger | Salary day or another chosen planning date
+Functional job | Store recipient + amount + date, then sign a transfer
+Emotional job | Feel responsible without pretending the transfer is automatic
+Evidence job | Open a real transaction hash and verify the destination
+Research next | Recipient cash preference, funding rail, provider trust, compliance path
 
-# SOLUTION
-A standing allowance that lands on a fixed day, in local cash.
-Step 1 — Schedule. Sender signs one payment in Freighter: amount, corridor, day-of-month, recipient.
-Step 2 — Escrow. BaktiEscrow (Soroban) holds the funds and releases one month at a time.
-Step 3 — Anchor off-ramp. A Stellar SEP-24 anchor converts USDC to local fiat and issues a cash-pickup reference.
-Step 4 — Pickup. The parent collects local cash at a MoneyGram pickup point. No wallet, no app on their side.
-Non-custodial end-to-end. Bakti never holds keys or funds.
+# PRODUCT
+Product today vs next
+TODAY — WORKING
+Freighter connection + custom signed manageData session (not SEP-10)
+Support-plan records; reminder day is metadata only
+XLM Soroban escrow/release with 60-ledger demo cadence
+Direct XLM/USDC payment to entered recipient address
+Horizon/RPC verification, SEP-7 direct pay link, recipient watcher
+Status ends at Verified on-chain
+NEXT — PLANNED
+Licensed anchor/provider onboarding and agreements
+SEP-1 + provider SEP-10 + hosted SEP-24
+KYC, quote/limits, approved deposit routing, provider status
+PHP cash-out, provider reference, provider-confirmed collection
+No current MoneyGram partnership or connected cash route
 
 # FLOW
-Sender → Freighter (signs schedule)
-        → Soroban BaktiEscrow (release 1 month per call)
-        → SEP-24 Anchor (USDC → local fiat, cash-pickup reference)
-        → MoneyGram pickup point (parent collects cash)
+One flow — solid is current, dashed is planned
+Sender → Bakti plan → Stellar transfer or XLM escrow → recipient Stellar wallet
+Planned continuation: Stellar/provider deposit → licensed anchor → KYC → PHP cash-out → family member
+Current product requires the recipient wallet address.
+No provider destination, pickup reference, or automatic monthly scheduler is wired.
 
-# WHY STELLAR
-Only chain where the last mile ends in cash.
-Sub-cent fees: a $25 allowance is not eaten by rails ($0.0000027 per tx).
-USDC on Stellar is natively issued by Circle — no bridged assets, no counterparty risk.
-Soroban escrow: permissionless keeper release, auditable on-chain.
-SEP-10 auth, SEP-23 muxed accounts, SEP-24 anchor off-ramp — standardized protocol, not proprietary lock-in.
-Source: stellar.org/developers · stellar.org/case-studies/moneygram
+# WHY
+Why Stellar; why the provider path
+Freighter keeps transaction signing with the sender.
+Horizon and Soroban RPC make the implemented transfers inspectable.
+Soroban demonstrates pre-funded XLM release rules.
+Stellar anchors connect network assets to off-chain rails.
+SEP-24 is a hosted interactive deposit/withdrawal flow with anchor authentication and KYC.
+MoneyGram Ramps is a target path, not a partner: integration requires allowlisting, SEP-1, SEP-10, SEP-24, KYC fields, testing/certification, KYB/compliance, and agreements.
+Published MoneyGram off-ramp range: 5–2,500 USDC. Malaysia and Philippines are listed cash-out only; this does not prove a MY salary cash-in route.
+Sources: Stellar anchors/SEP-24 docs; MoneyGram Ramps integration docs
 
-# LIVE PROOF
-Not a mockup. A real mainnet payout.
-Live app: https://bakti-stellar.vercel.app
-Soroban contract (mainnet): CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
-On-chain release: https://stellar.expert/explorer/public/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
-Sign once. Watch the payout flip Due now → Cash ready.
-Verify on stellar.expert — real, permanent receipt.
+# MODEL
+Business model + GTM hypotheses — unvalidated
+BUSINESS MODEL HYPOTHESES
+Transparent sender service fee within a licensed provider quote
+Provider referral/revenue share where permitted
+Employer, cooperative, or worker-community distribution
+No validated price, take rate, margin, or unit economics
+GTM EXPERIMENTS
+Interview Filipino workers in Malaysia and family recipients
+Test planning/reminder value before automation
+Map compliant Malaysia funding and Philippines payout partners
+Run testnet usability studies for signing, address safety, and proof
+Seek provider sandbox/certification conversations without claiming partnership
 
-# THE ASK
-Pilot anchor partner for SEP-24 integration, cash_pickup type.
-Intro to one Philippines diaspora organization in the Gulf (Saudi / UAE).
-Connections to PH remittance compliance reviewers.
-Funding support for anchor integration legal review.
-Contacts: GitHub issues @ castrodennisstephens128174-jpg/Bakti
-
-# THANK YOU
-A dignified monthly allowance for parents back home.
-Built on Stellar · Live on mainnet · Ready to pilot.
-https://bakti-stellar.vercel.app
+# STATUS
+Build status + ask
+BUILT
+Verified Stellar testnet contract: CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ
+Verified testnet Freighter-signed release: cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
+Direct payment verification; support-plan UI; honest status boundary
+NOT BUILT
+SEP-24, MoneyGram API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling
+ASK
+Customer-discovery introductions in Malaysia
+Licensed anchor/provider technical and compliance review
+Feedback on the planning job before adding last-mile complexity
+Proof: https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2

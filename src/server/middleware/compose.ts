@@ -11,12 +11,10 @@ export type HandlerContext = {
 export type Middleware = (handler: RouteHandler) => RouteHandler;
 
 export function compose(...middlewares: Middleware[]) {
-  // biome-ignore lint/suspicious/noExplicitAny: route ctx shape is provided by Next.
   return (
     handler: RouteHandler,
-  ): ((req: NextRequest, ctx: any) => Promise<Response> | Response) => {
+  ): ((req: NextRequest, ctx: HandlerContext) => Promise<Response> | Response) => {
     const composed = middlewares.reduceRight((acc, mw) => mw(acc), handler);
-    // biome-ignore lint/suspicious/noExplicitAny: route ctx shape is provided by Next.
-    return (req: NextRequest, ctx: any) => composed(req, ctx as HandlerContext);
+    return (req: NextRequest, ctx: HandlerContext) => composed(req, ctx);
   };
 }

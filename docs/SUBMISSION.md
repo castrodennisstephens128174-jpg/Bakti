@@ -1,69 +1,100 @@
-# Bakti — Stellar Submission Summary
+# Bakti — Submission Summary
 
-## Problem
+## Problem and customer
 
-OFW remittances into the Philippines topped **$38 billion in 2024** (World Bank /
-KNOMAD). The average cost of sending $200 globally is still **~6.4%** (WB
-Remittance Prices Q4 2024). Workers send ad-hoc transfers; parents cannot plan
-around income that arrives unpredictably. Missed months mean parents skip medicine
-or bills. Traditional standing orders require a bank account on both sides — most
-OFWs and their parents do not have one.
+Bakti focuses on a specific research customer: **a Filipino worker in Malaysia who plans support around salary day for a family member in the Philippines**.
 
-## Market
+The job is not simply “send crypto.” It is to decide an amount, remember the commitment, direct it to the right family member, and know whether the transfer reached the intended Stellar address. The current prototype tests planning and on-chain proof. It does not yet solve fiat funding or family cash pickup.
 
-- **Philippines 2024 inflow: ~$38B USD.** Forecast ~$38.3B in 2025. Trajectory
-  ~$40B by 2026. (Source: World Bank / KNOMAD, Migration and Development Brief
-  39, December 2024.)
-- **Malaysia → PH/ID/BD/NP/IN outflows: ~$10–12B/year.** Malaysia is primarily a
-  source country; MY→PH is the densest single intra-Asia remittance lane. Average
-  cost MY→PH is **3–5%**, lower than global average.
-- Top source countries into PH: Saudi Arabia, UAE, USA, Singapore, Hong Kong, Qatar,
-  Kuwait, Japan, UK, Canada, Taiwan.
+The persona used in the pitch is illustrative and is not presented as a completed interview.
 
-## Solution
+## Corridor evidence
 
-**Bakti = a standing order, one Stellar payment per month, parent collects local
-cash with a reference code.**
+BSP reports 2025 preliminary Philippine personal remittances of **US$39.619B** and cash remittances of **US$35.634B**, both up 3.3%. Jan–May 2026 preliminary figures were US$15.735B and US$14.110B respectively.
 
-- Sender connects a Stellar wallet (Freighter), names the recipient, sets amount
-  and payout day, picks a corridor.
-- For XLM: signs one `create_schedule` Soroban transaction that escrows the full
-  run (monthly × months) into the BaktiEscrow contract; each month a permissionless
-  `release` call pays out one period.
-- For USDC: classic Horizon-verified payment per period.
-- Anchor off-ramps to a cash-pickup reference. Parent walks to a pickup point
-  and collects local money — no wallet, no crypto on their side.
+BSP reports Malaysia-attributed Philippine cash remittances of **US$661.182M in 2024**, **US$675.153M in 2025 provisional**, and **US$279.807M in Jan–May 2026 provisional**.
 
-## Business Model
+This is evidence that the national market matters and that Malaysia appears in the reported source tables. It is **not** a Malaysia → Philippines TAM calculation: BSP attribution reflects the immediate source of funds and may not be the remittance's true origin.
 
-Take rate on the on-ramp leg once a fiat on-ramp partner (e.g. a PH exchange or
-e-money wallet) signs. Anchor referral fee for driving users to SEP-24 partners.
-Target all-in cost to sender ≤2% once live, compared to 6.4% global average.
+Sources:
 
-## Go-to-Market
+- https://www.bsp.gov.ph/statistics/external/ofw.aspx
+- https://www.bsp.gov.ph/statistics/external/ofw2.aspx
 
-1. **Philippines first.** Coins.ph ecosystem + OFW community channels (Facebook
-   groups, diaspora orgs, remittance clinics in GCC host countries).
-2. **Malaysia → PH second.** Existing high-volume intra-Asia corridor; MY→PH
-   remittance costs already competitive, differentiate on predictability and UX.
-3. **Indonesia, Vietnam, Thailand** — expansion once anchor coverage confirmed per
-   corridor.
+## Product today
+
+```text
+Sender → Bakti plan → Stellar transfer or XLM escrow release → recipient Stellar wallet
+```
+
+- Freighter wallet connection.
+- Custom signed `manageData` session challenge; not SEP-10.
+- Family support plan with amount, recipient address, asset, and reminder day.
+- XLM Soroban escrow and signed release using a short 60-ledger demo cadence.
+- Direct XLM/USDC transfer to the entered recipient Stellar address.
+- Horizon verification for classic payments and Soroban RPC confirmation for contract releases.
+- SEP-7 direct pay link.
+- Best-effort Horizon watcher for recipient payments.
+- Status stops at **Verified on-chain**. No provider settlement is inferred.
+
+The reminder day is metadata only. There is no automatic monthly scheduler.
+
+## Target product
+
+```text
+Sender → Stellar → licensed anchor/provider → KYC → PHP cash-out → family member
+```
+
+The target path is a certified SEP-24 integration with MoneyGram Ramps or another licensed anchor. Stellar anchors connect network assets to off-chain rails. SEP-24 is a hosted interactive deposit/withdrawal flow that requires anchor authentication and KYC.
+
+MoneyGram Ramps is a target path, not a Bakti partner. Its integration requirements include domain allowlisting, SEP-1, SEP-10, SEP-24, KYC fields, testing/certification, KYB/compliance, and agreements. It publishes an off-ramp range of 5–2,500 USDC. Its availability sheet lists Malaysia and the Philippines as cash-out only, which does not prove Malaysian salary cash-in or a Bakti Malaysia → Philippines route.
+
+Sources:
+
+- https://developers.stellar.org/docs/learn/fundamentals/anchors
+- https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
+- https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
 
 ## Why Stellar
 
-- 3–5 second settlement finality; fee ~0.00001 XLM.
-- USDC natively issued by Circle on Stellar — no bridged assets.
-- Soroban BaktiEscrow contract: permissionless keeper release, non-custodial,
-  auditable.
-- SEP-23 muxed accounts: one anchor collection account, per-family attribution,
-  no memos required from senders.
-- SEP-24 off-ramp standard: anchor-agnostic integration path.
-- Open ecosystem: any Stellar wallet works; no proprietary signing key.
+- Freighter provides user-controlled signing.
+- Horizon and Soroban RPC provide verifiable transaction evidence.
+- Soroban can pre-fund and release XLM according to contract rules.
+- Stellar's anchor standards provide a defined integration target for regulated off-chain rails.
 
-## Why Now
+## Business-model hypotheses — unvalidated
 
-- Stellar has native USDC (Circle-issued) and a growing SEP-24 anchor ecosystem.
-- SEP-7 / SEP-10 / SEP-23 / SEP-24 standards are stable and wallet-native.
-- PH remittance market is large enough to matter and underserved on-chain.
-- The corridor from Gulf countries (where most OFWs send from) to PH is dominated
-  by WU / Remitly / Western Union pricing — on-chain disruption window is open.
+- Transparent sender service fee within a licensed provider quote.
+- Provider referral or revenue share where contractually and legally permitted.
+- Employer, cooperative, or worker-community distribution paid by an institution.
+
+No fee, margin, take rate, or unit economics is validated.
+
+## GTM experiments
+
+1. Interview Filipino workers in Malaysia and family recipients in the Philippines.
+2. Validate whether salary-day planning and reminders solve a real problem before adding automation.
+3. Identify compliant Malaysian funding rails and licensed Philippine payout providers.
+4. Test the current testnet flow for trust, signing comprehension, and address errors.
+5. Pursue a provider sandbox or certification discussion without claiming partnership.
+
+## Build status and proof
+
+Verified testnet contract:
+
+`CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
+
+Verified testnet Freighter-signed release:
+
+`cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`
+
+https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
+
+This is testnet proof of an on-chain contract release. It is not mainnet, a provider deposit, fiat cash-out, or collection confirmation.
+
+## Ask
+
+- Customer-discovery introductions to Filipino worker communities in Malaysia.
+- A technical/compliance conversation with a licensed anchor or MoneyGram Ramps integration team.
+- Review of the Malaysia funding and Philippines payout regulatory path.
+- Feedback on whether the planning job is valuable before adding provider and scheduling complexity.

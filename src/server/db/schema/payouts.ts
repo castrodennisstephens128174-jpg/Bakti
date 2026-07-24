@@ -6,10 +6,10 @@ export type PayoutStatus = (typeof PAYOUT_STATUSES)[number];
 export const payoutStatusEnum = pgEnum('payout_status', PAYOUT_STATUSES);
 
 /**
- * One month's drip on an allowance. `txHash` is the real, Horizon-verified
- * on-chain payment from the sender to the recipient/anchor. `pickupRef` is the
- * off-ramp cash-pickup code issued once the anchor settles (simulated on
- * testnet). Status walks: scheduled -> sent -> settled -> collected (or failed).
+ * One payment record for an allowance period. `txHash` is the Horizon- or
+ * RPC-confirmed on-chain transfer to the recipient. Current endpoints stop at
+ * `sent`; `settled`, `collected`, and `pickupRef` are reserved for a future
+ * provider adapter and must not be inferred from ledger confirmation.
  */
 export const payouts = pgTable(
   'payouts',
@@ -26,7 +26,7 @@ export const payouts = pgTable(
     txHash: text('tx_hash').unique(),
     pickupRef: text('pickup_ref'),
     memo: text('memo').notNull().default(''),
-    network: text('network').notNull().default('public'),
+    network: text('network').notNull().default('testnet'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },
