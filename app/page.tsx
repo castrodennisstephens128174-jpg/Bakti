@@ -30,8 +30,8 @@ export default function LandingPage() {
               Plan salary-day support for family in the Philippines.
             </h1>
             <p className="mt-5 max-w-xl text-lg text-ink-soft">
-              Bakti is a testnet prototype for Filipino workers in Malaysia who want a clear family
-              support plan and a verifiable Stellar transfer. Today, the recipient must have a
+              Bakti is a Stellar mainnet product for Filipino workers in Malaysia who want a clear
+              family support plan and a verifiable Stellar transfer. Today, the recipient must have a
               Stellar address. Cash-out through a licensed provider is the next integration, not a
               current feature.
             </p>
@@ -63,7 +63,7 @@ export default function LandingPage() {
                 <div className="mt-1 font-display text-2xl font-bold text-ink">Today vs next</div>
               </div>
               <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-800">
-                Testnet prototype
+                Mainnet product
               </span>
             </div>
             <div className="my-5 h-px bg-line" />

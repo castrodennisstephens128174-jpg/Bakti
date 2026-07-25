@@ -77,7 +77,7 @@ Paused and ended plans cannot build or record a send/release.
 
 - Creating the plan stores metadata only.
 - “Send now” creates a direct classic payment to the recipient address.
-- The default issuer is the official Stellar testnet USDC issuer.
+- The default issuer is the official Circle USDC issuer on Stellar mainnet.
 
 ## Session behavior
 
@@ -97,6 +97,11 @@ The allowance detail screen should always explain that the following are planned
 6. Status, reference, cash-out, and collection confirmation.
 
 MoneyGram Ramps may be named only as a target path, never as a partner or existing route.
+
+Two gaps in that target design are still open, not yet answered by any source:
+
+- **Malaysia on-ramp.** MoneyGram Ramps lists Malaysia cash-out only — no MYR→USDC deposit path exists through it. No Bank Negara Malaysia–licensed remittance operator found (checked TerraPay, Sunrate) offers a stablecoin capability; they are fiat-only.
+- **Third-party cash pickup.** Classic MoneyGram has always let the recipient collect with a reference number and matching photo ID, no wallet or KYC of their own required. Whether MoneyGram Ramps preserves that for a Stellar-funded withdrawal is unconfirmed. Beans, the one live Stellar+MoneyGram wallet with a documented flow, requires both sender and recipient to hold their own KYC'd wallet — the opposite of a recipient who just shows up and collects.
 
 ## Metrics page
 

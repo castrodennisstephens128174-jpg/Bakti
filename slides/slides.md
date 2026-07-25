@@ -1,11 +1,11 @@
 # Bakti Pitch Deck
-# Exactly 9 slides · Hop Stellar 2026
+# Exactly 8 slides · Hop Stellar 2026
 
 # TITLE
 Bakti
 Plan salary-day support. Verify the transfer.
 Filipino workers in Malaysia → family in the Philippines
-Stellar testnet prototype · licensed cash-out is the next integration
+Stellar mainnet product · licensed cash-out is the next integration
 
 # PERSONA
 Human problem / target persona
@@ -16,22 +16,11 @@ Job: make family support intentional, legible, and verifiable.
 
 # EVIDENCE
 Corridor evidence — signal, not TAM
-US$39.619B | Philippines personal remittances, 2025 preliminary
 US$35.634B | Philippines cash remittances, 2025 preliminary
 US$675.153M | Malaysia-attributed Philippine cash remittances, 2025 provisional
-Jan–May 2026: US$15.735B personal; US$14.110B cash; US$279.807M Malaysia-attributed cash.
+Jan–May 2026 already US$279.807M Malaysia-attributed cash.
 BSP source-country attribution is the immediate source of funds, not necessarily true origin.
 Source: BSP https://www.bsp.gov.ph/statistics/external/ofw.aspx and https://www.bsp.gov.ph/statistics/external/ofw2.aspx
-
-# CUSTOMER
-Customer and job to be done
-Customer | Filipino worker in Malaysia with a Stellar wallet
-Recipient today | Family member with a Stellar address in the Philippines
-Trigger | Salary day or another chosen planning date
-Functional job | Store recipient + amount + date, then sign a transfer
-Emotional job | Feel responsible without pretending the transfer is automatic
-Evidence job | Open a real transaction hash and verify the destination
-Research next | Recipient cash preference, funding rail, provider trust, compliance path
 
 # PRODUCT
 Product today vs next
@@ -47,14 +36,11 @@ Licensed anchor/provider onboarding and agreements
 SEP-1 + provider SEP-10 + hosted SEP-24
 KYC, quote/limits, approved deposit routing, provider status
 PHP cash-out, provider reference, provider-confirmed collection
-No current MoneyGram partnership or connected cash route
 
 # FLOW
 One flow — solid is current, dashed is planned
 Sender → Bakti plan → Stellar transfer or XLM escrow → recipient Stellar wallet
 Planned continuation: Stellar/provider deposit → licensed anchor → KYC → PHP cash-out → family member
-Current product requires the recipient wallet address.
-No provider destination, pickup reference, or automatic monthly scheduler is wired.
 
 # WHY
 Why Stellar; why the provider path
@@ -64,7 +50,7 @@ Soroban demonstrates pre-funded XLM release rules.
 Stellar anchors connect network assets to off-chain rails.
 SEP-24 is a hosted interactive deposit/withdrawal flow with anchor authentication and KYC.
 MoneyGram Ramps is a target path, not a partner: integration requires allowlisting, SEP-1, SEP-10, SEP-24, KYC fields, testing/certification, KYB/compliance, and agreements.
-Published MoneyGram off-ramp range: 5–2,500 USDC. Malaysia and Philippines are listed cash-out only; this does not prove a MY salary cash-in route.
+MoneyGram limits, three sources disagree: docs 5–950 on-ramp/5–2,500 off-ramp USDC; live endpoint floors at 1; certification tier caps 10–20 (100 aggregate). Malaysia and Philippines are both cash-out only — no MY salary cash-in route exists today.
 Sources: Stellar anchors/SEP-24 docs; MoneyGram Ramps integration docs
 
 # MODEL
@@ -84,13 +70,15 @@ Seek provider sandbox/certification conversations without claiming partnership
 # STATUS
 Build status + ask
 BUILT
-Verified Stellar testnet contract: CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ
-Verified testnet Freighter-signed release: cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
+Deployed on mainnet, creator key under review: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
+Mainnet release transaction: pending — to be signed before submission
 Direct payment verification; support-plan UI; honest status boundary
+Current endpoints stop at Verified on-chain
 NOT BUILT
 SEP-24, MoneyGram API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling
 ASK
 Customer-discovery introductions in Malaysia
-Licensed anchor/provider technical and compliance review
+Anchor review: confirm third-party cash pickup (no recipient wallet/KYC) and a Malaysia MYR on-ramp path
 Feedback on the planning job before adding last-mile complexity
-Proof: https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
+Help mapping a compliant Malaysia funding → Philippines payout path
+Proof: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR (testnet release history: contracts/DEPLOYMENT.md)

@@ -454,7 +454,7 @@ function CreateForm({
           <SimulationNote>
             {asset === 'XLM'
               ? 'XLM pre-funds the selected number of periods into the Bakti Soroban escrow. Releases use LEDGERS_PER_PERIOD=60, a short demo cadence, and still require a signed call in this app.'
-              : 'USDC is not escrowed or scheduled. When you choose Send now, Freighter signs a direct testnet transfer to the recipient Stellar address.'}
+              : 'USDC is not escrowed or scheduled. When you choose Send now, Freighter signs a direct transfer to the recipient Stellar address.'}
           </SimulationNote>
         </div>
 

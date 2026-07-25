@@ -55,7 +55,9 @@ async function loadAccount(pubkey: string) {
     return await server().loadAccount(pubkey);
   } catch {
     throw new WalletError(
-      'Your wallet is not funded on testnet yet. Fund it with the Friendbot, then try again.',
+      publicEnv.network === 'public'
+        ? 'Your wallet is not funded yet. Send it real XLM to activate the account, then try again.'
+        : 'Your wallet is not funded on testnet yet. Fund it with the Friendbot, then try again.',
     );
   }
 }
@@ -76,7 +78,7 @@ async function submit(signedXdr: string): Promise<string> {
       );
     }
     if (ops.includes('op_no_destination')) {
-      throw new WalletError('The recipient account does not exist on testnet yet.');
+      throw new WalletError('The recipient account does not exist on the network yet.');
     }
     if (ops.includes('op_underfunded')) {
       throw new WalletError('Not enough balance for this allowance (remember the network fee).');

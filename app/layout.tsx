@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: '%s · Bakti',
   },
   description:
-    'A testnet prototype for Filipino workers in Malaysia to plan family support and send verifiable XLM or USDC payments to a recipient Stellar address. Licensed cash-out integration is planned, not connected.',
+    'A Stellar mainnet product for Filipino workers in Malaysia to plan family support and send verifiable XLM or USDC payments to a recipient Stellar address. Licensed cash-out integration is planned, not connected.',
   icons: { icon: '/icon.svg' },
 };
 

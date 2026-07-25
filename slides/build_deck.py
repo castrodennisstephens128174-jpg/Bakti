@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the nine-slide Bakti pitch deck from slides/slides.md."""
+"""Build the eight-slide Bakti pitch deck from slides/slides.md."""
 
 from pathlib import Path
 from pptx import Presentation
@@ -27,7 +27,7 @@ WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 FONT_HEAD = "Fraunces"
 FONT_BODY = "Manrope"
 
-HEADERS = ["TITLE", "PERSONA", "EVIDENCE", "CUSTOMER", "PRODUCT", "FLOW", "WHY", "MODEL", "STATUS"]
+HEADERS = ["TITLE", "PERSONA", "EVIDENCE", "PRODUCT", "FLOW", "WHY", "MODEL", "STATUS"]
 
 
 def parse_source(path: Path) -> list[dict]:
@@ -40,7 +40,7 @@ def parse_source(path: Path) -> list[dict]:
         if line.startswith("# "):
             header = line[2:].strip()
             if header not in HEADERS:
-                continue
+                raise ValueError(f"Unrecognized slide header {header!r} — expected one of {HEADERS}")
             if current:
                 slides.append(current)
             current = {"type": header.lower(), "lines": []}
@@ -48,8 +48,8 @@ def parse_source(path: Path) -> list[dict]:
             current["lines"].append(line)
     if current:
         slides.append(current)
-    if len(slides) != 9:
-        raise ValueError(f"Expected exactly 9 slides, found {len(slides)}")
+    if len(slides) != 8:
+        raise ValueError(f"Expected exactly 8 slides, found {len(slides)}")
     return slides
 
 
@@ -128,7 +128,7 @@ def add_rich_lines(slide, lines, left, top, width, height, size=16, bullet=True)
 def add_header(slide, kicker, title, num):
     add_text(slide, kicker.upper(), Inches(0.72), Inches(0.34), Inches(10.5), Inches(0.32), 11, BRAND, True)
     add_text(slide, title, Inches(0.72), Inches(0.73), Inches(11.8), Inches(0.72), 27, INK, True, FONT_HEAD)
-    add_text(slide, f"{num} / 9", Inches(11.95), Inches(0.32), Inches(0.62), Inches(0.25), 9, INK_SOFT, False, FONT_BODY, PP_ALIGN.RIGHT)
+    add_text(slide, f"{num} / 8", Inches(11.95), Inches(0.32), Inches(0.62), Inches(0.25), 9, INK_SOFT, False, FONT_BODY, PP_ALIGN.RIGHT)
 
 
 def add_tag(slide, text, left, top, width, future=False):
@@ -142,60 +142,33 @@ def build_title(slide, data, num):
     add_text(slide, lines[0], Inches(0.75), Inches(1.15), Inches(8.5), Inches(1.0), 54, BRAND, True, FONT_HEAD)
     add_text(slide, lines[1], Inches(0.75), Inches(2.15), Inches(11), Inches(0.65), 27, INK, True, FONT_HEAD)
     add_text(slide, lines[2], Inches(0.75), Inches(2.95), Inches(11), Inches(0.45), 18, INK_SOFT)
-    add_rect(slide, Inches(0.75), Inches(3.8), Inches(5.75), Inches(1.65), BRAND_SOFT, BRAND_LINE, radius=True)
-    add_tag(slide, "CURRENT", Inches(1.02), Inches(4.03), Inches(1.0))
-    add_text(slide, "Stellar testnet prototype", Inches(1.02), Inches(4.5), Inches(5), Inches(0.32), 18, INK, True)
-    add_text(slide, "Signed XLM escrow releases, direct payments, and on-chain verification.", Inches(1.02), Inches(4.9), Inches(5), Inches(0.42), 13, INK_SOFT)
-    add_rect(slide, Inches(6.82), Inches(3.8), Inches(5.75), Inches(1.65), WHITE, BRAND_LINE, radius=True, dashed=True)
-    add_tag(slide, "PLANNED", Inches(7.09), Inches(4.03), Inches(1.0), True)
-    add_text(slide, "Licensed PHP cash-out", Inches(7.09), Inches(4.5), Inches(5), Inches(0.32), 18, INK, True)
-    add_text(slide, "Provider SEP-24, KYC, routing/status, and confirmed collection.", Inches(7.09), Inches(4.9), Inches(5), Inches(0.42), 13, INK_SOFT)
+    add_tag(slide, "MAINNET", Inches(0.75), Inches(3.7), Inches(1.3))
     add_text(slide, lines[3], Inches(0.75), Inches(6.75), Inches(11.8), Inches(0.25), 10, INK_SOFT)
-    add_text(slide, f"{num} / 9", Inches(11.95), Inches(0.32), Inches(0.62), Inches(0.25), 9, INK_SOFT, False, FONT_BODY, PP_ALIGN.RIGHT)
+    add_text(slide, f"{num} / 8", Inches(11.95), Inches(0.32), Inches(0.62), Inches(0.25), 9, INK_SOFT, False, FONT_BODY, PP_ALIGN.RIGHT)
 
 
 def build_persona(slide, data, num):
     add_header(slide, data["lines"][0], "“I want support to be ready around salary day.”", num)
-    add_tag(slide, data["lines"][1].upper(), Inches(0.75), Inches(1.62), Inches(3.2))
+    add_tag(slide, data["lines"][1].upper(), Inches(0.75), Inches(1.62), Inches(3.4))
     body = data["lines"][2:]
-    add_text(slide, body[0], Inches(0.75), Inches(2.2), Inches(7.2), Inches(1.75), 23, INK, False, FONT_HEAD)
-    add_text(slide, body[1], Inches(0.75), Inches(4.2), Inches(7.2), Inches(0.78), 16, INK_SOFT)
-    add_text(slide, body[2], Inches(0.75), Inches(5.25), Inches(7.2), Inches(0.55), 19, BRAND, True)
-    add_rect(slide, Inches(8.65), Inches(1.6), Inches(3.9), Inches(4.9), ACCENT, LINE, radius=True)
-    circle = slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(9.75), Inches(2.45), Inches(1.7), Inches(1.7))
-    circle.fill.solid(); circle.fill.fore_color.rgb = BRAND; circle.line.fill.background()
-    face = slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(10.05), Inches(2.72), Inches(1.1), Inches(0.85))
-    face.fill.solid(); face.fill.fore_color.rgb = ACCENT; face.line.fill.background()
-    add_text(slide, "MARIA", Inches(9.35), Inches(4.55), Inches(2.5), Inches(0.4), 12, INK_SOFT, True, FONT_BODY, PP_ALIGN.CENTER)
-    add_text(slide, "Illustrative persona", Inches(9.35), Inches(5.02), Inches(2.5), Inches(0.35), 13, INK, True, FONT_BODY, PP_ALIGN.CENTER)
-    add_text(slide, "Not a claimed interview", Inches(9.35), Inches(5.42), Inches(2.5), Inches(0.35), 11, INK_SOFT, False, FONT_BODY, PP_ALIGN.CENTER)
+    add_text(slide, body[0], Inches(0.75), Inches(2.2), Inches(11.8), Inches(1.4), 23, INK, False, FONT_HEAD)
+    add_text(slide, body[1], Inches(0.75), Inches(3.75), Inches(11.8), Inches(0.7), 16, INK_SOFT)
+    add_text(slide, body[2], Inches(0.75), Inches(4.6), Inches(11.8), Inches(0.55), 19, BRAND, True)
 
 
 def build_evidence(slide, data, num):
     add_header(slide, data["lines"][0], "A large national flow, with a measured Malaysia signal", num)
-    stats = data["lines"][1:4]
+    stats = data["lines"][1:3]
     for i, line in enumerate(stats):
         value, label = [part.strip() for part in line.split("|", 1)]
-        left = Inches(0.75 + i * 4.08)
-        add_rect(slide, left, Inches(1.7), Inches(3.75), Inches(1.75), ACCENT, ACCENT, radius=True)
-        add_text(slide, value, left + Inches(0.22), Inches(1.98), Inches(3.3), Inches(0.55), 25, INK, True, FONT_HEAD)
-        add_text(slide, label, left + Inches(0.22), Inches(2.62), Inches(3.3), Inches(0.6), 12, INK_SOFT)
+        left = Inches(0.75 + i * 6.1)
+        add_rect(slide, left, Inches(1.7), Inches(5.72), Inches(1.75), ACCENT, ACCENT, radius=True)
+        add_text(slide, value, left + Inches(0.3), Inches(1.98), Inches(5.1), Inches(0.55), 30, INK, True, FONT_HEAD)
+        add_text(slide, label, left + Inches(0.3), Inches(2.62), Inches(5.1), Inches(0.6), 13, INK_SOFT)
     add_rect(slide, Inches(0.75), Inches(3.8), Inches(11.82), Inches(1.6), WHITE, LINE, radius=True)
-    add_text(slide, data["lines"][4], Inches(1.0), Inches(4.12), Inches(11.2), Inches(0.5), 16, INK, True)
-    add_text(slide, data["lines"][5], Inches(1.0), Inches(4.73), Inches(11.2), Inches(0.42), 13, INK_SOFT)
-    add_text(slide, data["lines"][6], Inches(0.75), Inches(6.65), Inches(11.8), Inches(0.25), 8.5, INK_SOFT)
-
-
-def build_customer(slide, data, num):
-    add_header(slide, data["lines"][0], "One narrow customer; one clear job to be done", num)
-    rows = data["lines"][1:]
-    top = 1.62
-    for idx, line in enumerate(rows):
-        key, value = [part.strip() for part in line.split("|", 1)]
-        fill = BRAND_SOFT if idx % 2 == 0 else WHITE
-        add_rect(slide, Inches(0.75), Inches(top + idx * 0.67), Inches(11.82), Inches(0.58), fill, LINE, radius=True)
-        add_text(slide, key, Inches(0.98), Inches(top + 0.13 + idx * 0.67), Inches(2.45), Inches(0.28), 12, INK, True)
-        add_text(slide, value, Inches(3.22), Inches(top + 0.13 + idx * 0.67), Inches(9.0), Inches(0.3), 12, INK_SOFT)
+    add_text(slide, data["lines"][3], Inches(1.0), Inches(4.12), Inches(11.2), Inches(0.5), 16, INK, True)
+    add_text(slide, data["lines"][4], Inches(1.0), Inches(4.73), Inches(11.2), Inches(0.42), 13, INK_SOFT)
+    add_text(slide, data["lines"][5], Inches(0.75), Inches(6.65), Inches(11.8), Inches(0.25), 8.5, INK_SOFT)
 
 
 def split_sections(lines: list[str]) -> tuple[list[str], list[str]]:
@@ -204,7 +177,7 @@ def split_sections(lines: list[str]) -> tuple[list[str], list[str]]:
 
 
 def build_product(slide, data, num):
-    add_header(slide, data["lines"][0], "Do not confuse on-chain proof with cash delivery", num)
+    add_header(slide, data["lines"][0], "Plan, sign, and verify on-chain today", num)
     current, future = split_sections(data["lines"][1:])
     add_rect(slide, Inches(0.75), Inches(1.65), Inches(5.72), Inches(4.75), BRAND_SOFT, BRAND_LINE, radius=True)
     add_tag(slide, "TODAY · WORKING", Inches(1.02), Inches(1.9), Inches(1.62))
@@ -232,8 +205,6 @@ def build_flow(slide, data, num):
     add_rect(slide, Inches(0.75), Inches(4.25), Inches(11.82), Inches(1.2), WHITE, BRAND_LINE, radius=True, dashed=True)
     add_tag(slide, "PLANNED", Inches(1.0), Inches(4.52), Inches(1.0), True)
     add_text(slide, data["lines"][2], Inches(2.2), Inches(4.48), Inches(9.95), Inches(0.48), 14, INK, True)
-    add_text(slide, data["lines"][3], Inches(0.95), Inches(5.75), Inches(11.4), Inches(0.35), 12, INK_SOFT, False, FONT_BODY, PP_ALIGN.CENTER)
-    add_text(slide, data["lines"][4], Inches(0.95), Inches(6.15), Inches(11.4), Inches(0.35), 12, INK_SOFT, False, FONT_BODY, PP_ALIGN.CENTER)
 
 
 def build_why(slide, data, num):
@@ -264,7 +235,7 @@ def build_model(slide, data, num):
 
 
 def build_status(slide, data, num):
-    add_header(slide, data["lines"][0], "A working testnet core, with an honest last-mile gap", num)
+    add_header(slide, data["lines"][0], "A working mainnet core, with an honest last-mile gap", num)
     lines = data["lines"][1:]
     not_built = lines.index("NOT BUILT")
     ask = lines.index("ASK")
@@ -272,11 +243,15 @@ def build_status(slide, data, num):
     missing = lines[not_built + 1:ask]
     asks = lines[ask + 1:-1]
     proof = lines[-1]
+    contract_label, contract_value = built[0].split(": ", 1)
+    release_label, release_value = built[1].split(": ", 1)
     add_rect(slide, Inches(0.75), Inches(1.65), Inches(5.72), Inches(4.85), BRAND_SOFT, BRAND_LINE, radius=True)
     add_tag(slide, "BUILT", Inches(1.02), Inches(1.92), Inches(0.78))
-    add_rich_lines(slide, built[:3], Inches(1.02), Inches(2.42), Inches(5.05), Inches(1.92), 12.2)
-    add_text(slide, built[0].split(": ", 1)[1], Inches(1.02), Inches(4.45), Inches(5.05), Inches(0.55), 9.5, INK_SOFT, False, "Menlo")
-    add_text(slide, built[1].split(": ", 1)[1], Inches(1.02), Inches(5.2), Inches(5.05), Inches(0.55), 9.5, INK_SOFT, False, "Menlo")
+    add_rich_lines(slide, built[2:], Inches(1.02), Inches(2.42), Inches(5.05), Inches(0.85), 12.2)
+    add_text(slide, contract_label, Inches(1.02), Inches(3.42), Inches(5.05), Inches(0.28), 10.5, INK_SOFT, True, FONT_BODY)
+    add_text(slide, contract_value, Inches(1.02), Inches(3.68), Inches(5.05), Inches(0.42), 9.5, INK, False, "Consolas")
+    add_text(slide, release_label, Inches(1.02), Inches(4.35), Inches(5.05), Inches(0.28), 10.5, INK_SOFT, True, FONT_BODY)
+    add_text(slide, release_value, Inches(1.02), Inches(4.61), Inches(5.05), Inches(0.42), 9.5, INK, False, "Consolas")
     add_rect(slide, Inches(6.85), Inches(1.65), Inches(5.72), Inches(4.85), WHITE, BRAND_LINE, radius=True, dashed=True)
     add_tag(slide, "ASK", Inches(7.12), Inches(1.92), Inches(0.72), True)
     add_rich_lines(slide, asks, Inches(7.12), Inches(2.42), Inches(5.05), Inches(2.05), 13.2)
@@ -294,7 +269,6 @@ def build_deck():
         "title": build_title,
         "persona": build_persona,
         "evidence": build_evidence,
-        "customer": build_customer,
         "product": build_product,
         "flow": build_flow,
         "why": build_why,

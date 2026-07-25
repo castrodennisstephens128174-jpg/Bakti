@@ -26,11 +26,11 @@ export function shortKey(key: string, lead = 4, tail = 4): string {
   return `${key.slice(0, lead)}…${key.slice(-tail)}`;
 }
 
-export function explorerTx(hash: string, network = 'testnet'): string {
+export function explorerTx(hash: string, network: string): string {
   return `https://stellar.expert/explorer/${network}/tx/${hash}`;
 }
 
-export function explorerAccount(addr: string, network = 'testnet'): string {
+export function explorerAccount(addr: string, network: string): string {
   return `https://stellar.expert/explorer/${network}/account/${addr}`;
 }
 

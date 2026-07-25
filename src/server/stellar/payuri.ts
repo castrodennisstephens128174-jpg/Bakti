@@ -1,4 +1,8 @@
-import { env, USDC_ASSET_ISSUER_VALUE } from '@/server/config/env';
+import {
+  env,
+  STELLAR_NETWORK_PASSPHRASE_VALUE,
+  USDC_ASSET_ISSUER_VALUE,
+} from '@/server/config/env';
 import type { AllowanceAsset } from '@/server/db/schema/allowances';
 
 /**
@@ -24,7 +28,7 @@ export function buildPayUri(params: {
     q.set('memo', params.memo);
     q.set('memo_type', 'MEMO_TEXT');
   }
-  q.set('network_passphrase', env.STELLAR_NETWORK_PASSPHRASE);
+  q.set('network_passphrase', STELLAR_NETWORK_PASSPHRASE_VALUE);
   q.set('msg', 'Monthly allowance via Bakti');
   return `web+stellar:pay?${q.toString()}`;
 }

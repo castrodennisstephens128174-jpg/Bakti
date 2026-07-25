@@ -47,13 +47,22 @@ Sender → Stellar → licensed anchor/provider → KYC → PHP cash-out → fam
 
 The target path is a certified SEP-24 integration with MoneyGram Ramps or another licensed anchor. Stellar anchors connect network assets to off-chain rails. SEP-24 is a hosted interactive deposit/withdrawal flow that requires anchor authentication and KYC.
 
-MoneyGram Ramps is a target path, not a Bakti partner. Its integration requirements include domain allowlisting, SEP-1, SEP-10, SEP-24, KYC fields, testing/certification, KYB/compliance, and agreements. It publishes an off-ramp range of 5–2,500 USDC. Its availability sheet lists Malaysia and the Philippines as cash-out only, which does not prove Malaysian salary cash-in or a Bakti Malaysia → Philippines route.
+MoneyGram Ramps is a target path, not a Bakti partner. Its integration requirements include domain allowlisting, SEP-1, SEP-10, SEP-24, KYC fields, testing/certification, KYB/compliance, and agreements. Its docs publish a 5–950 USDC on-ramp and 5–2,500 USDC off-ramp range, but the live production `/info` endpoint currently floors both sides at 1 USDC, and a separate Production Preview/certification tier caps test transactions at 10–20 USDC (100 USDC aggregate) — three figures, not one clean number. Its availability sheet lists Malaysia and the Philippines as cash-out only, which does not prove Malaysian salary cash-in or a Bakti Malaysia → Philippines route.
+
+Two parts of this target design are still open:
+
+- **Malaysia on-ramp.** No licensed Malaysian rail (checked TerraPay, Sunrate) offers a stablecoin capability today; MoneyGram Ramps itself lists Malaysia cash-out only.
+- **Third-party cash pickup.** Classic MoneyGram lets a recipient collect with just a reference number and matching photo ID — no account or KYC of their own. Whether MoneyGram Ramps preserves that for a Stellar withdrawal is unconfirmed; Beans, the one live Stellar+MoneyGram wallet with a documented flow, requires both parties to hold their own KYC'd wallet instead.
 
 Sources:
 
 - https://developers.stellar.org/docs/learn/fundamentals/anchors
 - https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
 - https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
+- https://stellar.moneygram.com/stellaradapterservice/sep24/info
+- https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
+- https://www.moneygram.com/us/en/send-and-receive/receiving-money
+- https://www.beansapp.com/moneygram
 
 ## Why Stellar
 
@@ -75,22 +84,18 @@ No fee, margin, take rate, or unit economics is validated.
 1. Interview Filipino workers in Malaysia and family recipients in the Philippines.
 2. Validate whether salary-day planning and reminders solve a real problem before adding automation.
 3. Identify compliant Malaysian funding rails and licensed Philippine payout providers.
-4. Test the current testnet flow for trust, signing comprehension, and address errors.
+4. Test the current mainnet flow for trust, signing comprehension, and address errors — using a testnet usability study to iterate cheaply before spending real XLM on later rounds.
 5. Pursue a provider sandbox or certification discussion without claiming partnership.
 
 ## Build status and proof
 
-Verified testnet contract:
+Deployed on Stellar mainnet:
 
-`CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
+`CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
 
-Verified testnet Freighter-signed release:
+https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR — confirmed live (created 2026-07-12, 7 recorded invocations).
 
-`cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`
-
-https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
-
-This is testnet proof of an on-chain contract release. It is not mainnet, a provider deposit, fiat cash-out, or collection confirmation.
+A fresh, team-signed mainnet release transaction is pending; the previously-cited testnet proof (`CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`, tx `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`) remains in `contracts/DEPLOYMENT.md` as the development record but is not mainnet, provider-deposit, fiat-cash-out, or collection-confirmation proof.
 
 ## Ask
 

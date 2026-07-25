@@ -66,9 +66,9 @@ POST /api/allowances { ..., asset: "USDC" }
   → create one scheduled app record for current YYYY-MM
 ```
 
-No escrow or automatic payment is created. The configured issuer is the official Stellar testnet USDC issuer:
+No escrow or automatic payment is created. The configured issuer is the official Circle USDC issuer on Stellar mainnet:
 
-`GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`
+`GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN`
 
 ## 4. XLM contract release
 
@@ -107,7 +107,7 @@ POST /api/allowances/:id/payouts { txHash }
       - transaction exists and succeeded
       - sender matches owner
       - recipient matches entered G-address
-      - asset matches XLM or configured testnet USDC
+      - asset matches XLM or the configured USDC issuer
       - amount matches the database value
   → record txHash with status sent
 ```
@@ -159,17 +159,17 @@ Both payout construction and payout recording reject paused and ended plans.
 
 ## 10. Network defaults
 
-Local/example defaults are internally consistent on Stellar testnet:
+Defaults are internally consistent on Stellar mainnet — every value below is derived from `STELLAR_NETWORK` in `src/server/config/env.ts`, so setting that one variable is enough to switch network; explicit env vars still override any single value:
 
-- Network: `testnet`
-- Horizon: `https://horizon-testnet.stellar.org`
-- Passphrase: `Test SDF Network ; September 2015`
-- Soroban RPC: `https://soroban-testnet.stellar.org`
-- Bakti contract: `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
-- Native XLM SAC: `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
-- Testnet USDC issuer: `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`
+- Network: `public`
+- Horizon: `https://horizon.stellar.org`
+- Passphrase: `Public Global Stellar Network ; September 2015`
+- Soroban RPC: `https://mainnet.sorobanrpc.com`
+- Bakti contract: `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
+- Native XLM SAC: `CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA`
+- USDC issuer (official Circle issuer): `GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN`
 
-Explicit deployment environment variables still override defaults. A mainnet deployment must configure a verified network-specific contract and asset issuers; changing only the network name is insufficient.
+For free local development, set `STELLAR_NETWORK=testnet` and `NEXT_PUBLIC_STELLAR_NETWORK=testnet` in your own `.env.local` — the testnet contract/passphrase/Horizon/RPC/issuer all resolve automatically from that one change.
 
 ## 11. Last-mile integration required
 
@@ -186,25 +186,37 @@ A MoneyGram Ramps or other licensed anchor adapter would need, at minimum:
 
 None of these steps is implemented in the current endpoints.
 
+Two additional gaps in this target design are open, not yet answered by any source:
+
+- **Malaysia on-ramp.** MoneyGram Ramps' own coverage sheet lists Malaysia cash-out only — there is no MYR→USDC deposit path through it today. No Bank Negara Malaysia–licensed remittance operator found (TerraPay, Sunrate) offers a stablecoin capability; they are fiat-only. Classic (non-crypto) MoneyGram already runs a full send corridor out of Malaysia, but that path never touches Stellar or USDC.
+- **Third-party cash pickup.** Classic MoneyGram has always supported sender ≠ receiver — the recipient collects with a reference number and matching photo ID, no account or KYC of their own required. Whether MoneyGram Ramps preserves that for a Stellar-funded withdrawal is unconfirmed by MoneyGram's developer docs. Beans, the one live Stellar+MoneyGram wallet with a documented flow, requires both sender and recipient to hold their own KYC'd wallet. Decaf shows a friendlier sender-only-account + recipient-claim-link pattern feeding into MoneyGram cash-out, but its recipient KYC mechanics aren't publicly confirmed.
+
+MoneyGram's published off-ramp limits also need a caveat: the integration docs list 5–950 USDC on-ramp and 5–2,500 USDC off-ramp, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides, and a separate Production Preview/certification tier caps test transactions at 10–20 USDC (100 USDC aggregate) — treat these as three different figures from three different sources, not one clean number.
+
 Sources:
 
 - https://developers.stellar.org/docs/learn/fundamentals/anchors
 - https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
 - https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
+- https://stellar.moneygram.com/stellaradapterservice/sep24/info
+- https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
+- https://www.moneygram.com/us/en/send-and-receive/receiving-money
+- https://www.beansapp.com/moneygram
+- https://decaf.so/en/use-cases/remittance-senders
 
-## 12. Verified testnet proof
+## 12. Verified mainnet deployment
 
-- Contract: `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
-- Freighter-signed release: `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`
-- Explorer: https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
+- Contract: `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR` — confirmed live on Stellar mainnet (created 2026-07-12, 7 recorded invocations).
+- Explorer: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
+- Open item: the on-chain creator key does not match the documented admin key in `contracts/DEPLOYMENT.md`. A fresh, team-signed `create_schedule` + `release` call producing a citable mainnet transaction hash is pending — do not cite a specific tx hash as mainnet proof until one is produced and confirmed at `horizon.stellar.org/transactions/<hash>`.
 
-This is testnet contract-release proof only.
+The previously-cited testnet proof (contract `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`, tx `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`) is testnet contract-release proof only, kept in `contracts/DEPLOYMENT.md` as the development record.
 
 ## Key files
 
 | File | Role |
 |---|---|
-| `src/server/config/env.ts` | Server env validation and testnet defaults |
+| `src/server/config/env.ts` | Server env validation and network-derived (mainnet default) config |
 | `src/server/config/env.public.ts` | Client-safe network configuration |
 | `src/server/service/auth.service.ts` | Custom signed session challenge |
 | `src/server/service/allowance.service.ts` | Plan validation and lifecycle |

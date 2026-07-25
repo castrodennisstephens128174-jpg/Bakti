@@ -1,6 +1,6 @@
 # Bakti
 
-Bakti is a Stellar testnet prototype for **Filipino workers in Malaysia planning salary-day support for family in the Philippines**. It keeps a recipient, amount, and reminder date in one plan, then lets the sender sign a direct Stellar payment or release pre-funded XLM from a Soroban escrow.
+Bakti is a Stellar mainnet product for **Filipino workers in Malaysia planning salary-day support for family in the Philippines**. It keeps a recipient, amount, and reminder date in one plan, then lets the sender sign a direct Stellar payment or release pre-funded XLM from a Soroban escrow.
 
 **Current boundary:** the recipient needs a Stellar address. Bakti does not yet connect to a licensed cash-out provider, perform KYC, or deliver Philippine pesos.
 
@@ -43,6 +43,11 @@ The reminder day is planning metadata only. No scheduler automatically sends or 
 
 The target last mile is a certified SEP-24 integration with MoneyGram Ramps or another licensed anchor. It is not currently connected.
 
+**Two open gaps in this target design, not yet resolved by any source:**
+
+- **Malaysia on-ramp.** MoneyGram Ramps' own coverage sheet lists Malaysia as cash-out only — there is no MYR→USDC deposit path through it. No Bank Negara Malaysia–licensed remittance operator found (TerraPay, Sunrate) offers a stablecoin/crypto capability either; they are fiat-only. Classic (non-crypto) MoneyGram already runs a full send corridor out of Malaysia, but that path never touches Stellar or USDC.
+- **Third-party cash pickup.** Classic MoneyGram has always supported sender ≠ receiver — the recipient collects with a reference number and matching photo ID, no account or prior KYC of their own required. Whether MoneyGram Ramps (the Stellar/crypto rail) preserves that pattern is unconfirmed by MoneyGram's own developer docs. The one live Stellar+MoneyGram wallet with a documented flow, Beans, requires **both** sender and recipient to hold their own KYC'd wallet — the opposite of a recipient who "just shows up and collects." Decaf's WhatsApp claim-link model looks closer to what Bakti wants but its exact recipient KYC mechanics aren't publicly confirmed. This needs a direct answer from an anchor before it's claimed as the target design.
+
 ## Current product vs target product
 
 | Capability | Current prototype | Target product |
@@ -66,7 +71,7 @@ The target last mile is a certified SEP-24 integration with MoneyGram Ramps or a
 - Custom signed `manageData` session challenge. **This is not SEP-10.**
 - Postgres allowance/support-plan records with active, paused, and ended states.
 - XLM Soroban escrow via `create_schedule` and signed `release`.
-- Direct XLM or testnet USDC payments to a recipient Stellar address.
+- Direct XLM or USDC payments to a recipient Stellar address.
 - Horizon verification of direct payment sender, recipient, asset, and amount.
 - Soroban RPC simulation, submission, and confirmation.
 - SEP-7 direct payment URI.
@@ -101,9 +106,11 @@ MoneyGram Ramps supports USDC on/off-ramp flows through Stellar, but integration
 - Testing and certification.
 - Provider transaction status and operational handling.
 
-MoneyGram publishes off-ramp limits of **5–2,500 USDC**. Its linked availability sheet lists Malaysia and the Philippines as **cash-out only**; this does not establish Malaysian salary cash-in or an implemented Malaysia → Philippines route for Bakti.
+MoneyGram's integration docs publish **5–950 USDC on-ramp** and **5–2,500 USDC off-ramp** limits; the live production `/info` endpoint currently reports a 1 USDC floor on both sides instead of 5, and a separate Production Preview/certification tier caps test transactions at **10–20 USDC (100 USDC aggregate)**. These three sources disagree on the exact minimum — treat the ranges as approximate until confirmed against whichever tier Bakti is actually certified against.
 
-Source: [Integrate MoneyGram Ramps](https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps).
+Its linked availability sheet lists Malaysia and the Philippines as **cash-out only**; this does not establish Malaysian salary cash-in or an implemented Malaysia → Philippines route for Bakti.
+
+Sources: [Integrate MoneyGram Ramps](https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps), the live [`/info` endpoint](https://stellar.moneygram.com/stellaradapterservice/sep24/info), and MoneyGram's [supported-countries sheet](https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM).
 
 Stellar anchors connect on-chain assets with off-chain rails. SEP-24 is an anchor-hosted interactive deposit/withdrawal flow and requires the anchor's authentication and KYC process. Sources: [Stellar anchors](https://developers.stellar.org/docs/learn/fundamentals/anchors) and [SEP-24 getting started](https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started).
 
@@ -122,7 +129,7 @@ Next.js server
   ├─ Soroban RPC assembly/submission
   └─ Postgres persistence via Drizzle
 
-Stellar testnet
+Stellar mainnet
   ├─ classic payments to recipient address
   └─ Bakti XLM escrow contract
 
@@ -158,28 +165,26 @@ No price, take rate, unit economics, or provider margin has been validated.
 
 ## Limitations and security
 
-- Prototype defaults to Stellar testnet; assets have no production value.
+- Product defaults to Stellar mainnet; XLM and USDC sent through it are real assets with real value. Set both `STELLAR_NETWORK=testnet` and `NEXT_PUBLIC_STELLAR_NETWORK=testnet` in your own `.env.local` for free local development — the server and client resolve network independently, so both must be set together.
 - The app is not a bank, money transmitter, anchor, KYC provider, or cash-pickup service.
 - The sender controls the wallet and signs every on-chain action; Bakti must never receive secret keys.
 - XLM escrow pre-funds the contract. `release` is permissionless, but always pays the recorded recipient.
-- `LEDGERS_PER_PERIOD = 60` is intentionally short for demonstrations.
+- `LEDGERS_PER_PERIOD = 60` is intentionally short for demonstrations, not a calendar month.
 - `dayOfMonth` does not control the contract and does not trigger a job.
-- USDC uses the official Stellar testnet issuer `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`.
-- A mainnet-looking contract ID previously shown in project materials is unverified and is not release proof.
+- USDC uses the official Circle issuer on Stellar mainnet `GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN`.
 - Existing database rows may contain legacy local `settled`/`collected` demo states; the UI labels them honestly and new endpoints do not create them.
 
-## Verified testnet proof
+## Verified mainnet deployment
 
-- **Contract:** `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
-- **Contract explorer:** [Stellar Expert testnet](https://stellar.expert/explorer/testnet/contract/CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ)
-- **Freighter-signed release transaction:** `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`
-- **Transaction explorer:** [Stellar Expert testnet](https://stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2)
+- **Contract:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
+- **Contract explorer:** [Stellar Expert public](https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR) — confirmed live on Stellar mainnet (created 2026-07-12, 7 recorded invocations as of this check).
+- **Open item:** the contract's on-chain creator key does not match the admin key documented in `contracts/DEPLOYMENT.md`. A fresh, team-signed `create_schedule` + `release` call — producing a mainnet transaction hash citable as release proof — is pending; do not cite a specific transaction hash as mainnet proof until one is produced and confirmed at `horizon.stellar.org/transactions/<hash>`.
 
-This proves a testnet contract release, not mainnet operation, provider settlement, or cash collection. See `contracts/DEPLOYMENT.md` for the deployment record.
+The previously-cited testnet proof (`CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`, tx `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`) remains in `contracts/DEPLOYMENT.md` for the testnet development record, but is not mainnet operation, provider settlement, or cash collection proof.
 
 ## Setup
 
-Requirements: Node.js, pnpm, PostgreSQL, Freighter, and a funded testnet wallet.
+Requirements: Node.js, pnpm, PostgreSQL, Freighter, and a funded Stellar wallet (real mainnet XLM by default — see `.env.example` for switching to testnet locally).
 
 ```bash
 pnpm install
@@ -195,7 +200,7 @@ Optional demo data:
 pnpm seed
 ```
 
-A real seeded testnet payment is attempted only if `DEMO_SENDER_SECRET` is explicitly supplied. Never commit secrets.
+A real seeded payment on the configured network is attempted only if `DEMO_SENDER_SECRET` is explicitly supplied. Never commit secrets.
 
 ## Test and build
 
@@ -220,3 +225,9 @@ make test
 - Stellar, Anchors: https://developers.stellar.org/docs/learn/fundamentals/anchors
 - Stellar Anchor Platform, SEP-24: https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
 - MoneyGram, Integrate MoneyGram Ramps: https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
+- MoneyGram Ramps, live `/info` endpoint: https://stellar.moneygram.com/stellaradapterservice/sep24/info
+- MoneyGram Ramps, supported-countries sheet: https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
+- MoneyGram, classic receive-money flow (sender ≠ receiver, ID + reference number): https://www.moneygram.com/us/en/send-and-receive/receiving-money
+- Beans (live Stellar + MoneyGram wallet, both parties KYC'd): https://www.beansapp.com/moneygram
+- Decaf (live, sender-only account + recipient claim link): https://decaf.so/en/use-cases/remittance-senders
+- Stellar Expert, Bakti mainnet contract: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR

@@ -26,6 +26,7 @@ type Payout = {
   status: string;
   txHash: string | null;
   pickupRef: string | null;
+  network: string;
 };
 type Allowance = {
   id: string;
@@ -39,6 +40,7 @@ type Allowance = {
   status: string;
   scheduleId: string | null;
   contractId: string | null;
+  network: string;
   payouts: Payout[];
 };
 
@@ -112,7 +114,7 @@ export default function AllowanceDetailPage() {
     setBusy(true);
     try {
       await enableUsdc(publicKey);
-      toast.success('USDC enabled', { description: 'Your testnet wallet can now hold USDC.' });
+      toast.success('USDC enabled', { description: 'Your wallet can now hold USDC.' });
     } catch (e) {
       const msg = e instanceof WalletError || e instanceof Error ? e.message : 'Could not enable';
       toast.error('Enable USDC failed', { description: msg });
@@ -194,7 +196,7 @@ export default function AllowanceDetailPage() {
                 <AllowanceStatusBadge status={allowance.status} />
               </div>
               <a
-                href={explorerAccount(allowance.recipientAddress, publicEnv.network)}
+                href={explorerAccount(allowance.recipientAddress, allowance.network)}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-1 inline-flex items-center gap-1 font-mono text-xs text-ink-soft hover:text-brand-700"
@@ -242,7 +244,7 @@ export default function AllowanceDetailPage() {
                     onClick={() => void onEnableUsdc()}
                     className="btn-ghost inline-flex h-12 items-center gap-2 rounded-full px-5 text-sm font-semibold"
                   >
-                    Enable testnet USDC
+                    Enable USDC
                   </button>
                 )}
                 <button
@@ -341,7 +343,7 @@ export default function AllowanceDetailPage() {
                     <td className="px-5 py-4">
                       {p.txHash ? (
                         <a
-                          href={explorerTx(p.txHash, publicEnv.network)}
+                          href={explorerTx(p.txHash, p.network)}
                           target="_blank"
                           rel="noreferrer"
                           className="inline-flex items-center gap-1 text-sm font-medium text-brand-700 hover:text-brand-800"

@@ -2,7 +2,7 @@
   "name": "bakti",
   "version": "1.0.0",
   "private": true,
-  "description": "Bakti — a testnet prototype for planning family support and sending verifiable Stellar payments to a recipient address.",
+  "description": "Bakti — a Stellar mainnet product for planning family support and sending verifiable payments to a recipient address.",
   "scripts": {
     "dev": "next dev -p ${PORT:-3005}",
     "build": "next build",

@@ -1,9 +1,9 @@
-import { env, USDC_ASSET_ISSUER_VALUE } from '@/server/config/env';
+import { STELLAR_HORIZON_URL_VALUE, USDC_ASSET_ISSUER_VALUE } from '@/server/config/env';
 import type { AllowanceAsset } from '@/server/db/schema/allowances';
 import { toStroops } from '@/server/lib/amount';
 import { AppError } from '@/server/lib/http';
 
-const HORIZON = env.STELLAR_HORIZON_URL;
+const HORIZON = STELLAR_HORIZON_URL_VALUE;
 
 type PaymentOp = {
   type: string;
@@ -34,7 +34,7 @@ export async function verifyAllowancePayment(params: {
 
   const txRes = await fetch(`${HORIZON}/transactions/${txHash}`);
   if (txRes.status === 404) {
-    throw new AppError('NOT_FOUND', 'Transaction not found on Stellar testnet yet', 404);
+    throw new AppError('NOT_FOUND', 'Transaction not found on Stellar yet', 404);
   }
   if (!txRes.ok) throw new AppError('INTERNAL', `Horizon error ${txRes.status}`, 502);
   const tx = (await txRes.json()) as { successful?: boolean };

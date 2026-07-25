@@ -8,7 +8,6 @@ import {
   type Page,
   test,
 } from '@playwright/test';
-import { Keypair } from '@stellar/stellar-sdk';
 import {
   approveOnce,
   cleanup,
@@ -19,6 +18,23 @@ import {
 } from '../../../../../shared/freighter/freighter-fixture';
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? 'https://bakti-sooty.vercel.app';
+
+/**
+ * Mainnet has no faucet: the recipient must already exist and hold enough real
+ * XLM to stay above the reserve. Fund a keypair once by hand, then reuse its
+ * public key across every run via this env var — never mint a fresh account.
+ */
+function requireMainnetRecipient(): string {
+  const recipient = process.env.E2E_MAINNET_RECIPIENT_PUBLIC_KEY;
+  if (!recipient) {
+    throw new Error(
+      'E2E_MAINNET_RECIPIENT_PUBLIC_KEY is not set. Fund a real Stellar mainnet account ' +
+        'and pass its public key via this env var before running prod-real.spec.ts — ' +
+        'there is no mainnet friendbot to create one automatically.',
+    );
+  }
+  return recipient;
+}
 
 const SHOTS = path.resolve(__dirname, '../../../screen-shot');
 mkdirSync(SHOTS, { recursive: true });
@@ -172,7 +188,7 @@ async function createXlmAllowance(page: Page, recipient: string): Promise<string
   // XLM create now escrows the whole run via the Bakti contract's `create_schedule`,
   // so the sender signs a Soroban invoke before the allowance is persisted. Poll for
   // the row while opportunistically approving the popup; retry the whole submit if the
-  // create errors (e.g. a shared-testnet sequence bump) and re-enables the button.
+  // create errors (e.g. a shared-account sequence bump) and re-enables the button.
   const labelText = page.getByText(label);
   const submitBtn = page.getByTestId('submit-allowance');
   for (let attempt = 0; attempt < 4; attempt++) {
@@ -228,15 +244,9 @@ async function sendAllowanceForTxHash(page: Page): Promise<string> {
   throw new Error('allowance payout never produced an on-chain tx after retries');
 }
 
-async function friendbot(pubkey: string): Promise<void> {
-  const res = await fetch(`https://friendbot.stellar.org/?addr=${pubkey}`);
-  if (!res.ok && res.status !== 400) throw new Error(`friendbot failed: ${res.status}`);
-}
-
 test('real Freighter: signed session + on-chain support payment -> real tx hash', async () => {
   test.setTimeout(360_000);
-  const recipient = Keypair.random();
-  await friendbot(recipient.publicKey());
+  const recipientPublicKey = requireMainnetRecipient();
 
   const page = await context.newPage();
   await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
@@ -249,13 +259,13 @@ test('real Freighter: signed session + on-chain support payment -> real tx hash'
   await expect(walletPill(page)).toBeVisible({ timeout: 60_000 });
   await page.waitForTimeout(1500);
 
-  const label = await createXlmAllowance(page, recipient.publicKey());
+  const label = await createXlmAllowance(page, recipientPublicKey);
 
   await page.getByTestId('allowance-row').filter({ hasText: label }).first().click();
   await expect(page.getByTestId('send-button')).toBeVisible({ timeout: 30_000 });
 
   const txHref = await sendAllowanceForTxHash(page);
-  expect(txHref).toMatch(/stellar\.expert\/explorer\/testnet\/tx\/[0-9a-f]{64}/);
+  expect(txHref).toMatch(/stellar\.expert\/explorer\/public\/tx\/[0-9a-f]{64}/);
   await page.waitForTimeout(1200);
   await pageShot(page, '10-live-payout.jpg');
 
