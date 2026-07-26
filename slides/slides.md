@@ -11,7 +11,7 @@ Stellar mainnet product · licensed cash-out is the next integration
 "I meant to send it. The week got away from me."
 Illustrative persona — not a claimed interview
 Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Some months she remembers to send money home; some months a double shift pushes it to next week.
-She doesn't want to "remember to send." She wants a standing plan she signs once and can verify landed.
+She doesn't want to "remember to send." She wants a standing plan she sets up once, then signs each month on a habit — not from memory.
 Today the recipient still needs a Stellar address, and Linh signs every transfer herself — Bakti does not send automatically.
 
 # EVIDENCE

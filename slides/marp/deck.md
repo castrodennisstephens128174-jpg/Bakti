@@ -91,12 +91,12 @@ style: |
   .badge.next { background: #fdf1e0; color: #92400e; }
   .card-title { font-size: 19px; font-weight: 800; color: #0b1b2b; margin: 0 0 4px; }
 
-  .flow-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
-  .flow-node { background: #ffffff; border: 2px solid #0284c7; border-radius: 10px; padding: 14px 18px; text-align: center; }
+  .flow-row { display: flex; align-items: stretch; gap: 10px; margin-top: 16px; }
+  .flow-node { flex: 1; min-width: 0; background: #ffffff; border: 2px solid #0284c7; border-radius: 10px; padding: 16px 14px; text-align: center; }
   .flow-node strong { display: block; font-size: 19px; }
   .flow-node span { font-size: 14px; color: #51617a; }
   .flow-node.target { border-style: dashed; border-color: #d18b2c; background: #fdf1e0; }
-  .flow-arrow { font-size: 24px; color: #94a3b8; }
+  .flow-arrow { flex: 0 0 auto; align-self: center; font-size: 22px; color: #94a3b8; }
 ---
 
 <!-- _class: lead -->
@@ -125,7 +125,7 @@ Vietnamese workers abroad → family in Vietnam
 
 Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Payday comes; some months she remembers to send money home, some months a double shift pushes it to next week.
 
-**She doesn't want to "remember to send." She wants a standing plan she signs once and can verify landed.**
+**She doesn't want to "remember to send." She wants a standing plan she sets up once, then signs each month on a habit — not from memory.**
 
 Today the recipient still needs a Stellar address, and Linh signs every transfer herself — Bakti does not send automatically.
 
