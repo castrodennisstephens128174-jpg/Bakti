@@ -127,7 +127,7 @@ Filipino workers abroad, family in the Philippines
 
 Maria works in Singapore, one of over 221,000 Filipino workers there. Payday comes. Some months she remembers to send money home, some months a long shift pushes it to next week. She wants a standing plan she sets up once, then signs each month on a habit, not from memory.
 
-**Her mother, back home in the Philippines, has never used a banking app. What she actually wants is to walk in, show her ID, and leave with cash.** Today the recipient still needs a Stellar address. Cash pickup for her mother is the target, not built yet.
+**Her mother, back home in the Philippines, has never used a banking app. What she actually wants is to walk in, show her ID, and leave with cash.** Today the recipient still needs a Stellar address; cash pickup for her mother is the next milestone.
 
 ---
 
@@ -182,12 +182,12 @@ Only the receiving side needs a Stellar anchor. Wherever the sender is, they jus
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div>
 <span class="flow-arrow">→</span>
-<div class="flow-node target"><strong>Anchor</strong><span>MoneyGram Ramps, real and live in PH, Bakti's connection is next</span></div>
+<div class="flow-node target"><strong>Anchor</strong><span>MoneyGram Ramps, live in PH since 2021, Bakti's connection is next</span></div>
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Receiver</strong><span>Her mother, cash in hand, no wallet needed</span></div>
 </div>
 
-Solid border = built today. Dashed = planned, not yet connected. Once the anchor connects, funds land in MoneyGram's own Stellar account, then flow into their agent network across the Philippines. Her mother just needs a reference number and a photo ID to walk out with cash. No wallet, no app.
+Solid border marks what's built today; dashed marks what's still ahead. Once the anchor connects, funds land in MoneyGram's own Stellar account, then flow into their agent network across the Philippines. Her mother just needs a reference number and a photo ID to walk out with cash.
 
 ---
 
@@ -207,7 +207,7 @@ Solid border = built today. Dashed = planned, not yet connected. Once the anchor
 <div class="card">
 <span class="badge now">Confirmed anchor</span>
 <ul>
-<li>MoneyGram Ramps is real and live. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li>
+<li>MoneyGram Ramps has been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li>
 <li>Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed</li>
 <li>What's still pending is Bakti's own connection to it: an email is out, no reply yet, nothing's confirmed as a partner</li>
 </ul>
@@ -220,11 +220,11 @@ Solid border = built today. Dashed = planned, not yet connected. Once the anchor
 
 ## Why Bakti, not the alternatives
 
-# Classic remittance is transactional. Bakti is a standing habit with on-chain proof.
+# A one-off transfer versus a standing habit with proof attached
 
 <img class="chart-img" src="assets/fee-comparison.png">
 
-Classic apps and bank transfers are one-off: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti's target is different on all three: no wallet needed on the recipient's side, a verifiable Stellar transaction the sender can point to, and a monthly habit instead of "did I remember this month." The network layer itself costs next to nothing; the number still missing is the anchor's own cash-out quote.
+Classic apps and bank transfers happen once: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti skips the wallet requirement on the recipient's side, gives the sender a Stellar transaction they can actually point to, and turns "did I remember this month" into a habit that's already set up. The network layer itself costs next to nothing; what's still missing is the anchor's own cash-out quote.
 
 <p class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</p>
 
@@ -232,11 +232,11 @@ Classic apps and bank transfers are one-off: no standing plan, no proof beyond a
 
 ## Market size
 
-# TAM $9.3B, SAM $1.6B, SOM $16M: a funnel, not a guess
+# Sizing the corridor: TAM $9.3B → SAM $1.6B → SOM $16M
 
 <img class="chart-img" src="assets/tam-sam-som.png">
 
-TAM: 2025 cash-remittance volume from 5 of Bakti's 7 confirmed sending markets (UAE, Saudi Arabia, Singapore, Japan, Hong Kong); a floor, since BSP doesn't break out South Korea or Malaysia separately. SAM applies each market's own crypto-ownership rate, the senders who already hold crypto today. SOM is a 1% target slice of SAM for year one or two, not a revenue forecast.
+TAM comes from 2025 cash-remittance volume in 5 of Bakti's 7 confirmed sending markets (UAE, Saudi Arabia, Singapore, Japan, Hong Kong); a floor, since BSP doesn't break out South Korea or Malaysia separately. SAM applies each market's own crypto-ownership rate to that volume, the senders who already hold crypto today. SOM is a 1% slice of SAM to aim for in year one or two, a goal to work toward, not a promise.
 
 <p class="source">Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025 · Triple-A, State of Global Cryptocurrency Ownership 2024</p>
 
@@ -244,16 +244,16 @@ TAM: 2025 cash-remittance volume from 5 of Bakti's 7 confirmed sending markets (
 
 ## Business model + GTM
 
-# A fee on real volume, not a list of ideas
+# Where the fee comes from, and what we still don't know
 
 <div class="row">
 <div class="card">
 <span class="badge next">Unvalidated business model</span>
 <ul>
-<li>Primary: a sender-paid service fee bundled into the licensed provider's quote. At an illustrative 2% (under the 6.36% world average), capturing SOM's $16M target volume is roughly $320K in year one/two fee revenue, an illustrative target, not a forecast</li>
-<li>Secondary: provider referral or revenue share where contractually permitted</li>
-<li>Institutional: employer, cooperative, or worker-community distribution paid by an organization instead of the individual</li>
-<li>Not yet validated: actual fee tolerance, provider revenue-share terms, or per-transaction unit economics</li>
+<li>Main path: a sender-paid fee bundled into the provider's quote. At 2% (under the 6.36% world average), SOM's $16M works out to roughly $300K a year, a sanity check, not a projection we're standing behind</li>
+<li>Also possible: provider referral or revenue share, where contracts and regulation allow it</li>
+<li>Also possible: employer or worker-community distribution, paid by an organization instead of the individual sender</li>
+<li>Still open: whether senders actually tolerate this fee, what a provider will share, and the real cost per transaction</li>
 </ul>
 </div>
 <div class="card">
@@ -304,7 +304,7 @@ TAM: 2025 cash-remittance volume from 5 of Bakti's 7 confirmed sending markets (
 
 # The target value, in one line.
 
-A sender signs once a month. Her mother just walks in and picks up cash. No wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet. It's exactly what the anchor connection is for.
+A sender signs once a month. Her mother just walks in and picks up cash — no wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet; the anchor connection is what gets us there.
 
 <div class="stats">
 <div class="stat"><span class="num pi pi-globe"></span><span class="lbl">bakti-stellar.vercel.app, live app</span></div>

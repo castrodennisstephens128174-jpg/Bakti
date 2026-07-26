@@ -155,15 +155,15 @@ Bakti's fee model taps a share of remittance dollar volume, so market size is de
 
 - **TAM ≈ $9.3B/year**: 2025 BSP cash-remittance volume from 5 of Bakti's 7 confirmed sending markets (UAE 4.6%, Saudi Arabia 6.6%, Singapore 7.3%, Japan 5.0%, Hong Kong 2.5% of the $35.63B national total). This is a floor: South Korea and Malaysia are also in Bakti's corridor evidence but aren't broken out separately in BSP's top-source reporting.
 - **SAM ≈ $1.6B/year**: TAM discounted by each market's own crypto-ownership rate (Triple-A, 2024: UAE 25.3%, Singapore 24.4%, Saudi Arabia 15.0%, Hong Kong 14.3%, Japan 4.0%), the senders who already hold crypto and could plausibly fund a Bakti transfer today without first being onboarded to crypto itself.
-- **SOM ≈ $16M/year**: an illustrative 1% target slice of SAM for year one or two, reachable through direct worker-community outreach. This is a target, not a forecast.
+- **SOM ≈ $16M/year**: a 1% slice of SAM to aim for in year one or two, reachable through direct worker-community outreach. A goal to work toward, not a promise.
 
 Sources: [Bangko Sentral ng Pilipinas cash remittance data, 2025](https://www.pna.gov.ph/articles/1269149); [Triple-A, State of Global Cryptocurrency Ownership 2024](https://www.triple-a.io/blog/crypto-ownership-report).
 
 ## Business-model hypotheses, unvalidated
 
-- **Primary:** a sender-paid service fee bundled transparently into a licensed provider's quote. At an illustrative 2% (well under the 6.36% world average cost to remit, World Bank Remittance Prices Worldwide Q3 2025), capturing SOM's $16M target volume is roughly $320K in year-one/two fee revenue, an illustrative target, not a forecast.
-- **Secondary:** provider referral or revenue share where permitted by contracts and regulation.
-- **Institutional:** employer or worker-community distribution paid by an institution rather than the recipient.
+- **Main path:** a sender-paid fee bundled transparently into a licensed provider's quote. At 2% (well under the 6.36% world average cost to remit, World Bank Remittance Prices Worldwide Q3 2025), SOM's $16M works out to roughly $300K a year in fee revenue, a sanity check on the model, not a projection we're standing behind.
+- **Also possible:** provider referral or revenue share, where contracts and regulation allow it.
+- **Also possible:** employer or worker-community distribution, paid by an institution rather than the recipient.
 
 No price, take rate, unit economics, or provider margin has been validated. For context, the same World Bank dataset puts the bank-average cost to remit at 14.99% and the cheapest available option today at 3.29%; Bakti's target sits under the 6.36% global average, though the anchor's own cash-out quote is not yet known.
 

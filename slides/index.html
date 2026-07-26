@@ -162,7 +162,7 @@
       <p class="quote" style="margin-top:22px;">Maria works in Singapore, one of over 221,000 Filipino workers there. Payday comes. Some months she remembers to send money home, some months a long shift pushes it to next week.</p>
       <p class="lede" style="margin-top:24px;color:var(--brand);font-weight:700;">She wants a standing plan she sets up once, then signs each month on a habit, not from memory.</p>
       <p class="lede" style="margin-top:16px;font-size:16px;">Her mother, back home in the Philippines, has never used a banking app. What she actually wants is to walk in, show her ID, and leave with cash.</p>
-      <p class="small" style="margin-top:16px;">Today the recipient still needs a Stellar address, and Maria signs every transfer herself. Bakti does not send automatically. Cash pickup for her mother is the target, not built yet.</p>
+      <p class="small" style="margin-top:16px;">Today the recipient still needs a Stellar address, and Maria signs every transfer herself. Bakti does not send automatically. Cash pickup for her mother is the next milestone.</p>
     </div>
   </section>
 
@@ -195,7 +195,7 @@
         <div class="node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div><div class="arrow" aria-hidden="true">→</div>
         <div class="node"><strong>Receiver</strong><span>Her mother, cash in hand, no wallet needed</span></div>
       </div>
-      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (MoneyGram Ramps, real and live in PH, Bakti's connection is next) → MoneyGram's Philippines agent network → cash in hand</strong></div>
+      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (MoneyGram Ramps, live in PH since 2021, Bakti's connection is next) → MoneyGram's Philippines agent network → cash in hand</strong></div>
     </div>
   </section>
 
@@ -205,7 +205,7 @@
     <h2 id="s6-title">One Philippines anchor serves every sending market</h2>
     <div class="grid-2">
       <div class="card current"><span class="tag">ARCHITECTURE</span><ul class="clean"><li>Only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange</li><li>No separate integration per sending country, no separate deal per market</li><li>The Philippines is the one place Bakti needs a licensed cash-out partner</li></ul></div>
-      <div class="card current"><span class="tag">CONFIRMED ANCHOR</span><ul class="clean"><li>MoneyGram Ramps is real and live. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li><li>Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed</li><li>What's still pending is Bakti's own connection to it: an email is out, no reply yet, nothing's confirmed as a partner</li></ul></div>
+      <div class="card current"><span class="tag">CONFIRMED ANCHOR</span><ul class="clean"><li>MoneyGram Ramps has been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li><li>Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed</li><li>What's still pending is Bakti's own connection to it: an email is out, no reply yet, nothing's confirmed as a partner</li></ul></div>
     </div>
     <div class="source">Sources: stellar.org/case-studies/moneygram-international (2021 launch) · developer.moneygram.com/integrate-moneygram-ramps</div>
   </section>
@@ -213,27 +213,27 @@
   <section class="slide" data-slide="7" aria-labelledby="s7-title">
     <span class="slide-num">7 / 11</span>
     <p class="kicker">Why Bakti, not the alternatives</p>
-    <h2 id="s7-title">Classic remittance is transactional. Bakti is a standing habit with on-chain proof.</h2>
+    <h2 id="s7-title">A one-off transfer versus a standing habit with proof attached</h2>
     <img src="assets/fee-comparison.png" style="max-width:460px;align-self:center;margin-top:4px;">
-    <p class="small" style="margin-top:12px;">Classic apps and bank transfers are one-off: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti's target is different on all three: no wallet needed on the recipient's side, a verifiable Stellar transaction the sender can point to, and a monthly habit instead of "did I remember this month." The network layer itself costs next to nothing; the number still missing is the anchor's own cash-out quote.</p>
+    <p class="small" style="margin-top:12px;">Classic apps and bank transfers happen once: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti skips the wallet requirement on the recipient's side, gives the sender a Stellar transaction they can actually point to, and turns "did I remember this month" into a habit that's already set up. The network layer itself costs next to nothing; what's still missing is the anchor's own cash-out quote.</p>
     <div class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</div>
   </section>
 
   <section class="slide" data-slide="8" aria-labelledby="s8-title">
     <span class="slide-num">8 / 11</span>
     <p class="kicker">Market size</p>
-    <h2 id="s8-title">TAM $9.3B, SAM $1.6B, SOM $16M: a funnel, not a guess</h2>
+    <h2 id="s8-title">Sizing the corridor: TAM $9.3B → SAM $1.6B → SOM $16M</h2>
     <img src="assets/tam-sam-som.png" style="max-width:500px;align-self:center;margin-top:4px;">
-    <p class="small" style="margin-top:12px;">TAM is 2025 cash-remittance volume from just 5 of Bakti's 7 confirmed sending markets (UAE, Saudi Arabia, Singapore, Japan, Hong Kong); South Korea and Malaysia aren't broken out separately by BSP, so this is a floor. SAM applies each market's own crypto-ownership rate to that volume, the share of senders who already hold crypto and could fund a transfer today. SOM is a 1% target slice of SAM for year one or two, reached through direct worker-community outreach, not a revenue forecast.</p>
+    <p class="small" style="margin-top:12px;">TAM comes from 2025 cash-remittance volume in 5 of Bakti's 7 confirmed sending markets (UAE, Saudi Arabia, Singapore, Japan, Hong Kong); a floor, since BSP doesn't break out South Korea or Malaysia separately. SAM applies each market's own crypto-ownership rate to that volume, the senders who already hold crypto today. SOM is a 1% slice of SAM to aim for in year one or two, a goal to work toward, not a promise.</p>
     <div class="source">Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025 · Triple-A, State of Global Cryptocurrency Ownership 2024</div>
   </section>
 
   <section class="slide" data-slide="9" aria-labelledby="s9-title">
     <span class="slide-num">9 / 11</span>
     <p class="kicker">Business model + GTM</p>
-    <h2 id="s9-title">A fee on real volume, not a list of ideas</h2>
+    <h2 id="s9-title">Where the fee comes from, and what we still don't know</h2>
     <div class="grid-2">
-      <div class="card soft"><span class="tag">UNVALIDATED BUSINESS MODEL</span><ul class="clean"><li>Primary: a sender-paid service fee bundled into the licensed provider's quote. At an illustrative 2% (under the 6.36% world average), capturing SOM's $16M target volume is roughly $320K in year one/two fee revenue, an illustrative target, not a forecast</li><li>Secondary: provider referral or revenue share where contractually permitted</li><li>Institutional: employer, cooperative, or worker-community distribution paid by an organization instead of the individual</li><li>Not yet validated: actual fee tolerance, provider revenue-share terms, or per-transaction unit economics</li></ul></div>
+      <div class="card soft"><span class="tag">UNVALIDATED BUSINESS MODEL</span><ul class="clean"><li>Main path: a sender-paid fee bundled into the provider's quote. At 2% (under the 6.36% world average), SOM's $16M works out to roughly $300K a year, a sanity check, not a projection we're standing behind</li><li>Also possible: provider referral or revenue share, where contracts and regulation allow it</li><li>Also possible: employer or worker-community distribution, paid by an organization instead of the individual sender</li><li>Still open: whether senders actually tolerate this fee, what a provider will share, and the real cost per transaction</li></ul></div>
       <div class="card"><span class="tag">GTM EXPERIMENTS</span><ul class="clean"><li>Interview Filipino workers abroad (any market) and family recipients in the Philippines</li><li>Test planning/reminder value before automation</li><li>Follow up on the MoneyGram Ramps email, without claiming a partnership</li><li>Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore), the same senders SAM counts</li><li>Run testnet usability studies for signing and address safety</li></ul></div>
     </div>
     <div class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</div>
@@ -255,7 +255,7 @@
     <p class="kicker">The target value, in one line</p>
     <h2 id="s11-title">A sender signs. Her mother collects cash. No blockchain to learn.</h2>
     <div class="card" style="margin-top:8px;">
-      <p class="lede" style="font-size:19px;">A sender signs once a month. Her mother just walks in and picks up cash. No wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet. It's exactly what the anchor connection is for.</p>
+      <p class="lede" style="font-size:19px;">A sender signs once a month. Her mother just walks in and picks up cash — no wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet; the anchor connection is what gets us there.</p>
     </div>
     <div class="source">bakti-stellar.vercel.app · Bakti · GitHub · Stellar APAC Hackathon 2026 · Track A</div>
   </section>
