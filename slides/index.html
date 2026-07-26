@@ -73,7 +73,7 @@
   .kicker { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--brand); margin-bottom: 9px; font-weight: 750; }
   .lede { font-size: 22px; color: var(--ink-soft); max-width: 74ch; line-height: 1.48; }
   .small { font-size: 13px; color: var(--ink-soft); line-height: 1.48; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex: 1; min-height: 0; align-items: start; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex: 1; min-height: 0; align-items: stretch; }
   .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .card { border: 1px solid var(--line); border-radius: 16px; padding: 20px; background: var(--white); }
   .soft { background: var(--accent); border-color: transparent; }
@@ -145,7 +145,7 @@
 <main id="deck" aria-label="Bakti pitch deck">
 
   <section class="slide active" data-slide="1" aria-labelledby="s1-title">
-    <span class="slide-num">1 / 12</span>
+    <span class="slide-num">1 / 11</span>
     <p class="kicker">Stellar APAC Hackathon 2026 · Product pitch</p>
     <h1 id="s1-title">Bakti</h1>
     <p class="lede" style="font-size:30px;color:var(--ink);font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;">Plan salary-day support. Verify the transfer.</p>
@@ -155,7 +155,7 @@
   </section>
 
   <section class="slide" data-slide="2" aria-labelledby="s2-title">
-    <span class="slide-num">2 / 12</span>
+    <span class="slide-num">2 / 11</span>
     <p class="kicker">What we heard</p>
     <h2 id="s2-title">A friend's problem, then 200 more</h2>
     <div class="grid-2">
@@ -166,113 +166,108 @@
   </section>
 
   <section class="slide" data-slide="3" aria-labelledby="s3-title">
-    <span class="slide-num">3 / 12</span>
-    <p class="kicker">Corridor evidence</p>
-    <h2 id="s3-title">One anchor in the Philippines reaches every market Filipino workers send from</h2>
-    <img src="assets/ofw-markets.png" style="max-width:520px;align-self:center;margin-top:4px;">
-    <p class="small" style="margin-top:12px;">Only the receiving side needs a Stellar anchor. Wherever the sender is, they just need XLM/USDC sitting in their own wallet. Singapore's OFWs alone also account for 7.3% of all 2025 PH cash remittances, the #2 source country after the US.</p>
-    <div class="source">Sources: DMW/OFW deployment reporting via businessmirror.com.ph · Bangko Sentral ng Pilipinas cash remittance data</div>
+    <span class="slide-num">3 / 11</span>
+    <p class="kicker">In plain terms</p>
+    <h2 id="s3-title">What Bakti does</h2>
+    <div class="stat-grid" style="margin-top:8px;">
+      <div class="stat"><span class="num pi pi-calendar" style="font-family:'primeicons';font-size:36px;color:var(--brand);"></span><span class="lbl" style="font-size:17px;font-weight:700;">Plan the send around payday</span></div>
+      <div class="stat"><span class="num pi pi-key" style="font-family:'primeicons';font-size:36px;color:var(--brand);"></span><span class="lbl" style="font-size:17px;font-weight:700;">Sign it once, yourself</span></div>
+      <div class="stat"><span class="num pi pi-shop" style="font-family:'primeicons';font-size:36px;color:var(--brand);"></span><span class="lbl" style="font-size:17px;font-weight:700;">Family picks up PHP cash, no wallet</span></div>
+    </div>
+    <p class="lede" style="margin-top:32px;text-align:center;">Money moves on Stellar in between. That's the whole idea.</p>
   </section>
 
   <section class="slide" data-slide="4" aria-labelledby="s4-title">
-    <span class="slide-num">4 / 12</span>
-    <p class="kicker">In plain terms</p>
-    <h2 id="s4-title">What Bakti does</h2>
-    <div class="stat-grid" style="margin-top:8px;">
-      <div class="stat"><span class="num pi pi-calendar" style="font-family:'primeicons';font-size:30px;color:var(--brand);"></span><span class="lbl">Plan the send around payday</span></div>
-      <div class="stat"><span class="num pi pi-key" style="font-family:'primeicons';font-size:30px;color:var(--brand);"></span><span class="lbl">Sign it once, yourself</span></div>
-      <div class="stat"><span class="num pi pi-shop" style="font-family:'primeicons';font-size:30px;color:var(--brand);"></span><span class="lbl">Family picks up PHP cash, no wallet</span></div>
+    <span class="slide-num">4 / 11</span>
+    <p class="kicker">Product today vs next</p>
+    <h2 id="s4-title">Plan, sign, and verify on-chain today</h2>
+    <div class="grid-2">
+      <div class="card current"><span class="tag">TODAY · WORKING</span><ul class="clean"><li>Freighter + custom signed manageData session, not SEP-10</li><li>Support-plan records; reminder day is metadata only</li><li>XLM escrow/release with 60-ledger demo cadence</li><li>Direct XLM/USDC to a recipient address the sender enters and confirms</li><li>Horizon/RPC verification, SEP-7 link, recipient watcher</li><li>Status ends at <strong>Verified on-chain</strong></li></ul></div>
+      <div class="card future"><span class="tag">NEXT · PLANNED</span><ul class="clean"><li>Licensed provider onboarding, KYB/compliance, agreements</li><li>SEP-1 + provider SEP-10 + hosted SEP-24</li><li>KYC, quote/limits, approved deposit routing</li><li>Provider transaction status and reference</li><li>PHP cash-out and provider-confirmed collection</li></ul></div>
     </div>
-    <p class="lede" style="margin-top:28px;">Money moves on Stellar in between. That's the whole idea.</p>
   </section>
 
   <section class="slide" data-slide="5" aria-labelledby="s5-title">
-    <span class="slide-num">5 / 12</span>
+    <span class="slide-num">5 / 11</span>
     <p class="kicker">One simple flow</p>
     <h2 id="s5-title">Sender → Stellar → Anchor → Receiver</h2>
     <div class="flow-wrap">
       <div class="flow" role="img" aria-label="Current Bakti flow from sender through Stellar to a planned anchor to the receiver in the Philippines">
         <div class="node"><strong>Sender</strong><span>Filipino worker, any market</span></div><div class="arrow" aria-hidden="true">→</div>
         <div class="node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div><div class="arrow" aria-hidden="true">→</div>
-        <div class="node"><strong>Receiver</strong><span>Her mother, cash in hand, no wallet needed</span></div>
+        <div class="node"><strong>Receiver</strong><span>Family member, cash in hand, no wallet needed</span></div>
       </div>
-      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (PeraHub, SEP-31 confirmed on the Stellar directory, Bakti's connection is next) → PeraHub's 3,000+ Philippines branches → cash in hand</strong></div>
+      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (PeraHub, SEP-31 confirmed on the Stellar directory, outreach not started) → PeraHub's 3,000+ Philippines branches → cash in hand</strong></div>
     </div>
   </section>
 
   <section class="slide" data-slide="6" aria-labelledby="s6-title">
-    <span class="slide-num">6 / 12</span>
-    <p class="kicker">Why Stellar; why one anchor is enough</p>
+    <span class="slide-num">6 / 11</span>
+    <p class="kicker">Why one anchor, and who it is</p>
     <h2 id="s6-title">One Philippines anchor serves every sending market</h2>
     <div class="grid-2">
-      <div class="card current"><span class="tag">ARCHITECTURE</span><ul class="clean"><li>Only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange</li><li>No separate integration per sending country, no separate deal per market</li><li>The Philippines is the one place Bakti needs a licensed cash-out partner</li></ul></div>
-      <div class="card current"><span class="tag">CONFIRMED ANCHOR</span><ul class="clean"><li>PeraHub, PETNET Inc.'s retail brand (BSP-regulated, UnionBank/UBX PH group, 3,000+ branches), is listed on Stellar's own anchor directory with SEP-31 support, USDC in, PHP or USD out, cash payout</li><li>SEP-31 is anchor-to-anchor, no wallet required on the recipient's side, a closer fit than a hosted webview</li><li>Bakti also emailed MoneyGram Ramps earlier (SEP-24, live in PH since 2021, no reply yet); PeraHub is the better-matched pick, outreach hasn't started</li></ul></div>
+      <div style="display:flex;align-items:center;justify-content:center;"><img src="assets/ofw-markets.png" style="max-width:100%;"></div>
+      <div class="card current"><span class="tag">CONFIRMED ANCHOR: PERAHUB</span><ul class="clean"><li>Only the receiving side needs a Stellar anchor; a sender anywhere just needs XLM/USDC in their own wallet</li><li>PeraHub (PETNET Inc., BSP-regulated, UnionBank/UBX PH, 3,000+ branches) is on Stellar's own directory with SEP-31: USDC in, PHP or USD out, cash payout</li><li>SEP-31 needs no recipient wallet, a closer fit than a hosted webview</li><li>Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); PeraHub outreach hasn't started yet</li></ul></div>
     </div>
-    <div class="source">Sources: anchors.stellar.org (PeraHub, SEP-31) · perahub.com.ph (BSP regulation) · developer.moneygram.com/integrate-moneygram-ramps</div>
+    <div class="source">Sources: DMW/OFW deployment reporting via businessmirror.com.ph · anchors.stellar.org (PeraHub, SEP-31) · perahub.com.ph (BSP regulation) · developer.moneygram.com/integrate-moneygram-ramps</div>
   </section>
 
   <section class="slide" data-slide="7" aria-labelledby="s7-title">
-    <span class="slide-num">7 / 12</span>
+    <span class="slide-num">7 / 11</span>
     <p class="kicker">Why Bakti, not the alternatives</p>
     <h2 id="s7-title">A one-off transfer versus a standing habit with proof attached</h2>
     <img src="assets/fee-comparison.png" style="max-width:460px;align-self:center;margin-top:4px;">
-    <p class="small" style="margin-top:12px;">Classic apps and bank transfers happen once: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti skips the wallet requirement on the recipient's side, gives the sender a Stellar transaction they can actually point to, and turns "did I remember this month" into a habit that's already set up. The network layer itself costs next to nothing; what's still missing is the anchor's own cash-out quote.</p>
+    <p class="small" style="margin-top:12px;">Classic apps and bank transfers happen once: no standing plan, no proof beyond a receipt, and the recipient needs a bank account or wallet. Bakti skips that, gives the sender a Stellar transaction to point to, and turns "did I remember" into a habit already set up. This chart is the classic-rail cost stack; Bakti's own total, a 2% fee plus whatever PeraHub charges to cash out, isn't on it, since PeraHub's rate isn't public yet.</p>
     <div class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</div>
   </section>
 
   <section class="slide" data-slide="8" aria-labelledby="s8-title">
-    <span class="slide-num">8 / 12</span>
-    <p class="kicker">Why Bakti, not the alternatives</p>
-    <h2 id="s8-title">A one-off transfer versus a standing habit with proof attached</h2>
-    <img src="assets/fee-comparison.png" style="max-width:460px;align-self:center;margin-top:4px;">
-    <p class="small" style="margin-top:12px;">Classic apps and bank transfers happen once: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti skips the wallet requirement on the recipient's side, gives the sender a Stellar transaction they can actually point to, and turns "did I remember this month" into a habit that's already set up. The network layer itself costs next to nothing; what's still missing is the anchor's own cash-out quote.</p>
-    <div class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</div>
-  </section>
-
-  <section class="slide" data-slide="9" aria-labelledby="s9-title">
-    <span class="slide-num">9 / 12</span>
+    <span class="slide-num">8 / 11</span>
     <p class="kicker">Market size</p>
-    <h2 id="s9-title">The same demand, counted in dollars</h2>
+    <h2 id="s8-title">The same demand, counted in dollars</h2>
     <img src="assets/tam-sam-som.png" style="max-width:460px;align-self:center;margin-top:4px;">
     <ul class="clean" style="margin-top:12px;">
-      <li>The survey's 78% monthly senders, sized in dollars</li>
-      <li>TAM $9.3B: BSP 2025 remittances, 5 confirmed OFW markets</li>
-      <li>SAM $1.6B: cut down by each market's crypto-ownership rate</li>
-      <li>SOM $16M: a 1% target slice for year one or two, a goal</li>
+      <li>TAM $9.3B: BSP 2025 remittances, 5 of the 7 markets from the corridor chart (Korea and Malaysia aren't broken out by BSP)</li>
+      <li>SAM $1.6B: that same volume, cut down to senders who already hold crypto in each market</li>
+      <li>SOM $16M: a 1% target slice of SAM for year one or two, a goal, not a promise</li>
     </ul>
     <div class="source">Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025 · Triple-A, State of Global Cryptocurrency Ownership 2024</div>
   </section>
 
-  <section class="slide" data-slide="10" aria-labelledby="s10-title">
-    <span class="slide-num">10 / 12</span>
+  <section class="slide" data-slide="9" aria-labelledby="s9-title">
+    <span class="slide-num">9 / 11</span>
     <p class="kicker">Model and go-to-market</p>
-    <h2 id="s10-title">Revenue plan and a sequenced launch</h2>
+    <h2 id="s9-title">Revenue plan and a sequenced launch</h2>
     <div class="grid-2">
       <div class="card soft"><span class="tag">BUSINESS MODEL</span><ul class="clean"><li>2% sender fee, bundled into the provider's quote</li><li>At SOM's $16M, roughly $300K a year</li><li>Later: revenue share with the anchor</li><li>Still open: fee tolerance, provider terms, unit economics</li></ul></div>
-      <div class="card"><span class="tag">GO-TO-MARKET STRATEGY</span><ul class="clean"><li>Start with one corridor: Singapore to the Philippines</li><li>Land the PeraHub anchor connection first</li><li>Seed users through OFW community groups</li><li>Expand market by market as crypto access grows</li></ul></div>
+      <div class="card"><span class="tag">GO-TO-MARKET STRATEGY</span><ul class="clean"><li>Start in Singapore, with senders who already hold crypto, SAM's $1.6B</li><li>Land the PeraHub anchor connection first</li><li>Seed users through OFW community groups</li><li>Expand market by market as crypto access grows</li></ul></div>
     </div>
     <div class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</div>
   </section>
 
-  <section class="slide" data-slide="11" aria-labelledby="s11-title">
-    <span class="slide-num">11 / 12</span>
+  <section class="slide" data-slide="10" aria-labelledby="s10-title">
+    <span class="slide-num">10 / 11</span>
     <p class="kicker">Where we are</p>
-    <h2 id="s11-title">Phase 1 done, Phase 2 underway</h2>
+    <h2 id="s10-title">Phase 1 done, Phase 2 underway</h2>
     <div class="grid-2">
       <div class="card current"><span class="tag">PHASE 1, BUILT AND TESTED</span><ul class="clean"><li>Mainnet contract live and working well</li><li>Direct payment plus on-chain verification</li><li>Honest boundary: status stops at Verified on-chain</li></ul></div>
-      <div class="card future"><span class="tag">PHASE 2, IN PROGRESS NOW</span><ul class="clean"><li>Reaching out to PeraHub for early integration</li><li>Found via anchors.stellar.org: SEP-31, Philippines</li><li>Running the product, finding real users</li><li>Awaiting feedback</li></ul></div>
+      <div class="card future"><span class="tag">PHASE 2, IN PROGRESS NOW</span><ul class="clean"><li>Running the product, finding real users</li><li>Next: reach out to PeraHub for early integration</li><li>Awaiting feedback</li></ul></div>
     </div>
-    <div class="source">Contract live on Stellar mainnet since 2026-07-12: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR, stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</div>
+    <div class="source">Contract live on Stellar mainnet since 2026-07-12: stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</div>
   </section>
 
-  <section class="slide" data-slide="12" aria-labelledby="s12-title">
-    <span class="slide-num">12 / 12</span>
-    <p class="kicker">The target value, in one line</p>
-    <h2 id="s12-title">A sender signs. Her mother collects cash. No blockchain to learn.</h2>
+  <section class="slide" data-slide="11" aria-labelledby="s11-title">
+    <span class="slide-num">11 / 11</span>
+    <p class="kicker">The target value</p>
+    <h2 id="s11-title">No wallet, no app, just cash in hand</h2>
     <div class="card" style="margin-top:8px;">
-      <p class="lede" style="font-size:19px;">A sender signs once a month. Her mother just walks in and picks up cash — no wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet; the anchor connection is what gets us there.</p>
+      <p class="lede" style="font-size:19px;">A sender signs once a month. Their family just walks in and picks up cash, no wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet; the anchor connection is what gets us there.</p>
     </div>
-    <div class="source">bakti-stellar.vercel.app · Bakti · GitHub · Stellar APAC Hackathon 2026 · Track A</div>
+    <div style="display:flex;gap:16px;margin-top:20px;">
+      <div class="stat" style="flex:1;"><span class="num pi pi-globe" style="font-family:'primeicons';font-size:30px;color:var(--brand);"></span><span class="lbl">bakti-stellar.vercel.app, live app</span></div>
+      <div class="stat" style="flex:1;"><span class="num pi pi-github" style="font-family:'primeicons';font-size:30px;color:var(--brand);"></span><span class="lbl">Bakti · GitHub, source & issues</span></div>
+    </div>
+    <div class="source">Stellar APAC Hackathon 2026 · Track A</div>
   </section>
 
 </main>
@@ -281,7 +276,7 @@
   <button type="button" id="next" aria-label="Next slide">→</button>
 </nav>
 <script>
-  const TOTAL = 12;
+  const TOTAL = 11;
   let current = 1;
   const progress = document.getElementById('progress');
   const slides = Array.from(document.querySelectorAll('.slide'));

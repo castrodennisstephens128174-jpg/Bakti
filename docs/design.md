@@ -91,14 +91,14 @@ The allowance detail screen should always explain that the following are planned
 
 1. Provider onboarding, commercial/compliance approval, and allowlisting.
 2. SEP-1 and anchor SEP-10.
-3. Hosted SEP-24 and KYC.
+3. Anchor deposit/withdrawal flow and KYC (SEP-31 anchor-to-anchor for PeraHub; SEP-24 hosted webview for MoneyGram Ramps).
 4. Provider quote/limits where applicable.
 5. Provider-approved deposit routing.
 6. Status, reference, cash-out, and collection confirmation.
 
-MoneyGram Ramps may be named only as a provider Bakti has emailed about integrating, never as a confirmed partner or existing route.
+**PeraHub** may be named as the target anchor Bakti is pursuing — SEP-31, BSP-regulated PETNET Inc., UnionBank/UBX group — but never as a confirmed partner or existing route; outreach to PeraHub has not started. MoneyGram Ramps may be named only as the anchor Bakti emailed earlier about integrating, never as a confirmed partner or existing route either.
 
-The gap in that target design is still open, not yet answered by any source: MoneyGram Ramps has not confirmed the integration, and there has been no response to Bakti's outreach email yet.
+The gap in that target design is still open, not yet answered by any source: neither PeraHub nor MoneyGram Ramps has confirmed an integration. Outreach to PeraHub has not started, and there has been no response to Bakti's earlier MoneyGram Ramps outreach email.
 
 ## Metrics page
 

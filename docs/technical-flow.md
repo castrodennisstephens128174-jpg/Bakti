@@ -11,7 +11,7 @@ Sender → Bakti support-plan record → Stellar → recipient Stellar address
 Planned flow:
 
 ```text
-Sender → Stellar → MoneyGram Ramps → KYC and provider workflow → PHP cash-out
+Sender → Stellar → PeraHub → PeraHub's Philippines branch network → family member
 ```
 
 The planned provider segment is not implemented.
@@ -173,12 +173,12 @@ For free local development, set `STELLAR_NETWORK=testnet` and `NEXT_PUBLIC_STELL
 
 ## 11. Last-mile integration required
 
-A MoneyGram Ramps adapter would need, at minimum:
+A PeraHub adapter would need, at minimum:
 
 1. Commercial onboarding, KYB/compliance, agreements, and allowlisting.
 2. SEP-1 metadata.
 3. Anchor SEP-10 authentication and JWT handling.
-4. Hosted SEP-24 flow and KYC fields.
+4. SEP-31 anchor-to-anchor payment flow and KYC data exchange — no hosted interactive webview, since the receiving customer never touches a wallet.
 5. Provider quote/limit presentation where applicable.
 6. Provider-approved deposit routing.
 7. Transaction status polling/webhooks and error reconciliation.
@@ -186,9 +186,11 @@ A MoneyGram Ramps adapter would need, at minimum:
 
 None of these steps is implemented in the current endpoints.
 
-The core gap in this target design is open, not yet answered by any source: MoneyGram Ramps has not confirmed the integration. Bakti emailed MoneyGram Ramps about it, and there has been no response yet.
+The core gap in this target design is open, not yet answered by any source: PeraHub has not confirmed the integration, and outreach to PeraHub/PETNET has not started yet. Bakti has not found any publicly documented fees, per-transaction limits, or KYC fields for PeraHub.
 
-The target design is not pure speculation, though. MoneyGram Ramps settles funds to its own Stellar address and lets the recipient collect cash via reference number plus photo ID, no wallet needed on their side. That mechanism has been live in the Philippines since October 2021, one of the original four launch countries with Canada, Kenya, and the US ([stellar.org/case-studies/moneygram-international](https://stellar.org/case-studies/moneygram-international)). Classic (non-crypto) MoneyGram already runs that same agent-based cash pickup across the Philippines today.
+The target design is not pure speculation, though. **PeraHub** is the retail brand of PETNET Inc., regulated by the Bangko Sentral ng Pilipinas (BSP) and sitting in the UnionBank/UBX PH group, with 3,000+ branches nationwide across the Philippines. It is listed on Stellar's own anchor directory, confirmed via the directory's own filter/detail modal: SEP-31 support (Cross-Border Payments API), country Philippines only, crypto asset USDC, fiat assets PHP and USD, payment rail Cash. SEP-31 is an anchor-to-anchor cross-border payment API — the receiving customer needs no Stellar wallet at all, a closer fit for Bakti's cash-pickup pitch than a SEP-24 hosted webview. PeraHub's own public site (perahub.com.ph) does not itself mention Stellar, crypto, or USDC anywhere; the SEP-31 listing is confirmed only via Stellar's own directory, not via PeraHub's marketing site.
+
+Bakti had earlier emailed **MoneyGram Ramps** about integrating instead; there was no response, and MoneyGram Ramps was never a confirmed partner. MoneyGram Ramps settles funds to its own Stellar address and lets the recipient collect cash via reference number plus photo ID, no wallet needed on their side. That mechanism has been live in the Philippines since October 2021, one of the original four launch countries with Canada, Kenya, and the US ([stellar.org/case-studies/moneygram-international](https://stellar.org/case-studies/moneygram-international)), and MoneyGram Ramps is tagged SEP-24 on the Stellar directory with full public developer docs (developer.moneygram.com). Classic (non-crypto) MoneyGram already runs that same agent-based cash pickup across the Philippines today.
 
 MoneyGram's published off-ramp limits also need a caveat: the integration docs list 5-950 USDC on-ramp and 5-2,500 USDC off-ramp, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides, and a separate Production Preview/certification tier caps test transactions at 10-20 USDC (100 USDC aggregate). Treat these as three different figures from three different sources, not one clean number.
 
@@ -196,6 +198,8 @@ Sources:
 
 - https://developers.stellar.org/docs/learn/fundamentals/anchors
 - https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
+- https://anchors.stellar.org
+- https://perahub.com.ph
 - https://stellar.org/case-studies/moneygram-international
 - https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
 - https://stellar.moneygram.com/stellaradapterservice/sep24/info
