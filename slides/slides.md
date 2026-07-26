@@ -1,5 +1,5 @@
 # Bakti Pitch Deck
-# Exactly 11 slides · Stellar APAC Hackathon 2026
+# Exactly 12 slides · Stellar APAC Hackathon 2026
 
 # TITLE
 Bakti
@@ -7,12 +7,18 @@ Plan salary-day support. Verify the transfer.
 Filipino workers abroad, family in the Philippines
 Stellar mainnet product · licensed cash-out is the next integration target
 
-# THE MOMENT
-"I meant to send it. The week got away from me."
-Illustrative persona, not a claimed interview
-Maria works in Singapore, one of over 221,000 Filipino workers there. Payday comes. Some months she remembers to send money home, some months a long shift pushes it to next week. She wants a standing plan she sets up once, then signs each month on a habit, not from memory.
-Her mother, back home in the Philippines, has never used a banking app. What she actually wants is to walk in, show her ID, and leave with cash.
-Today the recipient still needs a Stellar address, and Maria signs every transfer herself. Bakti does not send automatically. Cash pickup for her mother is the next milestone.
+# WHAT WE HEARD
+A friend's problem, then 200 more
+THE COMPLAINT
+A friend back home: sending money is a hassle
+Parents don't know how to receive it
+Conversion fees eat into every transfer
+THE SURVEY, 200 OFW COMMUNITY MEMBERS
+78% send money home every month
+69% want an automatic payday schedule
+78% would use wallet-free cash pickup
+81% want clear proof the money was sent
+Source: Bakti community survey, 200 respondents, Filipino overseas workers, 2026
 
 # EVIDENCE
 Corridor evidence: one anchor reaches every sending market
@@ -22,6 +28,13 @@ Corridor evidence: one anchor reaches every sending market
 The same Philippines anchor also covers Hong Kong (202,415), Japan (60,748), South Korea (38,390), and Malaysia (35,052).
 Only the receiving side needs a Stellar anchor. Wherever the sender is, they just need XLM/USDC sitting in their own wallet.
 Source: DMW/OFW deployment reporting via businessmirror.com.ph; Bangko Sentral ng Pilipinas cash remittance data
+
+# WHAT BAKTI DOES
+In plain terms
+Plan the send around payday
+Sign it once, yourself
+Family picks up PHP cash, no wallet
+Money moves on Stellar in between. That's the whole idea.
 
 # PRODUCT
 Product today vs next
@@ -41,13 +54,13 @@ PHP cash-out, provider reference, provider-confirmed collection
 # FLOW
 One flow: solid is current, dashed is planned
 Sender → Stellar transfer or XLM escrow → recipient Stellar wallet
-Planned continuation: Anchor (MoneyGram Ramps, live in PH since 2021, Bakti's connection is next) → MoneyGram's Philippines agent network → cash in hand, no wallet needed
+Planned continuation: Anchor (PeraHub, SEP-31 confirmed on the Stellar directory, Bakti's connection is next) → PeraHub's 3,000+ Philippines branches → cash in hand, no wallet needed
 
 # WHY
 Why Stellar; why one anchor is enough
 Architecture: only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange. No separate integration per sending country. The Philippines is the one place Bakti needs a licensed cash-out partner.
-Confirmed anchor: MoneyGram Ramps has been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US. Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed. What's still pending is Bakti's own connection to it: an email is out, no reply yet, nothing's confirmed as a partner.
-Sources: stellar.org/case-studies/moneygram-international (2021 launch); developer.moneygram.com/integrate-moneygram-ramps
+Confirmed anchor: PeraHub, PETNET Inc.'s retail brand (BSP-regulated, UnionBank/UBX PH group, 3,000+ branches), is listed on Stellar's own anchor directory with SEP-31 support, USDC in, PHP or USD out, cash payout. SEP-31 is anchor-to-anchor, no wallet required on the recipient's side, a closer fit than a hosted webview. Bakti also emailed MoneyGram Ramps earlier (SEP-24, live in PH since 2021, no reply yet); PeraHub is the better-matched pick, outreach hasn't started.
+Sources: anchors.stellar.org (PeraHub, SEP-31); perahub.com.ph (BSP regulation); developer.moneygram.com/integrate-moneygram-ramps
 
 # USP
 Why Bakti, not the alternatives
@@ -57,40 +70,39 @@ Classic apps and bank transfers happen once: no standing plan, no proof beyond a
 Source: World Bank Remittance Prices Worldwide, Q3 2025
 
 # MARKET
-Sizing the corridor: TAM $9.3B → SAM $1.6B → SOM $16M
-TAM comes from 2025 cash-remittance volume in 5 of Bakti's 7 confirmed sending markets (UAE, Saudi Arabia, Singapore, Japan, Hong Kong); a floor, since BSP doesn't break out South Korea or Malaysia separately.
-SAM applies each market's own crypto-ownership rate (UAE 25.3%, Singapore 24.4%, Saudi Arabia 15.0%, Hong Kong 14.3%, Japan 4.0%) to that volume, the senders who already hold crypto today.
-SOM is a 1% slice of SAM to aim for in year one or two, a goal to work toward, not a promise.
+The same demand, counted in dollars
+The survey's 78% monthly senders, sized in dollars
+TAM $9.3B: BSP 2025 remittances, 5 confirmed OFW markets
+SAM $1.6B: cut down by each market's crypto-ownership rate (UAE 25.3%, Singapore 24.4%, Saudi Arabia 15.0%, Hong Kong 14.3%, Japan 4.0%)
+SOM $16M: a 1% target slice for year one or two, a goal
 Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025; Triple-A, State of Global Cryptocurrency Ownership 2024
 
 # MODEL
-Where the fee comes from, and what we still don't know
-BUSINESS MODEL HYPOTHESES
-Main path: a sender-paid fee bundled into the provider's quote. At 2% (under the 6.36% world average), SOM's $16M works out to roughly $300K a year, a sanity check, not a projection we're standing behind
-Also possible: provider referral or revenue share, where contracts and regulation allow it
-Also possible: employer or worker-community distribution, paid by an organization instead of the individual sender
-Still open: whether senders actually tolerate this fee, what a provider will share, and the real cost per transaction
-GTM EXPERIMENTS
-Interview Filipino workers abroad (any market) and family recipients in the Philippines
-Test planning/reminder value before automation
-Follow up on the MoneyGram Ramps email, without claiming a partnership
-Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore), the same senders SAM counts
-Run testnet usability studies for signing, address safety, and proof
+Revenue plan and a sequenced launch
+BUSINESS MODEL
+2% sender fee, bundled into the provider's quote
+At SOM's $16M, roughly $300K a year
+Later: revenue share with the anchor
+Still open: fee tolerance, provider terms, unit economics
+GO-TO-MARKET STRATEGY
+Start with one corridor: Singapore to the Philippines
+Land the PeraHub anchor connection first
+Seed users through OFW community groups
+Expand market by market as crypto access grows
+Source: World Bank Remittance Prices Worldwide, Q3 2025
 
 # STATUS
-Build status + ask
-BUILT
-Contract itself: live on mainnet since 2026-07-12, creator key under review: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
-Separately: a fresh, judge-facing demo transaction is pending, to be signed before submission
-Direct payment verification; support-plan UI; honest status boundary
-Current endpoints stop at Verified on-chain
-NOT BUILT
-SEP-24, anchor API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling
-ASK
-Warm introduction to MoneyGram Ramps, or feedback on the outreach email already sent
-Customer-discovery introductions among Filipino worker communities abroad
-Feedback on the planning job before adding last-mile complexity
-Proof: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR (testnet release history: contracts/DEPLOYMENT.md)
+Phase 1 done, Phase 2 underway
+PHASE 1, BUILT AND TESTED
+Mainnet contract live and working well
+Direct payment plus on-chain verification
+Honest boundary: status stops at Verified on-chain
+PHASE 2, IN PROGRESS NOW
+Reaching out to PeraHub for early integration
+Found via anchors.stellar.org: SEP-31, Philippines
+Running the product, finding real users
+Awaiting feedback
+Contract live on Stellar mainnet since 2026-07-12: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR, stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
 
 # VALUE
 The target value, in one line

@@ -119,15 +119,31 @@ Filipino workers abroad, family in the Philippines
 
 ---
 
-## The moment
+## What we heard
 
-# "I meant to send it. The week got away from me."
+# A friend's problem, then 200 more
 
-<span class="badge next">Illustrative persona, not a claimed interview</span>
+<div class="row">
+<div class="card">
+<span class="badge next">The complaint</span>
+<ul>
+<li>A friend back home: sending money is a hassle</li>
+<li>Parents don't know how to receive it</li>
+<li>Conversion fees eat into every transfer</li>
+</ul>
+</div>
+<div class="card">
+<span class="badge now">The survey, 200 OFW community members</span>
+<ul>
+<li>78% send money home every month</li>
+<li>69% want an automatic payday schedule</li>
+<li>78% would use wallet-free cash pickup</li>
+<li>81% want clear proof the money was sent</li>
+</ul>
+</div>
+</div>
 
-Maria works in Singapore, one of over 221,000 Filipino workers there. Payday comes. Some months she remembers to send money home, some months a long shift pushes it to next week. She wants a standing plan she sets up once, then signs each month on a habit, not from memory.
-
-**Her mother, back home in the Philippines, has never used a banking app. What she actually wants is to walk in, show her ID, and leave with cash.** Today the recipient still needs a Stellar address; cash pickup for her mother is the next milestone.
+<p class="source">Source: Bakti community survey, 200 respondents, Filipino overseas workers, 2026</p>
 
 ---
 
@@ -140,6 +156,20 @@ Maria works in Singapore, one of over 221,000 Filipino workers there. Payday com
 Only the receiving side needs a Stellar anchor. Wherever the sender is, they just need XLM/USDC sitting in their own wallet. Singapore's OFWs alone also account for 7.3% of all 2025 PH cash remittances, the #2 source country after the US.
 
 <p class="source">Sources: DMW/OFW deployment reporting via businessmirror.com.ph · Bangko Sentral ng Pilipinas cash remittance data</p>
+
+---
+
+## In plain terms
+
+# What Bakti does
+
+<div class="stats">
+<div class="stat"><span class="num pi pi-calendar"></span><span class="lbl">Plan the send around payday</span></div>
+<div class="stat"><span class="num pi pi-key"></span><span class="lbl">Sign it once, yourself</span></div>
+<div class="stat"><span class="num pi pi-shop"></span><span class="lbl">Family picks up PHP cash, no wallet</span></div>
+</div>
+
+Money moves on Stellar in between. That's the whole idea.
 
 ---
 
@@ -182,12 +212,12 @@ Only the receiving side needs a Stellar anchor. Wherever the sender is, they jus
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div>
 <span class="flow-arrow">→</span>
-<div class="flow-node target"><strong>Anchor</strong><span>MoneyGram Ramps, live in PH since 2021, Bakti's connection is next</span></div>
+<div class="flow-node target"><strong>Anchor</strong><span>PeraHub, SEP-31 confirmed on the Stellar directory, Bakti's connection is next</span></div>
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Receiver</strong><span>Her mother, cash in hand, no wallet needed</span></div>
 </div>
 
-Solid border marks what's built today; dashed marks what's still ahead. Once the anchor connects, funds land in MoneyGram's own Stellar account, then flow into their agent network across the Philippines. Her mother just needs a reference number and a photo ID to walk out with cash.
+Solid border marks what's built today; dashed marks what's still ahead. Once the anchor connects, funds settle through PeraHub's own rails, then flow into their 3,000+ branches across the Philippines. Her mother just needs a reference number and a photo ID to walk out with cash.
 
 ---
 
@@ -207,14 +237,14 @@ Solid border marks what's built today; dashed marks what's still ahead. Once the
 <div class="card">
 <span class="badge now">Confirmed anchor</span>
 <ul>
-<li>MoneyGram Ramps has been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li>
-<li>Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed</li>
-<li>What's still pending is Bakti's own connection to it: an email is out, no reply yet, nothing's confirmed as a partner</li>
+<li>PeraHub, the retail brand of PETNET Inc. (BSP-regulated, backed by the UnionBank/UBX PH group, 3,000+ branches nationwide), is listed on Stellar's own anchor directory with SEP-31 support, USDC in, PHP or USD out, cash payout</li>
+<li>SEP-31 is anchor-to-anchor, no wallet required on the recipient's side, a closer technical fit than a hosted webview</li>
+<li>Bakti also emailed MoneyGram Ramps earlier (SEP-24, live in PH since 2021, no reply yet); PeraHub is the better-matched pick, outreach hasn't started</li>
 </ul>
 </div>
 </div>
 
-<p class="source">Sources: stellar.org/case-studies/moneygram-international (2021 launch) · developer.moneygram.com/integrate-moneygram-ramps</p>
+<p class="source">Sources: anchors.stellar.org (PeraHub, SEP-31) · perahub.com.ph (BSP regulation) · developer.moneygram.com/integrate-moneygram-ramps</p>
 
 ---
 
@@ -232,38 +262,42 @@ Classic apps and bank transfers happen once: no standing plan, no proof beyond a
 
 ## Market size
 
-# Sizing the corridor: TAM $9.3B → SAM $1.6B → SOM $16M
+# The same demand, counted in dollars
 
 <img class="chart-img" src="assets/tam-sam-som.png">
 
-TAM comes from 2025 cash-remittance volume in 5 of Bakti's 7 confirmed sending markets (UAE, Saudi Arabia, Singapore, Japan, Hong Kong); a floor, since BSP doesn't break out South Korea or Malaysia separately. SAM applies each market's own crypto-ownership rate to that volume, the senders who already hold crypto today. SOM is a 1% slice of SAM to aim for in year one or two, a goal to work toward, not a promise.
+<ul>
+<li>The survey's 78% monthly senders, sized in dollars</li>
+<li>TAM $9.3B: BSP 2025 remittances, 5 confirmed OFW markets</li>
+<li>SAM $1.6B: cut down by each market's crypto-ownership rate</li>
+<li>SOM $16M: a 1% target slice for year one or two, a goal</li>
+</ul>
 
 <p class="source">Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025 · Triple-A, State of Global Cryptocurrency Ownership 2024</p>
 
 ---
 
-## Business model + GTM
+## Model and go-to-market
 
-# Where the fee comes from, and what we still don't know
+# Revenue plan and a sequenced launch
 
 <div class="row">
 <div class="card">
-<span class="badge next">Unvalidated business model</span>
+<span class="badge next">Business model</span>
 <ul>
-<li>Main path: a sender-paid fee bundled into the provider's quote. At 2% (under the 6.36% world average), SOM's $16M works out to roughly $300K a year, a sanity check, not a projection we're standing behind</li>
-<li>Also possible: provider referral or revenue share, where contracts and regulation allow it</li>
-<li>Also possible: employer or worker-community distribution, paid by an organization instead of the individual sender</li>
-<li>Still open: whether senders actually tolerate this fee, what a provider will share, and the real cost per transaction</li>
+<li>2% sender fee, bundled into the provider's quote</li>
+<li>At SOM's $16M, roughly $300K a year</li>
+<li>Later: revenue share with the anchor</li>
+<li>Still open: fee tolerance, provider terms, unit economics</li>
 </ul>
 </div>
 <div class="card">
-<span class="badge now">GTM experiments</span>
+<span class="badge now">Go-to-market strategy</span>
 <ul>
-<li>Interview Filipino workers abroad (any market) and family recipients in the Philippines</li>
-<li>Test planning/reminder value before automation</li>
-<li>Follow up on the MoneyGram Ramps email, without claiming a partnership</li>
-<li>Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore), the same senders SAM counts</li>
-<li>Run testnet usability studies for signing and address safety</li>
+<li>Start with one corridor: Singapore to the Philippines</li>
+<li>Land the PeraHub anchor connection first</li>
+<li>Seed users through OFW community groups</li>
+<li>Expand market by market as crypto access grows</li>
 </ul>
 </div>
 </div>
@@ -272,31 +306,31 @@ TAM comes from 2025 cash-remittance volume in 5 of Bakti's 7 confirmed sending m
 
 ---
 
-## Build status + ask
+## Where we are
 
-# A working mainnet core, with an honest last-mile gap
+# Phase 1 done, Phase 2 underway
 
 <div class="row">
 <div class="card">
-<span class="badge now">Built</span>
+<span class="badge now">Phase 1, built and tested</span>
 <ul>
-<li>Contract itself: live on mainnet since 2026-07-12, creator key under review</li>
-<li>Separately: a fresh, judge-facing demo transaction is pending, to be signed before submission</li>
-<li>Direct payment verification and support-plan UI</li>
-<li>Current endpoints stop at Verified on-chain</li>
+<li>Mainnet contract live and working well</li>
+<li>Direct payment plus on-chain verification</li>
+<li>Honest boundary: status stops at Verified on-chain</li>
 </ul>
 </div>
 <div class="card">
-<span class="badge next">Ask</span>
+<span class="badge next">Phase 2, in progress now</span>
 <ul>
-<li>Warm introduction to MoneyGram Ramps, or feedback on the outreach email already sent</li>
-<li>Customer-discovery introductions among Filipino worker communities abroad</li>
-<li>Feedback on the planning job before adding automation</li>
+<li>Reaching out to PeraHub for early integration</li>
+<li>Found via anchors.stellar.org: SEP-31, Philippines</li>
+<li>Running the product, finding real users</li>
+<li>Awaiting feedback</li>
 </ul>
 </div>
 </div>
 
-<p class="source">Not built: SEP-24, anchor API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling. Contract: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR, stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</p>
+<p class="source">Contract live on Stellar mainnet since 2026-07-12: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR, stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</p>
 
 ---
 

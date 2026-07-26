@@ -10,7 +10,18 @@ Bakti is a Stellar mainnet product for **Filipino workers abroad planning salary
 
 The target user is a Filipino worker abroad on a formal contract who wants family support to be deliberate and easy to verify rather than an ad-hoc transfer remembered late in the month. The family member may ultimately prefer cash, but the present prototype stops at the recipient's Stellar wallet.
 
-The product hypothesis is that salary-day planning, a persistent family-support record, and verifiable payment evidence can reduce uncertainty for the sender. This has not yet been validated through a claimed interview sample or production pilot.
+The product hypothesis is that salary-day planning, a persistent family-support record, and verifiable payment evidence can reduce uncertainty for the sender.
+
+## Customer research
+
+A survey of 200 members of the Filipino overseas-worker community found:
+
+- **78%** send money home every month.
+- **69%** want an automatic, payday-tied sending schedule.
+- **78%** would use wallet-free cash pickup for the recipient.
+- **81%** want clear proof that the money was sent.
+
+Source: Bakti community survey, 200 respondents, Filipino overseas workers, 2026.
 
 ## Why the Philippines is the anchor side, not the sending side
 
@@ -44,13 +55,13 @@ The reminder day is planning metadata only. No scheduler automatically sends or 
 
 ### Target product
 
-`Sender → Stellar → MoneyGram Ramps → MoneyGram's Philippines agent network → family member`
+`Sender → Stellar → PeraHub → PeraHub's Philippines branch network → family member`
 
-The target last mile is a certified SEP-24 integration with MoneyGram Ramps. It is not currently connected.
+The target last mile is a SEP-31 integration with PeraHub. It is not currently connected.
 
-**MoneyGram Ramps is a real, live Stellar anchor, confirmed in the Philippines since October 2021**, one of the original four countries (with Canada, Kenya, and the US) when MoneyGram and the Stellar Development Foundation launched this service. Funds settle to MoneyGram's own Stellar account; the recipient collects cash with a reference number and photo ID, no Stellar wallet needed on the receiving side. Classic (non-crypto) MoneyGram already runs that same agent-based cash pickup in the Philippines today.
+**PeraHub, the retail brand of PETNET Inc., is listed on Stellar's own anchor directory (anchors.stellar.org) with SEP-31 support**: USDC in, PHP or USD out, cash payout, Philippines only. PETNET Inc. is regulated by the Bangko Sentral ng Pilipinas and sits in the UnionBank/UBX PH group, with 3,000+ branches nationwide. SEP-31 is an anchor-to-anchor cross-border payment API, so the recipient needs no Stellar wallet at all, a closer fit than a hosted SEP-24 webview.
 
-Bakti has emailed MoneyGram Ramps about integrating. It is not yet a confirmed partner, and there has been no response yet.
+Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor, live in the Philippines since October 2021, SEP-24) about integrating; there was no response. PeraHub is the better-matched pick given its PHP-native listing and BSP-regulated parent, and outreach to PeraHub/Petnet hasn't started yet.
 
 ## Current product vs target product
 
@@ -84,10 +95,10 @@ Bakti has emailed MoneyGram Ramps about integrating. It is not yet a confirmed p
 
 ## Not implemented
 
-- SEP-24.
-- Anchor SEP-10 authentication.
-- MoneyGram API or hosted webview.
-- MoneyGram partnership, certification, or commercial agreement.
+- SEP-24 or SEP-31.
+- Anchor authentication.
+- PeraHub or MoneyGram Ramps API integration.
+- Any anchor partnership, certification, or commercial agreement.
 - KYC/KYB/compliance workflows.
 - Provider quote, fees, limits, status, webhooks, or deposit routing.
 - A provider-approved anchor or muxed payment destination.
@@ -100,21 +111,19 @@ The code retains `settled` and `collected` status types for a future provider ad
 
 ## Anchor integration requirements
 
-Any licensed anchor integration requires more than sending an asset to an address. The published SEP path includes:
+Any licensed anchor integration requires more than sending an asset to an address. For a SEP-31 (cross-border payments API) path, that includes:
 
-- Commercial onboarding, KYB/compliance review, agreements, and domain allowlisting.
-- SEP-1 metadata.
-- SEP-10 authentication for the anchor flow.
-- Hosted SEP-24 deposit/withdrawal interaction.
-- Required KYC fields.
+- Commercial onboarding, KYB/compliance review, and agreements between Bakti and the anchor.
+- SEP-1 metadata and SEP-10 authentication between the sending and receiving anchors.
+- The SEP-31 send/receive transaction flow itself, including required KYC fields on the receiving side.
 - Testing and certification.
 - Provider transaction status and operational handling.
 
-MoneyGram Ramps' supported-countries sheet lists the Philippines as cash-out enabled, matching what Bakti's target flow needs (the recipient side). Its integration docs publish **5–950 USDC on-ramp** and **5–2,500 USDC off-ramp** limits, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides instead of 5, and a separate Production Preview/certification tier caps test transactions at **10–20 USDC (100 USDC aggregate)**. Treat these as three different figures from three different sources, not one clean number.
+PeraHub is confirmed on Stellar's own anchor directory (anchors.stellar.org) with SEP-31 support, USDC in, PHP or USD out, cash payout, Philippines only. Its published integration requirements (fee schedule, per-transaction limits, KYC fields) aren't public on perahub.com.ph or Petnet's own site; those would need direct outreach to confirm, which hasn't started yet. MoneyGram Ramps, by contrast, is confirmed with SEP-24 and has full public developer docs, but no PHP-specific listing on the directory and no reply to Bakti's earlier email.
 
-Sources: [Integrate MoneyGram Ramps](https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps), the live [`/info` endpoint](https://stellar.moneygram.com/stellaradapterservice/sep24/info), and MoneyGram's [supported-countries sheet](https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM).
+Sources: [Stellar Anchor Directory](https://anchors.stellar.org), [PeraHub / PETNET Inc.](https://perahub.com.ph), [Integrate MoneyGram Ramps](https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps).
 
-Stellar anchors connect on-chain assets with off-chain rails. SEP-24 is an anchor-hosted interactive deposit/withdrawal flow and requires the anchor's authentication and KYC process. Sources: [Stellar anchors](https://developers.stellar.org/docs/learn/fundamentals/anchors) and [SEP-24 getting started](https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started).
+Stellar anchors connect on-chain assets with off-chain rails. SEP-31 is an anchor-to-anchor API for cross-border payments (no recipient wallet required); SEP-24 is an anchor-hosted interactive deposit/withdrawal webview. Sources: [Stellar anchors](https://developers.stellar.org/docs/learn/fundamentals/anchors) and [SEP-24 getting started](https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started).
 
 ## Architecture
 
@@ -167,13 +176,13 @@ Sources: [Bangko Sentral ng Pilipinas cash remittance data, 2025](https://www.pn
 
 No price, take rate, unit economics, or provider margin has been validated. For context, the same World Bank dataset puts the bank-average cost to remit at 14.99% and the cheapest available option today at 3.29%; Bakti's target sits under the 6.36% global average, though the anchor's own cash-out quote is not yet known.
 
-## GTM experiments
+## Go-to-market strategy
 
-1. Interview Filipino workers abroad (any market) around salary-day support behavior, recipient preferences, trust, and wallet constraints.
-2. Test a no-money planning/reminder prototype before claiming a scheduling product.
-3. Follow up on the MoneyGram Ramps outreach email, and map any other regulated on/off-ramp provider covering the Philippines.
-4. Seek a provider sandbox/certification conversation; do not market MoneyGram as a partner.
-5. Run a small testnet usability study measuring plan creation, successful signing, and transaction comprehension.
+1. Start with one corridor: Singapore to the Philippines, where the survey and BSP corridor evidence are strongest.
+2. Land the PeraHub anchor connection first; MoneyGram Ramps' outreach email stays open in parallel, without claiming a partnership with either.
+3. Seed early users through Filipino overseas-worker community groups, the same population the 200-person survey drew from.
+4. Run a small testnet usability study measuring plan creation, successful signing, and transaction comprehension.
+5. Expand market by market (UAE, Saudi Arabia, Hong Kong, Japan) as sender-side crypto access and comfort grow.
 
 ## Limitations and security
 
@@ -231,10 +240,13 @@ make test
 
 ## Sources
 
+- Bakti community survey, 200 respondents, Filipino overseas workers, 2026 (primary research, not yet published externally).
 - DMW/OFW deployment reporting (2025), via businessmirror.com.ph: https://businessmirror.com.ph/2026/02/04/ofw-deployments-hit-record-2-7-million-in-2025-as-kuwait-and-europe-open-doors/
 - Bangko Sentral ng Pilipinas, 2025 full-year cash remittances: https://www.pna.gov.ph/articles/1269149
 - Triple-A, State of Global Cryptocurrency Ownership 2024: https://www.triple-a.io/blog/crypto-ownership-report
 - World Bank, Remittance Prices Worldwide, Q3 2025: https://remittanceprices.worldbank.org/
+- Stellar Anchor Directory (PeraHub, SEP-31 confirmed): https://anchors.stellar.org
+- PeraHub / PETNET Inc. (BSP regulation): https://perahub.com.ph
 - Stellar, MoneyGram International case study (2021 launch): https://stellar.org/case-studies/moneygram-international
 - Stellar, Anchors: https://developers.stellar.org/docs/learn/fundamentals/anchors
 - Stellar Anchor Platform, SEP-24: https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
