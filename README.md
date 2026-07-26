@@ -4,6 +4,8 @@ Bakti is a Stellar mainnet product for **Filipino workers in Malaysia planning s
 
 **Current boundary:** the recipient needs a Stellar address. Bakti does not yet connect to a licensed cash-out provider, perform KYC, or deliver Philippine pesos.
 
+**Pitch deck:** [`slides/marp/deck.pdf`](slides/marp/deck.pdf) · [visual HTML deck](slides/index.html)
+
 ## Problem and target user
 
 The target user is a Filipino worker in Malaysia who wants family support to be deliberate and easy to verify rather than an ad-hoc transfer remembered late in the month. The family member may ultimately prefer cash, but the present prototype stops at the recipient's Stellar wallet.
