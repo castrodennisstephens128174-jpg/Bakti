@@ -96,7 +96,7 @@ The allowance detail screen should always explain that the following are planned
 5. Provider-approved deposit routing.
 6. Status, reference, cash-out, and collection confirmation.
 
-Lightnet and MoneyGram Ramps may be named only as target paths, never as a partner or existing route.
+Lightnet and MoneyGram Ramps may be named only as providers Bakti is currently reaching out to — never as a confirmed partner or existing route.
 
 The gap in that target design is still open, not yet answered by any source:
 

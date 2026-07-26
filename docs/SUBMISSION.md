@@ -53,7 +53,7 @@ Neither candidate anchor is a Bakti partner. **MoneyGram Ramps** is a real, live
 
 The core gap in this target design is still open:
 
-- **No confirmed Vietnam VND anchor.** Neither MoneyGram Ramps nor Lightnet has a publicly verifiable, live VND rail today. Both are contact targets for the next research phase, not integrations.
+- **No confirmed Vietnam VND anchor.** Neither MoneyGram Ramps nor Lightnet has a publicly verifiable, live VND rail today. Bakti is currently reaching out to both — neither is a confirmed partner or integration yet.
 
 Sources:
 
@@ -83,7 +83,7 @@ No fee, margin, take rate, or unit economics is validated.
 
 1. Interview Vietnamese contract workers in Japan/Taiwan/Korea and family recipients in Vietnam.
 2. Validate whether salary-day planning and reminders solve a real problem before adding automation.
-3. Contact Lightnet and MoneyGram about a Vietnam VND rail, and identify any other licensed payout provider covering Vietnam.
+3. Currently reaching out to Lightnet and MoneyGram about a Vietnam VND rail, and identifying any other licensed payout provider covering Vietnam.
 4. Test the current mainnet flow for trust, signing comprehension, and address errors — using a testnet usability study to iterate cheaply before spending real XLM on later rounds.
 5. Pursue a provider sandbox or certification discussion without claiming partnership.
 

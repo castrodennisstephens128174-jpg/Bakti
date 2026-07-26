@@ -215,7 +215,7 @@ Solid border = built today. Dashed = planned, not yet connected.
 <ul>
 <li><strong>Lightnet</strong> — listed on Stellar's own Anchor Directory, Vietnam in its 150+ country coverage, SEP-24, cross-border-payments focus. No live <code>stellar.toml</code> found — unverified today.</li>
 <li><strong>MoneyGram Ramps</strong> — real, live Stellar anchor, but its confirmed countries are Kenya, Philippines, Mexico. Vietnam is not on that list.</li>
-<li>Neither is a Bakti partner. Both are contact targets, not integrations.</li>
+<li>Neither is a confirmed partner yet — Bakti is currently reaching out to both.</li>
 </ul>
 </div>
 </div>
@@ -243,7 +243,7 @@ Solid border = built today. Dashed = planned, not yet connected.
 <ul>
 <li>Interview Vietnamese contract workers in Japan/Taiwan/Korea and family recipients</li>
 <li>Test planning/reminder value before automation</li>
-<li>Contact Lightnet and MoneyGram about a Vietnam VND rail</li>
+<li>Currently reaching out to Lightnet and MoneyGram about a Vietnam VND rail</li>
 <li>Run testnet usability studies for signing and address safety</li>
 <li>Seek provider sandbox/certification conversations, no partnership claim</li>
 </ul>

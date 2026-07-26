@@ -50,7 +50,7 @@ The target last mile is a certified SEP-24 integration with a licensed Stellar a
 - **Lightnet.** Listed on Stellar's own [Anchor Directory](https://anchors.stellar.org/) with Vietnam among its 150+ country coverage, SEP-24 support, and a cross-border-payments focus. Its listed `stellar.toml` URL (`lightnet.io/.well-known/stellar.toml`) returns 404 — the directory listing is not independently verifiable against a live anchor endpoint.
 - **MoneyGram Ramps.** A real, live Stellar anchor, but its own supported-countries sheet confirms only Kenya, Philippines, and Mexico for direct deposit. Vietnam does not appear in any MoneyGram Ramps source checked.
 
-Neither is a Bakti partner or in active discussion. Both are contact targets for the next research phase.
+Neither is a confirmed partner yet — Bakti is currently reaching out to both.
 
 ## Current product vs target product
 
@@ -163,7 +163,7 @@ No price, take rate, unit economics, or provider margin has been validated.
 
 1. Interview Vietnamese contract workers in Japan/Taiwan/Korea around salary-day support behavior, recipient preferences, trust, and wallet constraints.
 2. Test a no-money planning/reminder prototype before claiming a scheduling product.
-3. Contact Lightnet and MoneyGram about a Vietnam VND rail, and map any other regulated on/off-ramp provider covering Vietnam.
+3. Currently reaching out to Lightnet and MoneyGram about a Vietnam VND rail, and mapping any other regulated on/off-ramp provider covering Vietnam.
 4. Seek a provider sandbox/certification conversation; do not market either provider as a partner.
 5. Run a small testnet usability study measuring plan creation, successful signing, and transaction comprehension.
 

@@ -53,7 +53,7 @@ Stellar anchors connect network assets to off-chain rails.
 SEP-24 is a hosted interactive deposit/withdrawal flow with anchor authentication and KYC.
 Lightnet is listed on Stellar's own Anchor Directory with Vietnam in its 150+ country coverage and SEP-24 support, but its stellar.toml 404s — unverified today.
 MoneyGram Ramps is a real, live Stellar anchor, but its confirmed countries are Kenya, Philippines, and Mexico — Vietnam is not on that list.
-Neither is a Bakti partner. Both are contact targets, not integrations.
+Neither is a confirmed partner yet — Bakti is currently reaching out to both.
 Sources: anchors.stellar.org (Anchor Directory); Stellar anchors/SEP-24 docs; MoneyGram Ramps integration docs
 
 # MODEL
@@ -66,7 +66,7 @@ No validated price, take rate, margin, or unit economics
 GTM EXPERIMENTS
 Interview Vietnamese contract workers in Japan/Taiwan/Korea and family recipients
 Test planning/reminder value before automation
-Contact Lightnet and MoneyGram about a Vietnam VND rail
+Currently reaching out to Lightnet and MoneyGram about a Vietnam VND rail
 Run testnet usability studies for signing, address safety, and proof
 Seek provider sandbox/certification conversations without claiming partnership
 
