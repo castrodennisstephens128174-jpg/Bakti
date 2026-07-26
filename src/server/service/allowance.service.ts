@@ -6,7 +6,12 @@ import type { Allowance, AllowanceAsset, AllowanceStatus, Payout } from '@/serve
 import { ALLOWANCE_ASSETS } from '@/server/db/schema/allowances';
 import { toStroops } from '@/server/lib/amount';
 import { AppError } from '@/server/lib/http';
-import { buildCreateScheduleXdr, contractIds, submitCreateSchedule } from '@/server/stellar';
+import {
+  buildCreateScheduleXdr,
+  contractIds,
+  submitCreateSchedule,
+  validateSignedCreateSchedule,
+} from '@/server/stellar';
 import { currentPeriod } from './payout.service';
 
 export type AllowanceAction = 'pause' | 'resume' | 'end';
@@ -51,18 +56,28 @@ export function nextAllowanceStatus(
 
 export function assertAllowanceInput(input: AllowanceInput): void {
   if (!input.recipientName.trim()) {
-    throw new AppError('INVALID_INPUT', 'Add the name of the parent you support', 400);
+    throw new AppError('INVALID_INPUT', 'Add the name of the family member you support', 400);
   }
   if (!StrKey.isValidEd25519PublicKey(input.recipientAddress)) {
     throw new AppError('INVALID_INPUT', 'The recipient Stellar address is invalid', 400);
   }
   if (!input.corridor.trim()) {
-    throw new AppError('INVALID_INPUT', 'Choose a cash-pickup corridor', 400);
+    throw new AppError('INVALID_INPUT', 'Choose a research corridor', 400);
   }
   if (!ALLOWANCE_ASSETS.includes(input.asset)) {
     throw new AppError('INVALID_INPUT', 'Asset must be XLM or USDC', 400);
   }
-  if (toStroops(input.monthlyAmount) <= 0n) {
+  let monthlyAmountStroops: bigint;
+  try {
+    monthlyAmountStroops = toStroops(input.monthlyAmount);
+  } catch {
+    throw new AppError(
+      'INVALID_INPUT',
+      'Monthly amount must be a decimal with at most 7 fractional digits',
+      400,
+    );
+  }
+  if (monthlyAmountStroops <= 0n) {
     throw new AppError('INVALID_INPUT', 'Set a monthly amount greater than zero', 400);
   }
   if (!Number.isInteger(input.dayOfMonth) || input.dayOfMonth < 1 || input.dayOfMonth > 28) {
@@ -131,7 +146,11 @@ export const allowanceService = {
   ): Promise<{ xdr: string; contractId: string; months: number }> {
     assertAllowanceInput(input);
     if (input.asset !== 'XLM') {
-      throw new AppError('INVALID_INPUT', 'The escrow contract holds XLM; use XLM for on-chain.', 400);
+      throw new AppError(
+        'INVALID_INPUT',
+        'The escrow contract holds XLM; use XLM for on-chain.',
+        400,
+      );
     }
     const months = input.months ?? DEFAULT_MONTHS;
     const { xdr } = await buildCreateScheduleXdr({
@@ -154,9 +173,20 @@ export const allowanceService = {
   ): Promise<AllowanceWithPayouts> {
     assertAllowanceInput(input);
     if (input.asset !== 'XLM') {
-      throw new AppError('INVALID_INPUT', 'The escrow contract holds XLM; use XLM for on-chain.', 400);
+      throw new AppError(
+        'INVALID_INPUT',
+        'The escrow contract holds XLM; use XLM for on-chain.',
+        400,
+      );
     }
-    const { hash, scheduleId } = await submitCreateSchedule(signedXdr);
+    const months = input.months ?? DEFAULT_MONTHS;
+    const tx = validateSignedCreateSchedule(signedXdr, {
+      sender: publicKey,
+      recipient: input.recipientAddress,
+      monthlyAmountStroops: toStroops(input.monthlyAmount),
+      months,
+    });
+    const { hash, scheduleId } = await submitCreateSchedule(tx);
     return insertAllowanceWithFirstPayout(publicKey, input, {
       scheduleId,
       contractId: contractIds.bakti,

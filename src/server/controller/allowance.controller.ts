@@ -1,11 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
-import { env } from '@/server/config/env';
 import { AppError, created, ok } from '@/server/lib/http';
 import type { HandlerContext } from '@/server/middleware/compose';
 import { type AllowanceAction, allowanceService } from '@/server/service/allowance.service';
 import { currentPeriod, payoutService } from '@/server/service/payout.service';
-import { anchorMuxedAddress, buildPayUri } from '@/server/stellar';
+import { buildPayUri } from '@/server/stellar';
 
 const createSchema = z.object({
   recipientName: z.string().min(1).max(80),
@@ -22,7 +21,6 @@ const createSchema = z.object({
 const statusSchema = z.object({ action: z.enum(['pause', 'resume', 'end']) });
 const recordSchema = z.object({
   txHash: z.string().min(1).optional(),
-  amount: z.string().min(1).optional(),
   signedXdr: z.string().min(1).optional(),
 });
 
@@ -59,9 +57,7 @@ export async function buildRelease(_req: NextRequest, ctx: HandlerContext) {
 
 export async function getAllowance(_req: NextRequest, ctx: HandlerContext) {
   const id = await idParam(ctx);
-  const allowance = await allowanceService.getOwned(id, pk(ctx));
-  const muxedAttribution = anchorMuxedAddress(env.ANCHOR_COLLECTION_PUBLIC_KEY, allowance.id);
-  return ok({ ...allowance, muxedAttribution });
+  return ok(await allowanceService.getOwned(id, pk(ctx)));
 }
 
 export async function changeAllowanceStatus(req: NextRequest, ctx: HandlerContext) {
@@ -76,12 +72,10 @@ export async function recordPayout(req: NextRequest, ctx: HandlerContext) {
   if (body.signedXdr) {
     return created(await payoutService.recordRelease(id, pk(ctx), { signedXdr: body.signedXdr }));
   }
-  if (!body.txHash || !body.amount) {
-    throw new AppError('INVALID_INPUT', 'A signed release or a txHash + amount is required', 400);
+  if (!body.txHash) {
+    throw new AppError('INVALID_INPUT', 'A signed release or transaction hash is required', 400);
   }
-  return created(
-    await payoutService.recordPayment(id, pk(ctx), { txHash: body.txHash, amount: body.amount }),
-  );
+  return created(await payoutService.recordPayment(id, pk(ctx), { txHash: body.txHash }));
 }
 
 export async function collectPayout(_req: NextRequest, ctx: HandlerContext) {

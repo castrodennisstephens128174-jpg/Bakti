@@ -1,9 +1,9 @@
 'use client';
 
-import { HandCoins, HeartHandshake, LogIn, MapPin, Users, Wallet } from 'lucide-react';
+import { Database, FileCheck2, HeartHandshake, LogIn, Users, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Header } from '@/ui/components/Header';
-import { Footer } from '@/ui/components/ui';
+import { Footer, SimulationNote } from '@/ui/components/ui';
 
 type Stats = {
   uniqueWallets: number;
@@ -17,39 +17,39 @@ type Stats = {
 const CARDS: Array<{ key: keyof Stats; label: string; icon: React.ReactNode; hint: string }> = [
   {
     key: 'uniqueWallets',
-    label: 'Wallets connected',
+    label: 'Wallet keys in sessions',
     icon: <Wallet className="h-5 w-5" />,
-    hint: 'Distinct senders',
+    hint: 'Distinct public keys in the app database',
   },
   {
     key: 'logins',
-    label: 'Sessions signed',
+    label: 'Signed sessions stored',
     icon: <LogIn className="h-5 w-5" />,
-    hint: 'SEP-10 logins',
+    hint: 'Custom manageData challenges — not SEP-10',
   },
   {
     key: 'totalAllowances',
-    label: 'Allowances set up',
+    label: 'Support plans stored',
     icon: <HeartHandshake className="h-5 w-5" />,
-    hint: 'Standing plans',
+    hint: 'App database records, not automatic standing orders',
   },
   {
     key: 'activeAllowances',
-    label: 'Currently active',
+    label: 'Plans marked active',
     icon: <Users className="h-5 w-5" />,
-    hint: 'Running now',
+    hint: 'Local plan status in the app database',
   },
   {
     key: 'payoutsDelivered',
-    label: 'Payouts delivered',
-    icon: <HandCoins className="h-5 w-5" />,
-    hint: 'Sent on-chain',
+    label: 'Payment records beyond scheduled',
+    icon: <FileCheck2 className="h-5 w-5" />,
+    hint: 'Transaction hashes can be verified when present',
   },
   {
     key: 'parentsCollected',
-    label: 'Cash collected',
-    icon: <MapPin className="h-5 w-5" />,
-    hint: 'Confirmed pickups',
+    label: 'Legacy collection acknowledgements',
+    icon: <Database className="h-5 w-5" />,
+    hint: 'Historical local demo values — not provider confirmations',
   },
 ];
 
@@ -69,11 +69,19 @@ export default function StatsPage() {
     <div className="min-h-screen">
       <Header />
       <main className="mx-auto max-w-6xl px-5 py-10">
-        <h1 className="font-display text-3xl font-bold text-ink">Bakti in numbers</h1>
-        <p className="mt-2 max-w-2xl text-ink-soft">
-          Real, on-chain activity across everyone using Bakti — counted from Stellar sessions and
-          the allowances people have set up for their parents. No vanity metrics.
+        <h1 className="font-display text-3xl font-bold text-ink">Prototype database activity</h1>
+        <p className="mt-2 max-w-3xl text-ink-soft">
+          These are counts from Bakti's Postgres tables for sessions, support plans, and payment
+          records. They are not market traction, provider reports, or proof of cash collection.
         </p>
+
+        <div className="mt-5 max-w-3xl">
+          <SimulationNote>
+            On-chain transaction hashes can be opened and verified. Any historical rows marked
+            collected were local demo acknowledgements created before provider integration was
+            disabled; Bakti has no provider-confirmed collection feed.
+          </SimulationNote>
+        </div>
 
         <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CARDS.map((c) => (
