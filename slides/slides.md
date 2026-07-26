@@ -52,7 +52,7 @@ Sources: stellar.org/case-studies/moneygram-international (2021 launch); develop
 # MODEL
 Business model + GTM hypotheses, unvalidated
 BUSINESS MODEL HYPOTHESES
-Transparent sender service fee within a licensed provider quote
+Transparent sender service fee within a licensed provider quote, the world average cost to remit is 6.36% (World Bank, Q3 2025); target is to sit meaningfully under that
 Provider referral/revenue share where permitted
 Employer, cooperative, or worker-community distribution
 No validated price, take rate, margin, or unit economics
@@ -60,6 +60,7 @@ GTM EXPERIMENTS
 Interview Filipino workers abroad (any market) and family recipients in the Philippines
 Test planning/reminder value before automation
 Follow up on the MoneyGram Ramps email, without claiming a partnership
+Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore)
 Run testnet usability studies for signing, address safety, and proof
 
 # STATUS

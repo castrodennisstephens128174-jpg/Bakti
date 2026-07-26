@@ -151,7 +151,7 @@ Key files:
 
 ## Business-model hypotheses, unvalidated
 
-- A sender-paid planning/service fee bundled transparently with a licensed provider quote.
+- A sender-paid planning/service fee bundled transparently with a licensed provider quote. The world average cost to remit is 6.36% (World Bank, Remittance Prices Worldwide, Q3 2025); Bakti's target is to sit meaningfully under that.
 - Provider referral or revenue share where permitted by contracts and regulation.
 - Employer or worker-community distribution paid by an institution rather than the recipient.
 
@@ -210,7 +210,6 @@ A real seeded payment on the configured network is attempted only if `DEMO_SENDE
 pnpm lint
 pnpm test
 pnpm build
-python3 slides/build_deck.py
 ```
 
 Contract tests:

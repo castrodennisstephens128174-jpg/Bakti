@@ -229,7 +229,7 @@ Solid border = built today. Dashed = planned, not yet connected. Once the anchor
 <div class="card">
 <span class="badge next">Unvalidated business model</span>
 <ul>
-<li>Transparent sender service fee within a licensed provider quote</li>
+<li>Transparent sender service fee within a licensed provider quote, the world average cost to remit is 6.36% (World Bank, Q3 2025); target is to sit meaningfully under that</li>
 <li>Provider referral/revenue share where permitted</li>
 <li>Employer, cooperative, or worker-community distribution</li>
 <li>No validated price, take rate, margin, or unit economics</li>
@@ -241,10 +241,13 @@ Solid border = built today. Dashed = planned, not yet connected. Once the anchor
 <li>Interview Filipino workers abroad (any market) and family recipients in the Philippines</li>
 <li>Test planning/reminder value before automation</li>
 <li>Follow up on the MoneyGram Ramps email, without claiming a partnership</li>
+<li>Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore)</li>
 <li>Run testnet usability studies for signing and address safety</li>
 </ul>
 </div>
 </div>
+
+<p class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</p>
 
 ---
 
