@@ -230,18 +230,30 @@ Classic apps and bank transfers are one-off: no standing plan, no proof beyond a
 
 ---
 
+## Market size
+
+# TAM $9.3B, SAM $1.6B, SOM $16M: a funnel, not a guess
+
+<img class="chart-img" src="assets/tam-sam-som.png">
+
+TAM: 2025 cash-remittance volume from 5 of Bakti's 7 confirmed sending markets (UAE, Saudi Arabia, Singapore, Japan, Hong Kong); a floor, since BSP doesn't break out South Korea or Malaysia separately. SAM applies each market's own crypto-ownership rate, the senders who already hold crypto today. SOM is a 1% target slice of SAM for year one or two, not a revenue forecast.
+
+<p class="source">Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025 · Triple-A, State of Global Cryptocurrency Ownership 2024</p>
+
+---
+
 ## Business model + GTM
 
-# Hypotheses to test, not forecasts
+# A fee on real volume, not a list of ideas
 
 <div class="row">
 <div class="card">
 <span class="badge next">Unvalidated business model</span>
 <ul>
-<li>Transparent sender service fee within a licensed provider quote, the world average cost to remit is 6.36% (World Bank, Q3 2025); target is to sit meaningfully under that</li>
-<li>Provider referral/revenue share where permitted</li>
-<li>Employer, cooperative, or worker-community distribution</li>
-<li>No validated price, take rate, margin, or unit economics</li>
+<li>Primary: a sender-paid service fee bundled into the licensed provider's quote. At an illustrative 2% (under the 6.36% world average), capturing SOM's $16M target volume is roughly $320K in year one/two fee revenue, an illustrative target, not a forecast</li>
+<li>Secondary: provider referral or revenue share where contractually permitted</li>
+<li>Institutional: employer, cooperative, or worker-community distribution paid by an organization instead of the individual</li>
+<li>Not yet validated: actual fee tolerance, provider revenue-share terms, or per-transaction unit economics</li>
 </ul>
 </div>
 <div class="card">
@@ -250,7 +262,7 @@ Classic apps and bank transfers are one-off: no standing plan, no proof beyond a
 <li>Interview Filipino workers abroad (any market) and family recipients in the Philippines</li>
 <li>Test planning/reminder value before automation</li>
 <li>Follow up on the MoneyGram Ramps email, without claiming a partnership</li>
-<li>Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore)</li>
+<li>Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore), the same senders SAM counts</li>
 <li>Run testnet usability studies for signing and address safety</li>
 </ul>
 </div>

@@ -149,15 +149,23 @@ Key files:
 - `app/allowances/[id]/page.tsx`: direct pay tools, watcher, and planned last-mile panel.
 - `contracts/bakti-escrow/src/lib.rs`: XLM escrow contract.
 
+## Market size: TAM, SAM, SOM
+
+Bakti's fee model taps a share of remittance dollar volume, so market size is denominated in dollars flowing through the corridor, not headcount.
+
+- **TAM ≈ $9.3B/year**: 2025 BSP cash-remittance volume from 5 of Bakti's 7 confirmed sending markets (UAE 4.6%, Saudi Arabia 6.6%, Singapore 7.3%, Japan 5.0%, Hong Kong 2.5% of the $35.63B national total). This is a floor: South Korea and Malaysia are also in Bakti's corridor evidence but aren't broken out separately in BSP's top-source reporting.
+- **SAM ≈ $1.6B/year**: TAM discounted by each market's own crypto-ownership rate (Triple-A, 2024: UAE 25.3%, Singapore 24.4%, Saudi Arabia 15.0%, Hong Kong 14.3%, Japan 4.0%), the senders who already hold crypto and could plausibly fund a Bakti transfer today without first being onboarded to crypto itself.
+- **SOM ≈ $16M/year**: an illustrative 1% target slice of SAM for year one or two, reachable through direct worker-community outreach. This is a target, not a forecast.
+
+Sources: [Bangko Sentral ng Pilipinas cash remittance data, 2025](https://www.pna.gov.ph/articles/1269149); [Triple-A, State of Global Cryptocurrency Ownership 2024](https://www.triple-a.io/blog/crypto-ownership-report).
+
 ## Business-model hypotheses, unvalidated
 
-- A sender-paid planning/service fee bundled transparently with a licensed provider quote. The world average cost to remit is 6.36% (World Bank, Remittance Prices Worldwide, Q3 2025); Bakti's target is to sit meaningfully under that.
-- Provider referral or revenue share where permitted by contracts and regulation.
-- Employer or worker-community distribution paid by an institution rather than the recipient.
+- **Primary:** a sender-paid service fee bundled transparently into a licensed provider's quote. At an illustrative 2% (well under the 6.36% world average cost to remit, World Bank Remittance Prices Worldwide Q3 2025), capturing SOM's $16M target volume is roughly $320K in year-one/two fee revenue, an illustrative target, not a forecast.
+- **Secondary:** provider referral or revenue share where permitted by contracts and regulation.
+- **Institutional:** employer or worker-community distribution paid by an institution rather than the recipient.
 
-No price, take rate, unit economics, or provider margin has been validated.
-
-For context, the same World Bank dataset puts the bank-average cost to remit at 14.99% and the cheapest available option today at 3.29%; Bakti's target sits under the 6.36% global average, though the anchor's own cash-out quote is not yet known.
+No price, take rate, unit economics, or provider margin has been validated. For context, the same World Bank dataset puts the bank-average cost to remit at 14.99% and the cheapest available option today at 3.29%; Bakti's target sits under the 6.36% global average, though the anchor's own cash-out quote is not yet known.
 
 ## GTM experiments
 
@@ -224,6 +232,9 @@ make test
 ## Sources
 
 - DMW/OFW deployment reporting (2025), via businessmirror.com.ph: https://businessmirror.com.ph/2026/02/04/ofw-deployments-hit-record-2-7-million-in-2025-as-kuwait-and-europe-open-doors/
+- Bangko Sentral ng Pilipinas, 2025 full-year cash remittances: https://www.pna.gov.ph/articles/1269149
+- Triple-A, State of Global Cryptocurrency Ownership 2024: https://www.triple-a.io/blog/crypto-ownership-report
+- World Bank, Remittance Prices Worldwide, Q3 2025: https://remittanceprices.worldbank.org/
 - Stellar, MoneyGram International case study (2021 launch): https://stellar.org/case-studies/moneygram-international
 - Stellar, Anchors: https://developers.stellar.org/docs/learn/fundamentals/anchors
 - Stellar Anchor Platform, SEP-24: https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started

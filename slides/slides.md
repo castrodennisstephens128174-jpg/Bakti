@@ -1,5 +1,5 @@
 # Bakti Pitch Deck
-# Exactly 10 slides · Stellar APAC Hackathon 2026
+# Exactly 11 slides · Stellar APAC Hackathon 2026
 
 # TITLE
 Bakti
@@ -56,18 +56,25 @@ Cost to remit, % of amount sent: Banks (avg) 14.99% | Global average 6.36% | Che
 Classic apps and bank transfers are one-off: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti's target is different on all three: no wallet needed on the recipient's side, a verifiable Stellar transaction the sender can point to, and a monthly habit instead of "did I remember this month." The network layer itself costs next to nothing; the number still missing is the anchor's own cash-out quote.
 Source: World Bank Remittance Prices Worldwide, Q3 2025
 
+# MARKET
+TAM $9.3B, SAM $1.6B, SOM $16M: a funnel, not a guess
+TAM: 2025 cash-remittance volume from 5 of Bakti's 7 confirmed sending markets (UAE, Saudi Arabia, Singapore, Japan, Hong Kong); a floor, since BSP doesn't break out South Korea or Malaysia separately.
+SAM: TAM discounted by each market's own crypto-ownership rate (UAE 25.3%, Singapore 24.4%, Saudi Arabia 15.0%, Hong Kong 14.3%, Japan 4.0%), the senders who already hold crypto today.
+SOM: a 1% target slice of SAM for year one or two, reached through direct worker-community outreach, not a revenue forecast.
+Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025; Triple-A, State of Global Cryptocurrency Ownership 2024
+
 # MODEL
-Business model + GTM hypotheses, unvalidated
+Business model + GTM, tied to the funnel above
 BUSINESS MODEL HYPOTHESES
-Transparent sender service fee within a licensed provider quote, the world average cost to remit is 6.36% (World Bank, Q3 2025); target is to sit meaningfully under that
-Provider referral/revenue share where permitted
-Employer, cooperative, or worker-community distribution
-No validated price, take rate, margin, or unit economics
+Primary: a sender-paid service fee bundled into the licensed provider's quote. At an illustrative 2% (under the 6.36% world average), capturing SOM's $16M target volume is roughly $320K in year one/two fee revenue, an illustrative target, not a forecast
+Secondary: provider referral or revenue share where contractually permitted
+Institutional: employer, cooperative, or worker-community distribution paid by an organization instead of the individual
+Not yet validated: actual fee tolerance, provider revenue-share terms, or per-transaction unit economics
 GTM EXPERIMENTS
 Interview Filipino workers abroad (any market) and family recipients in the Philippines
 Test planning/reminder value before automation
 Follow up on the MoneyGram Ramps email, without claiming a partnership
-Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore)
+Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore), the same senders SAM counts
 Run testnet usability studies for signing, address safety, and proof
 
 # STATUS
