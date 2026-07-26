@@ -1,28 +1,31 @@
 # Bakti
 
-Bakti is a Stellar mainnet product for **Vietnamese contract workers abroad planning salary-day support for family in Vietnam**. It keeps a recipient, amount, and reminder date in one plan, then lets the sender sign a direct Stellar payment or release pre-funded XLM from a Soroban escrow.
+Bakti is a Stellar mainnet product for **Filipino workers abroad planning salary-day support for family in the Philippines**. It keeps a recipient, amount, and reminder date in one plan, then lets the sender sign a direct Stellar payment or release pre-funded XLM from a Soroban escrow.
 
-**Current boundary:** the recipient needs a Stellar address. Bakti does not yet connect to a licensed cash-out provider, perform KYC, or deliver Vietnamese dong.
+**Current boundary:** the recipient needs a Stellar address. Bakti does not yet connect to a licensed cash-out provider, perform KYC, or deliver Philippine pesos.
 
 **Pitch deck:** [`slides/marp/deck.pdf`](slides/marp/deck.pdf) · [visual HTML deck](slides/index.html)
 
 ## Problem and target user
 
-The target user is a Vietnamese worker on a formal labor contract abroad who wants family support to be deliberate and easy to verify rather than an ad-hoc transfer remembered late in the month. The family member may ultimately prefer cash, but the present prototype stops at the recipient's Stellar wallet.
+The target user is a Filipino worker abroad on a formal contract who wants family support to be deliberate and easy to verify rather than an ad-hoc transfer remembered late in the month. The family member may ultimately prefer cash, but the present prototype stops at the recipient's Stellar wallet.
 
 The product hypothesis is that salary-day planning, a persistent family-support record, and verifiable payment evidence can reduce uncertainty for the sender. This has not yet been validated through a claimed interview sample or production pilot.
 
-## Why research the Đông Á → Vietnam corridor
+## Why the Philippines is the anchor side, not the sending side
 
-Vietnam's Ministry of Labour (MOLISA) and government reporting show:
+Only the *receiving* side of this product needs a licensed Stellar anchor. A sender can be anywhere and fund their own wallet with XLM/USDC from any exchange; only the Philippines needs a certified cash-out partner. That means the addressable sending market is every country with Filipino workers abroad, not one fixed corridor.
 
-- **700,000+** Vietnamese currently on formal overseas labor contracts, remitting an estimated **US$3.5–4B/year**.
-- **New 2024 deployments** were concentrated in three markets: **Japan 62,722 · Taiwan 48,533 · Korea 10,877** — the longest-running, largest state-brokered labor programs.
-- **Ho Chi Minh City alone received US$10.34B in remittances in 2025** (+8.3% YoY); Asia-origin inflows were ~48.9% (~US$5.06B) of that total, reported as driven mainly by Japan/Korea/Taiwan.
+Department of Migrant Workers (DMW) deployment reporting and Bangko Sentral ng Pilipinas (BSP) cash-remittance data show:
 
-No public source breaks the HCMC remittance dollars down by sending country. The worker-deployment counts (MOLISA) and the Asia-origin remittance total (SBV/HCMC) are two different figures from two different measurements — **a corridor signal, not Bakti's TAM.** Further customer, channel, compliance, and provider research is required.
+- **UAE**, the #1 destination for Filipino workers in 2025, at 397,892 deployments.
+- **Saudi Arabia**, #2, at 386,699 deployments.
+- **Singapore** alone accounted for 7.3% of all 2025 Philippine cash remittances, the #2 source country after the US (39.7%).
+- The same Philippines anchor also reaches Hong Kong (202,415 workers), Japan (60,748), South Korea (38,390), and Malaysia (35,052).
 
-Sources: [MOLISA overseas labor deployment via VietnamPlus](https://en.vietnamplus.vn/vietnam-aims-to-send-130000-workers-abroad-in-2024-post304865.vnp), [SGGP 2024 deployment figures](https://en.sggp.org.vn/share113776.html), [HCMC 2025 remittances via baochinhphu.vn](https://en.baochinhphu.vn/hcmc-absorbs-over-1034-billion-of-remittances-in-2025-111260123102358585.htm), and [kinhtevadubao.vn on contract-worker remittances](https://kinhtevadubao.vn/dong-kieu-hoi-tang-tich-cuc-nho-xuat-khau-lao-dong-25022.html).
+These are corridor signals, not a TAM calculation, and the numbers describe worker counts and remittance share from two different measurements. Further customer, channel, compliance, and provider research is required.
+
+Sources: [DMW/OFW deployment reporting via businessmirror.com.ph](https://businessmirror.com.ph/2026/02/04/ofw-deployments-hit-record-2-7-million-in-2025-as-kuwait-and-europe-open-doors/) and Bangko Sentral ng Pilipinas cash remittance data.
 
 ## Solution
 
@@ -41,21 +44,13 @@ The reminder day is planning metadata only. No scheduler automatically sends or 
 
 ### Target product
 
-`Sender → Stellar → licensed anchor/provider → KYC and provider workflow → VND cash-out → family member`
+`Sender → Stellar → MoneyGram Ramps → MoneyGram's Philippines agent network → family member`
 
-The target last mile is a certified SEP-24 integration with a licensed Stellar anchor. It is not currently connected.
+The target last mile is a certified SEP-24 integration with MoneyGram Ramps. It is not currently connected.
 
-**No anchor has a publicly verified live VND rail today.** The two closest candidates:
+**MoneyGram Ramps is a real, live Stellar anchor, confirmed in the Philippines since October 2021**, one of the original four countries (with Canada, Kenya, and the US) when MoneyGram and the Stellar Development Foundation launched this service. Funds settle to MoneyGram's own Stellar account; the recipient collects cash with a reference number and photo ID, no Stellar wallet needed on the receiving side. Classic (non-crypto) MoneyGram already runs that same agent-based cash pickup in the Philippines today.
 
-- **Lightnet.** Listed on Stellar's own [Anchor Directory](https://anchors.stellar.org/) with Vietnam among its 150+ country coverage, SEP-24 support, and a cross-border-payments focus. Its listed `stellar.toml` URL (`lightnet.io/.well-known/stellar.toml`) returns 404 — the directory listing is not independently verifiable against a live anchor endpoint.
-- **MoneyGram Ramps.** A real, live Stellar anchor. Funds settle to a MoneyGram-controlled Stellar address; the recipient collects cash via phone number/code plus ID — no Stellar wallet needed on the receiving side. That exact no-wallet mechanism already runs in Kenya, Philippines, and Mexico (independent analysis, [chaingain.io](https://chaingain.io/moneygram-stellar-crypto-remittance-2026/) — not MoneyGram's own docs, which were inaccessible for direct verification). It's a proven pattern; Vietnam does not appear in any MoneyGram Ramps source checked.
-
-Neither is a confirmed partner yet — Bakti is currently reaching out to both.
-
-**Two reasons the target design is not pure speculation:**
-
-- **The cash-pickup network already exists in Vietnam.** Classic (non-crypto) MoneyGram runs agent locations across Vietnam today — a recipient can already collect cash with a reference number and photo ID, no account needed ([moneygram.com/intl/com-vn/en](https://www.moneygram.com/intl/com-vn/en/how-to-receive-money)). What's unconfirmed is only whether MoneyGram Ramps, the Stellar bridge, routes into that same agent network for Vietnam.
-- **A licensed VND crypto rail is opening.** Vietnam's Resolution 05/2025/NQ-CP (effective 2025-09-09) opened a five-year regulated crypto-asset pilot: VND-only settlement, up to five licensed exchanges selected by the Ministry of Finance, Ministry of Public Security, and the State Bank of Vietnam, with a VND 10 trillion (~US$380M) minimum charter capital. [CAEX](https://www.caex.com.vn/) is one shortlisted candidate, backed by OKX Ventures and HashKey Capital — it is not a confirmed Stellar anchor.
+Bakti has emailed MoneyGram Ramps about integrating. It is not yet a confirmed partner, and there has been no response yet.
 
 ## Current product vs target product
 
@@ -70,7 +65,7 @@ Neither is a confirmed partner yet — Bakti is currently reaching out to both.
 | Payment link | SEP-7 direct pay URI to recipient | Provider-aware payment/deposit instructions if certified |
 | Live watcher | Horizon recipient-payment watcher | Provider webhook/polling plus user notifications |
 | Provider/KYC | Not implemented | Hosted SEP-24 flow, authentication, KYC, quote/status |
-| Cash-out | Not implemented | Licensed VND cash-out and provider reference |
+| Cash-out | Not implemented | Licensed PHP cash-out and provider reference |
 | Collection | Not implemented | Provider-confirmed collection status |
 | Scheduling | No automatic scheduler | Only after legal, operational, and user validation |
 
@@ -115,11 +110,9 @@ Any licensed anchor integration requires more than sending an asset to an addres
 - Testing and certification.
 - Provider transaction status and operational handling.
 
-MoneyGram Ramps' integration docs publish **5–950 USDC on-ramp** and **5–2,500 USDC off-ramp** limits; the live production `/info` endpoint currently reports a 1 USDC floor on both sides instead of 5, and a separate Production Preview/certification tier caps test transactions at **10–20 USDC (100 USDC aggregate)**. These three sources disagree on the exact minimum — and none of them list Vietnam as a supported country to begin with.
+MoneyGram Ramps' supported-countries sheet lists the Philippines as cash-out enabled, matching what Bakti's target flow needs (the recipient side). Its integration docs publish **5–950 USDC on-ramp** and **5–2,500 USDC off-ramp** limits, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides instead of 5, and a separate Production Preview/certification tier caps test transactions at **10–20 USDC (100 USDC aggregate)**. Treat these as three different figures from three different sources, not one clean number.
 
-Lightnet's [Stellar Anchor Directory listing](https://anchors.stellar.org/) includes Vietnam in its country coverage and SEP-24 support, but its `stellar.toml` is unreachable (404), so its actual integration requirements and limits are unconfirmed.
-
-Sources: [Integrate MoneyGram Ramps](https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps), the live [`/info` endpoint](https://stellar.moneygram.com/stellaradapterservice/sep24/info), MoneyGram's [supported-countries sheet](https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM), and the [Stellar Anchor Directory](https://anchors.stellar.org/).
+Sources: [Integrate MoneyGram Ramps](https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps), the live [`/info` endpoint](https://stellar.moneygram.com/stellaradapterservice/sep24/info), and MoneyGram's [supported-countries sheet](https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM).
 
 Stellar anchors connect on-chain assets with off-chain rails. SEP-24 is an anchor-hosted interactive deposit/withdrawal flow and requires the anchor's authentication and KYC process. Sources: [Stellar anchors](https://developers.stellar.org/docs/learn/fundamentals/anchors) and [SEP-24 getting started](https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started).
 
@@ -143,20 +136,20 @@ Stellar mainnet
   └─ Bakti XLM escrow contract
 
 Future provider adapter (not implemented)
-  └─ SEP-1 + SEP-10 + SEP-24 + KYC + quote/status + VND cash-out
+  └─ SEP-1 + SEP-10 + SEP-24 + KYC + quote/status + PHP cash-out
 ```
 
 Key files:
 
-- `src/server/service/payout.service.ts` — payment verification and honest status boundary.
-- `src/server/service/allowance.service.ts` — plan lifecycle and escrow creation.
-- `src/server/service/auth.service.ts` — custom `manageData` challenge/session.
-- `src/server/stellar/contract.ts` — Soroban transaction assembly and submission.
-- `src/server/stellar/horizon.ts` — classic payment verification.
-- `app/allowances/[id]/page.tsx` — direct pay tools, watcher, and planned last-mile panel.
-- `contracts/bakti-escrow/src/lib.rs` — XLM escrow contract.
+- `src/server/service/payout.service.ts`: payment verification and honest status boundary.
+- `src/server/service/allowance.service.ts`: plan lifecycle and escrow creation.
+- `src/server/service/auth.service.ts`: custom `manageData` challenge/session.
+- `src/server/stellar/contract.ts`: Soroban transaction assembly and submission.
+- `src/server/stellar/horizon.ts`: classic payment verification.
+- `app/allowances/[id]/page.tsx`: direct pay tools, watcher, and planned last-mile panel.
+- `contracts/bakti-escrow/src/lib.rs`: XLM escrow contract.
 
-## Business-model hypotheses — unvalidated
+## Business-model hypotheses, unvalidated
 
 - A sender-paid planning/service fee bundled transparently with a licensed provider quote.
 - Provider referral or revenue share where permitted by contracts and regulation.
@@ -166,15 +159,15 @@ No price, take rate, unit economics, or provider margin has been validated.
 
 ## GTM experiments
 
-1. Interview Vietnamese contract workers in Japan/Taiwan/Korea around salary-day support behavior, recipient preferences, trust, and wallet constraints.
+1. Interview Filipino workers abroad (any market) around salary-day support behavior, recipient preferences, trust, and wallet constraints.
 2. Test a no-money planning/reminder prototype before claiming a scheduling product.
-3. Currently reaching out to Lightnet and MoneyGram about a Vietnam VND rail, and mapping any other regulated on/off-ramp provider covering Vietnam.
-4. Seek a provider sandbox/certification conversation; do not market either provider as a partner.
+3. Follow up on the MoneyGram Ramps outreach email, and map any other regulated on/off-ramp provider covering the Philippines.
+4. Seek a provider sandbox/certification conversation; do not market MoneyGram as a partner.
 5. Run a small testnet usability study measuring plan creation, successful signing, and transaction comprehension.
 
 ## Limitations and security
 
-- Product defaults to Stellar mainnet; XLM and USDC sent through it are real assets with real value. Set both `STELLAR_NETWORK=testnet` and `NEXT_PUBLIC_STELLAR_NETWORK=testnet` in your own `.env.local` for free local development — the server and client resolve network independently, so both must be set together.
+- Product defaults to Stellar mainnet; XLM and USDC sent through it are real assets with real value. Set both `STELLAR_NETWORK=testnet` and `NEXT_PUBLIC_STELLAR_NETWORK=testnet` in your own `.env.local` for free local development. The server and client resolve network independently, so both must be set together.
 - The app is not a bank, money transmitter, anchor, KYC provider, or cash-pickup service.
 - The sender controls the wallet and signs every on-chain action; Bakti must never receive secret keys.
 - XLM escrow pre-funds the contract. `release` is permissionless, but always pays the recorded recipient.
@@ -186,14 +179,14 @@ No price, take rate, unit economics, or provider margin has been validated.
 ## Verified mainnet deployment
 
 - **Contract:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
-- **Contract explorer:** [Stellar Expert public](https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR) — confirmed live on Stellar mainnet (created 2026-07-12, 7 recorded invocations as of this check).
-- **Open item:** the contract's on-chain creator key does not match the admin key documented in `contracts/DEPLOYMENT.md`. A fresh, team-signed `create_schedule` + `release` call — producing a mainnet transaction hash citable as release proof — is pending; do not cite a specific transaction hash as mainnet proof until one is produced and confirmed at `horizon.stellar.org/transactions/<hash>`.
+- **Contract explorer:** [Stellar Expert public](https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR), confirmed live on Stellar mainnet (created 2026-07-12, 7 recorded invocations as of this check).
+- **Open item:** the contract's on-chain creator key does not match the admin key documented in `contracts/DEPLOYMENT.md`. A fresh, team-signed `create_schedule` + `release` call, producing a mainnet transaction hash citable as release proof, is pending; do not cite a specific transaction hash as mainnet proof until one is produced and confirmed at `horizon.stellar.org/transactions/<hash>`.
 
 The previously-cited testnet proof (`CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`, tx `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`) remains in `contracts/DEPLOYMENT.md` for the testnet development record, but is not mainnet operation, provider settlement, or cash collection proof.
 
 ## Setup
 
-Requirements: Node.js, pnpm, PostgreSQL, Freighter, and a funded Stellar wallet (real mainnet XLM by default — see `.env.example` for switching to testnet locally).
+Requirements: Node.js, pnpm, PostgreSQL, Freighter, and a funded Stellar wallet (real mainnet XLM by default; see `.env.example` for switching to testnet locally).
 
 ```bash
 pnpm install
@@ -229,19 +222,11 @@ make test
 
 ## Sources
 
-- MOLISA overseas labor deployment (2024), via VietnamPlus: https://en.vietnamplus.vn/vietnam-aims-to-send-130000-workers-abroad-in-2024-post304865.vnp
-- MOLISA overseas labor deployment (2024), via SGGP: https://en.sggp.org.vn/share113776.html
-- HCMC 2025 remittances, via baochinhphu.vn: https://en.baochinhphu.vn/hcmc-absorbs-over-1034-billion-of-remittances-in-2025-111260123102358585.htm
-- Contract-worker remittance total, kinhtevadubao.vn: https://kinhtevadubao.vn/dong-kieu-hoi-tang-tich-cuc-nho-xuat-khau-lao-dong-25022.html
+- DMW/OFW deployment reporting (2025), via businessmirror.com.ph: https://businessmirror.com.ph/2026/02/04/ofw-deployments-hit-record-2-7-million-in-2025-as-kuwait-and-europe-open-doors/
+- Stellar, MoneyGram International case study (2021 launch): https://stellar.org/case-studies/moneygram-international
 - Stellar, Anchors: https://developers.stellar.org/docs/learn/fundamentals/anchors
 - Stellar Anchor Platform, SEP-24: https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
-- Stellar Anchor Directory (Lightnet listing): https://anchors.stellar.org/
 - MoneyGram, Integrate MoneyGram Ramps: https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
 - MoneyGram Ramps, live `/info` endpoint: https://stellar.moneygram.com/stellaradapterservice/sep24/info
 - MoneyGram Ramps, supported-countries sheet: https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
-- chaingain.io, MoneyGram + Stellar settlement flow analysis: https://chaingain.io/moneygram-stellar-crypto-remittance-2026/
-- MoneyGram Vietnam, how to receive money: https://www.moneygram.com/intl/com-vn/en/how-to-receive-money
-- Vietnam Resolution 05/2025/NQ-CP (State Securities Commission): https://ssc.gov.vn/cs/idcplg?IdcService=GET_FILE&allowInterrupt=1&dID=170615&dDocName=APPSSCGOVVN1620162698&filename=Resolution+No.05.pdf
-- CAEX, Vietnam's compliant crypto asset exchange: https://www.caex.com.vn/
-- Fintech Singapore, OKX and HashKey invest in CAEX: https://fintechnews.sg/129698/vietnam/okx-caex-investment-vietnam/
 - Stellar Expert, Bakti mainnet contract: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR

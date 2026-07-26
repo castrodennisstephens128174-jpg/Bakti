@@ -1,16 +1,16 @@
-# Bakti — Product and UX Design
+# Bakti: Product and UX Design
 
 ## Product boundary
 
 Bakti currently serves a sender with a Stellar wallet. It helps that person record a family support plan and sign a transfer to a recipient Stellar address.
 
-The intended research corridor is **Đông Á → Vietnam** (Japan, Taiwan, Korea being Vietnam's largest, longest-running formal labor-export markets). The initial target user is a Vietnamese contract worker abroad planning salary-day support for a family member in Vietnam.
+The Philippines is the anchor side, not the sending side. Only the recipient needs a licensed Stellar anchor; a sender can be in any market with Filipino workers abroad. The initial target user is a Filipino worker abroad planning salary-day support for a family member in the Philippines.
 
 The current experience does not hide the missing last mile:
 
 - The recipient must have a Stellar address.
 - No licensed anchor integration is connected.
-- No KYC, quote, provider deposit route, pickup reference, VND cash-out, or provider collection status exists.
+- No KYC, quote, provider deposit route, pickup reference, PHP cash-out, or provider collection status exists.
 - The selected day is a reminder/planning field only.
 
 ## UX principles
@@ -31,7 +31,7 @@ Landing (public)
       → Create support plan
           - family member
           - recipient Stellar address
-          - Đông Á → Vietnam research corridor
+          - sending market (any country with Filipino workers abroad)
           - XLM escrow or direct USDC plan
           - reminder day (planning only)
       → Support plan detail
@@ -96,11 +96,9 @@ The allowance detail screen should always explain that the following are planned
 5. Provider-approved deposit routing.
 6. Status, reference, cash-out, and collection confirmation.
 
-Lightnet and MoneyGram Ramps may be named only as providers Bakti is currently reaching out to — never as a confirmed partner or existing route.
+MoneyGram Ramps may be named only as a provider Bakti has emailed about integrating, never as a confirmed partner or existing route.
 
-The gap in that target design is still open, not yet answered by any source:
-
-- **No confirmed Vietnam VND anchor.** MoneyGram Ramps' supported-countries sheet confirms only Kenya, Philippines, and Mexico — Vietnam is not listed. Lightnet is on Stellar's own Anchor Directory (anchors.stellar.org) with Vietnam in its country coverage, but its `stellar.toml` 404s, so its actual VND rail is unverified.
+The gap in that target design is still open, not yet answered by any source: MoneyGram Ramps has not confirmed the integration, and there has been no response to Bakti's outreach email yet.
 
 ## Metrics page
 

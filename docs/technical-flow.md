@@ -1,4 +1,4 @@
-# Bakti — Technical Flow
+# Bakti: Technical Flow
 
 ## Product boundary
 
@@ -11,7 +11,7 @@ Sender → Bakti support-plan record → Stellar → recipient Stellar address
 Planned flow:
 
 ```text
-Sender → Stellar → certified anchor/provider → KYC and provider workflow → VND cash-out
+Sender → Stellar → MoneyGram Ramps → KYC and provider workflow → PHP cash-out
 ```
 
 The planned provider segment is not implemented.
@@ -35,7 +35,7 @@ Key code:
 - `src/ui/wallet/WalletProvider.tsx`
 - `src/ui/wallet/stellarClient.ts`
 
-## 2. Create support plan — XLM escrow path
+## 2. Create support plan: XLM escrow path
 
 ```text
 POST /api/allowances/escrow-intent
@@ -58,7 +58,7 @@ The contract transfers `monthly_amount × months` native XLM from the sender to 
 
 `dayOfMonth` is not passed to the contract and does not schedule anything.
 
-## 3. Create support plan — USDC path
+## 3. Create support plan: USDC path
 
 ```text
 POST /api/allowances { ..., asset: "USDC" }
@@ -159,7 +159,7 @@ Both payout construction and payout recording reject paused and ended plans.
 
 ## 10. Network defaults
 
-Defaults are internally consistent on Stellar mainnet — every value below is derived from `STELLAR_NETWORK` in `src/server/config/env.ts`, so setting that one variable is enough to switch network; explicit env vars still override any single value:
+Defaults are internally consistent on Stellar mainnet. Every value below is derived from `STELLAR_NETWORK` in `src/server/config/env.ts`, so setting that one variable is enough to switch network; explicit env vars still override any single value:
 
 - Network: `public`
 - Horizon: `https://horizon.stellar.org`
@@ -169,11 +169,11 @@ Defaults are internally consistent on Stellar mainnet — every value below is d
 - Native XLM SAC: `CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA`
 - USDC issuer (official Circle issuer): `GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN`
 
-For free local development, set `STELLAR_NETWORK=testnet` and `NEXT_PUBLIC_STELLAR_NETWORK=testnet` in your own `.env.local` — the testnet contract/passphrase/Horizon/RPC/issuer all resolve automatically from that one change.
+For free local development, set `STELLAR_NETWORK=testnet` and `NEXT_PUBLIC_STELLAR_NETWORK=testnet` in your own `.env.local`. The testnet contract/passphrase/Horizon/RPC/issuer all resolve automatically from that one change.
 
 ## 11. Last-mile integration required
 
-A MoneyGram Ramps or other licensed anchor adapter would need, at minimum:
+A MoneyGram Ramps adapter would need, at minimum:
 
 1. Commercial onboarding, KYB/compliance, agreements, and allowlisting.
 2. SEP-1 metadata.
@@ -186,33 +186,26 @@ A MoneyGram Ramps or other licensed anchor adapter would need, at minimum:
 
 None of these steps is implemented in the current endpoints.
 
-The core gap in this target design is open, not yet answered by any source:
+The core gap in this target design is open, not yet answered by any source: MoneyGram Ramps has not confirmed the integration. Bakti emailed MoneyGram Ramps about it, and there has been no response yet.
 
-- **No confirmed Vietnam VND anchor.** MoneyGram Ramps settles funds to its own Stellar address and lets the recipient collect cash via phone number/code plus ID, no wallet needed on their side — a proven no-wallet cash-pickup mechanism, already running in Kenya, Philippines, and Mexico ([chaingain.io](https://chaingain.io/moneygram-stellar-crypto-remittance-2026/) independent analysis; MoneyGram's own docs were inaccessible for direct verification). Vietnam is not on MoneyGram's confirmed-country list. Lightnet appears on Stellar's own [Anchor Directory](https://anchors.stellar.org/) with Vietnam among its 150+ country coverage and SEP-24 support, but its listed `stellar.toml` (`lightnet.io/.well-known/stellar.toml`) returns 404, so its actual VND rail, limits, and KYC flow are unverified. Neither is a confirmed partner yet — Bakti is currently reaching out to both.
+The target design is not pure speculation, though. MoneyGram Ramps settles funds to its own Stellar address and lets the recipient collect cash via reference number plus photo ID, no wallet needed on their side. That mechanism has been live in the Philippines since October 2021, one of the original four launch countries with Canada, Kenya, and the US ([stellar.org/case-studies/moneygram-international](https://stellar.org/case-studies/moneygram-international)). Classic (non-crypto) MoneyGram already runs that same agent-based cash pickup across the Philippines today.
 
-The target design is not pure speculation, though. Classic (non-crypto) MoneyGram already runs cash-pickup agents across Vietnam ([moneygram.com/intl/com-vn/en](https://www.moneygram.com/intl/com-vn/en/how-to-receive-money)) — the physical last-mile network exists; what's unconfirmed is whether MoneyGram Ramps routes into that same network for Vietnam. Separately, Vietnam's Resolution 05/2025/NQ-CP (effective 2025-09-09) opened a five-year regulated crypto-asset pilot requiring VND-only settlement and up to five licensed exchanges (VND 10 trillion / ~US$380M minimum charter capital). [CAEX](https://www.caex.com.vn/), backed by OKX Ventures and HashKey Capital, is one shortlisted candidate — not a confirmed Stellar anchor.
-
-MoneyGram's published off-ramp limits also need a caveat: the integration docs list 5–950 USDC on-ramp and 5–2,500 USDC off-ramp, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides, and a separate Production Preview/certification tier caps test transactions at 10–20 USDC (100 USDC aggregate) — treat these as three different figures from three different sources, not one clean number, and note that Vietnam isn't confirmed on any of them.
+MoneyGram's published off-ramp limits also need a caveat: the integration docs list 5-950 USDC on-ramp and 5-2,500 USDC off-ramp, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides, and a separate Production Preview/certification tier caps test transactions at 10-20 USDC (100 USDC aggregate). Treat these as three different figures from three different sources, not one clean number.
 
 Sources:
 
 - https://developers.stellar.org/docs/learn/fundamentals/anchors
 - https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
-- https://anchors.stellar.org/
-- https://chaingain.io/moneygram-stellar-crypto-remittance-2026/
-- https://www.moneygram.com/intl/com-vn/en/how-to-receive-money
-- https://ssc.gov.vn/cs/idcplg?IdcService=GET_FILE&allowInterrupt=1&dID=170615&dDocName=APPSSCGOVVN1620162698&filename=Resolution+No.05.pdf
-- https://www.caex.com.vn/
-- https://fintechnews.sg/129698/vietnam/okx-caex-investment-vietnam/
+- https://stellar.org/case-studies/moneygram-international
 - https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
 - https://stellar.moneygram.com/stellaradapterservice/sep24/info
 - https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
 
 ## 12. Verified mainnet deployment
 
-- Contract: `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR` — confirmed live on Stellar mainnet (created 2026-07-12, 7 recorded invocations).
+- Contract: `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`, confirmed live on Stellar mainnet (created 2026-07-12, 7 recorded invocations).
 - Explorer: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
-- Open item: the on-chain creator key does not match the documented admin key in `contracts/DEPLOYMENT.md`. A fresh, team-signed `create_schedule` + `release` call producing a citable mainnet transaction hash is pending — do not cite a specific tx hash as mainnet proof until one is produced and confirmed at `horizon.stellar.org/transactions/<hash>`.
+- Open item: the on-chain creator key does not match the documented admin key in `contracts/DEPLOYMENT.md`. A fresh, team-signed `create_schedule` + `release` call producing a citable mainnet transaction hash is pending. Do not cite a specific tx hash as mainnet proof until one is produced and confirmed at `horizon.stellar.org/transactions/<hash>`.
 
 The previously-cited testnet proof (contract `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`, tx `cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2`) is testnet contract-release proof only, kept in `contracts/DEPLOYMENT.md` as the development record.
 

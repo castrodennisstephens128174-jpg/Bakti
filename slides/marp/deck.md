@@ -7,8 +7,8 @@ html: true
 style: |
   @import url('assets/primeicons/primeicons.css');
 
-  /* type scale: 42 display / 30 stat / 21 body / 15 label — 4 sizes, no more */
-  /* spacing scale: 8 / 16 / 24 / 32 / 48 / 64 — 6 values, no more */
+  /* type scale: 42 display / 30 stat / 21 body / 15 label (4 sizes, no more) */
+  /* spacing scale: 8 / 16 / 24 / 32 / 48 / 64 (6 values, no more) */
 
   section {
     font-family: "Inter", "Segoe UI", system-ui, sans-serif;
@@ -106,7 +106,7 @@ style: |
 
 Plan salary-day support. Verify the transfer.
 
-Vietnamese workers abroad → family in Vietnam
+Filipino workers abroad, family in the Philippines
 
 <div class="stats">
 <div class="stat"><span class="num pi pi-check-circle"></span><span class="lbl">Stellar mainnet product</span></div>
@@ -122,29 +122,27 @@ Vietnamese workers abroad → family in Vietnam
 
 # "I meant to send it. The week got away from me."
 
-<span class="badge next">Illustrative persona · not a claimed interview</span>
+<span class="badge next">Illustrative persona, not a claimed interview</span>
 
-Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Payday comes; some months she remembers to send money home, some months a double shift pushes it to next week. She wants a standing plan she sets up once, then signs each month on a habit — not from memory.
+Maria works in Singapore, one of over 221,000 Filipino workers there. Payday comes. Some months she remembers to send money home, some months a long shift pushes it to next week. She wants a standing plan she sets up once, then signs each month on a habit, not from memory.
 
-**Her mother has never used a banking app. The real prize isn't the transfer — it's her mother collecting cash without touching a screen.** Today the recipient still needs a Stellar address; cash pickup for her mother is the target, not built yet.
+**Her mother, back home in the Philippines, has never used a banking app. What she actually wants is to walk in, show her ID, and leave with cash.** Today the recipient still needs a Stellar address. Cash pickup for her mother is the target, not built yet.
 
 ---
 
 ## Corridor evidence
 
-# Contract workers already send billions home
+# One anchor in the Philippines reaches every market Filipino workers send from
 
 <div class="stats">
-<div class="stat"><span class="num">700,000+</span><span class="lbl">Vietnamese on labor contracts abroad</span></div>
-<div class="stat"><span class="num">$3.5–4B</span><span class="lbl">Remitted by contract workers per year</span></div>
-<div class="stat"><span class="num">$10.34B</span><span class="lbl">Remittances to HCMC alone, 2025 (+8.3% YoY)</span></div>
+<div class="stat"><span class="num">397,892</span><span class="lbl">Filipino workers in the UAE, 2025, the #1 destination</span></div>
+<div class="stat"><span class="num">386,699</span><span class="lbl">Filipino workers in Saudi Arabia, 2025, #2</span></div>
+<div class="stat"><span class="num">7.3%</span><span class="lbl">Share of all 2025 PH cash remittances sent from Singapore, #2 source after the US</span></div>
 </div>
 
-Where the workers are (new deployments, 2024): **Japan 62,722 · Taiwan 48,533 · Korea 10,877** — the three markets Vietnam's labor program has run longest.
+The same Philippines anchor also covers Hong Kong (202,415 workers), Japan (60,748), South Korea (38,390), and Malaysia (35,052). Only the receiving side needs a Stellar anchor. Wherever the sender is, they just need XLM/USDC sitting in their own wallet.
 
-No public source breaks HCMC's remittance dollars down by sending country — worker-deployment counts and the Asia-origin remittance total are two different figures, not one TAM. Treat Japan/Taiwan/Korea as a corridor signal, not a market-size claim.
-
-<p class="source">Sources: MOLISA via VietnamPlus/SGGP (2024 deployments) · baochinhphu.vn (HCMC 2025 remittances) · kinhtevadubao.vn (contract-worker remittance total)</p>
+<p class="source">Sources: DMW/OFW deployment reporting via businessmirror.com.ph · Bangko Sentral ng Pilipinas cash remittance data</p>
 
 ---
 
@@ -171,7 +169,7 @@ No public source breaks HCMC's remittance dollars down by sending country — wo
 <li>SEP-1 + provider SEP-10 + hosted SEP-24</li>
 <li>KYC, quote/limits, approved deposit routing</li>
 <li>Provider transaction status and reference</li>
-<li>VND cash-out and provider-confirmed collection</li>
+<li>PHP cash-out and provider-confirmed collection</li>
 </ul>
 </div>
 </div>
@@ -183,75 +181,49 @@ No public source breaks HCMC's remittance dollars down by sending country — wo
 # Sender → Stellar → Anchor → Receiver
 
 <div class="flow-row">
-<div class="flow-node"><strong>Sender</strong><span>Vietnamese worker abroad</span></div>
+<div class="flow-node"><strong>Sender</strong><span>Filipino worker, any market</span></div>
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div>
 <span class="flow-arrow">→</span>
-<div class="flow-node target"><strong>Anchor</strong><span>SEP-24 cash-out — target, not connected</span></div>
+<div class="flow-node target"><strong>Anchor</strong><span>MoneyGram Ramps, target, not connected</span></div>
 <span class="flow-arrow">→</span>
-<div class="flow-node"><strong>Receiver</strong><span>Her mother — cash in hand, no wallet needed</span></div>
+<div class="flow-node"><strong>Receiver</strong><span>Her mother, cash in hand, no wallet needed</span></div>
 </div>
 
-Solid border = built today. Dashed = planned, not yet connected. The last box is the whole point: once the anchor connects, the receiving side never touches a wallet, an app, or crypto.
+Solid border = built today. Dashed = planned, not yet connected. Once the anchor connects, funds land in MoneyGram's own Stellar account, then flow into their agent network across the Philippines. Her mother just needs a reference number and a photo ID to walk out with cash. No wallet, no app.
 
 ---
 
-## Why Stellar; why these providers
+## Why Stellar; why one anchor is enough
 
-# Verifiable rails now; the anchor is still a target
-
-<div class="row">
-<div class="card">
-<p class="card-title">Why this customer</p>
-<ul>
-<li>A large, already-counted population on formal labor contracts abroad (see corridor evidence)</li>
-<li>Government-brokered placement → recurring, predictable monthly income</li>
-<li>Japan/Taiwan/Korea are the longest-running, largest programs</li>
-<li>The recipient is often an older parent — the target design ends in cash pickup, not a wallet they'd have to learn</li>
-</ul>
-</div>
-<div class="card">
-<p class="card-title">Why these provider candidates</p>
-<ul>
-<li><strong>Lightnet</strong> — listed on Stellar's own Anchor Directory, Vietnam in its 150+ country coverage, SEP-24, cross-border-payments focus. No live <code>stellar.toml</code> found — unverified today.</li>
-<li><strong>MoneyGram Ramps</strong> — real, live Stellar anchor. Funds settle to MoneyGram's own Stellar address; the recipient collects cash via phone number/code + ID, no wallet needed on their side. This exact no-wallet pattern already runs in Kenya, Philippines, and Mexico (third-party analysis, chaingain.io — not MoneyGram's own docs) — proven mechanism, Vietnam just isn't on the country list yet.</li>
-<li>Neither is a confirmed partner yet — Bakti is currently reaching out to both.</li>
-</ul>
-</div>
-</div>
-
-<p class="source">Sources: anchors.stellar.org (Anchor Directory) · developer.moneygram.com/integrate-moneygram-ramps · chaingain.io (independent analysis of the settlement flow)</p>
-
----
-
-## Vietnam is already building the rails
-
-# Cash infrastructure exists. Regulation is catching up.
+# One Philippines anchor serves every sending market
 
 <div class="row">
 <div class="card">
-<p class="card-title">Cash pickup already works here</p>
+<p class="card-title">Why one anchor covers many markets</p>
 <ul>
-<li>Classic MoneyGram runs cash-pickup agents across Vietnam today — reference number + photo ID, no account needed</li>
-<li>What that alone doesn't give Linh: a standing plan she sets once and on-chain proof it landed, instead of a one-off errand she has to remember and repeat by hand every month</li>
+<li>Only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange</li>
+<li>No separate integration per sending country, no separate deal per market</li>
+<li>The Philippines is the one place Bakti needs a licensed cash-out partner</li>
 </ul>
 </div>
 <div class="card">
-<p class="card-title">A licensed VND rail is opening</p>
+<p class="card-title">Why MoneyGram Ramps</p>
 <ul>
-<li>Vietnam's Resolution 05/2025/NQ-CP (Sep 2025) opened a 5-year regulated crypto pilot — VND-only settlement, up to 5 licensed exchanges</li>
-<li><strong>CAEX</strong> is a shortlisted candidate, backed by OKX Ventures and HashKey Capital — not a confirmed Stellar anchor</li>
+<li>Real, live Stellar anchor. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li>
+<li>Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed</li>
+<li>Bakti already emailed MoneyGram Ramps about integrating. No reply yet, and nothing's confirmed</li>
 </ul>
 </div>
 </div>
 
-<p class="source">Sources: moneygram.com/intl/com-vn/en · Resolution 05/2025/NQ-CP (ssc.gov.vn) · fintechnews.sg (CAEX investment)</p>
+<p class="source">Sources: stellar.org/case-studies/moneygram-international (2021 launch) · developer.moneygram.com/integrate-moneygram-ramps</p>
 
 ---
 
 ## Business model + GTM
 
-# Hypotheses to test — not forecasts
+# Hypotheses to test, not forecasts
 
 <div class="row">
 <div class="card">
@@ -266,11 +238,10 @@ Solid border = built today. Dashed = planned, not yet connected. The last box is
 <div class="card">
 <span class="badge now">GTM experiments</span>
 <ul>
-<li>Interview Vietnamese contract workers in Japan/Taiwan/Korea and family recipients</li>
+<li>Interview Filipino workers abroad (any market) and family recipients in the Philippines</li>
 <li>Test planning/reminder value before automation</li>
-<li>Currently reaching out to Lightnet and MoneyGram about a Vietnam VND rail</li>
+<li>Follow up on the MoneyGram Ramps email, without claiming a partnership</li>
 <li>Run testnet usability studies for signing and address safety</li>
-<li>Seek provider sandbox/certification conversations, no partnership claim</li>
 </ul>
 </div>
 </div>
@@ -285,7 +256,7 @@ Solid border = built today. Dashed = planned, not yet connected. The last box is
 <div class="card">
 <span class="badge now">Built</span>
 <ul>
-<li>Contract itself: live on mainnet since 2026-07-12 — creator key under review</li>
+<li>Contract itself: live on mainnet since 2026-07-12, creator key under review</li>
 <li>Separately: a fresh, judge-facing demo transaction is pending, to be signed before submission</li>
 <li>Direct payment verification and support-plan UI</li>
 <li>Current endpoints stop at Verified on-chain</li>
@@ -294,11 +265,11 @@ Solid border = built today. Dashed = planned, not yet connected. The last box is
 <div class="card">
 <span class="badge next">Ask</span>
 <ul>
-<li>Warm introduction to Lightnet or MoneyGram about a Vietnam VND rail</li>
-<li>Customer-discovery introductions among Vietnamese worker communities in Japan/Taiwan/Korea</li>
+<li>Warm introduction to MoneyGram Ramps, or feedback on the outreach email already sent</li>
+<li>Customer-discovery introductions among Filipino worker communities abroad</li>
 <li>Feedback on the planning job before adding automation</li>
 </ul>
-<p style="font-size:15px;color:#8291a3;margin-top:10px;"><strong>Not built:</strong> SEP-24, anchor API/webview, KYC, provider routing/status/reference, VND cash-out, automatic scheduling.</p>
+<p style="font-size:15px;color:#8291a3;margin-top:10px;"><strong>Not built:</strong> SEP-24, anchor API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling.</p>
 </div>
 </div>
 
@@ -310,7 +281,7 @@ Solid border = built today. Dashed = planned, not yet connected. The last box is
 
 # The target value, in one line.
 
-A sender signs once a month. Her mother walks in and collects the cash — no wallet, no app, no blockchain to learn. That last part isn't built yet; it's what the anchor connection is for.
+A sender signs once a month. Her mother just walks in and picks up cash. No wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet. It's exactly what the anchor connection is for.
 
 <div class="stats">
 <div class="stat"><span class="num">bakti-stellar.vercel.app</span><span class="lbl">Live app</span></div>
