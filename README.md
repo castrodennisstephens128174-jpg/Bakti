@@ -22,7 +22,7 @@ partnership unlocks.
 
 ![Stellar](https://img.shields.io/badge/Stellar-Public-0284c7)
 ![Soroban](https://img.shields.io/badge/Soroban-BaktiEscrow-7c3aed)
-![SEP-10](https://img.shields.io/badge/Auth-SEP--10-075985)
+![Auth](https://img.shields.io/badge/Auth-Signed--Challenge-075985)
 ![SEP-24](https://img.shields.io/badge/Off--ramp-SEP--24-0369a1)
 ![Asset](https://img.shields.io/badge/Asset-XLM%20%2F%20USDC-16803d)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
@@ -50,7 +50,7 @@ Bakti is a standing-order layer built on **classic Stellar primitives**. A worki
 
 ## 🔁 How it works
 
-1. **Connect** — link a Stellar wallet. Bakti proves ownership with a SEP-10 challenge (a signed, non-submitted transaction), pinned to the app's active network regardless of the wallet's own network setting.
+1. **Connect** — link a Stellar wallet. Bakti proves ownership with its own signed challenge (a `manageData` transaction, signed but never submitted — not a full SEP-10 flow, no anchor JWT), pinned to the app's active network regardless of the wallet's own network setting.
 2. **Add a parent** — name them, paste their Stellar address, pick a pickup corridor, an asset (XLM by default, USDC opt-in), a monthly amount, and a payout day.
 3. **Sign the month** — one tap sends the allowance as a single payment. The server re-derives and verifies it against Horizon before recording anything.
 4. **Off-ramp** — the anchor issues a cash-pickup reference (SEP-24), attributed per family with a SEP-23 muxed address; a Horizon SSE stream shows the payment landing.
@@ -78,7 +78,7 @@ The contract id is env-driven (`SOROBAN_BAKTI_CONTRACT_ID`, see `src/server/stel
 | Primitive | Role in Bakti |
 | --- | --- |
 | BaktiEscrow (Soroban) | `create_schedule` escrows an XLM allowance's full run; `release` is a permissionless keeper call that pays one due period to the recipient |
-| SEP-10 | Wallet login via a signed challenge transaction |
+| Signed challenge (not SEP-10) | Wallet login via Bakti's own `manageData` challenge — signed, never submitted; no anchor JWT |
 | Payment (USDC classic path) | The monthly allowance, signed once by the sender, verified against Horizon |
 | Horizon verification | Server re-derives and confirms each classic (USDC) payout on-chain before recording |
 | Soroban RPC | Server assembles/simulates contract invokes for the sender/keeper to sign, then submits and polls to `SUCCESS` |
@@ -95,7 +95,7 @@ The contract id is env-driven (`SOROBAN_BAKTI_CONTRACT_ID`, see `src/server/stel
 | --- | --- | --- | --- |
 | Escrow contract | ✅ Soroban `BaktiEscrow` deployed on Stellar mainnet | Same contract, real 30-day cadence | — |
 | Signing | ✅ Non-custodial, sender signs every payment (Freighter) | — | — |
-| Auth / attribution | ✅ SEP-10 auth, SEP-23 muxed accounts, SEP-7 pay links | — | — |
+| Auth / attribution | ✅ Signed-challenge wallet auth (not SEP-10), SEP-23 muxed accounts, SEP-7 pay links | 🎯 Real anchor SEP-10 + JWT handling once a provider signs | — |
 | Off-ramp | ✅ SEP-24 `cash_pickup` flow implemented against the published spec, run against a simulated anchor | 🎯 Production anchor: **MoneyGram Access** (live on Stellar, 170+ countries) and/or **Coins.ph** (BSP-registered PH VASP) — going live is a config swap, not a rewrite | 🎯 Multi-anchor per corridor |
 | End-to-end payout | ✅ Sign → verify → off-ramp → pickup-reference proven on Stellar **testnet** | 🎯 Same flow proven on mainnet with a live anchor | — |
 | Corridors | ✅ PH / ID / VN / MY / TH selectable, cash-pickup labeled | 🎯 Pilot corridor live with one anchor | 🎯 Licensed rail, multi-corridor |
@@ -221,7 +221,7 @@ One-command demo: `pnpm run demo` (push + seed + dev).
 
 ```
 app/                     Next.js routes
-  api/                   auth (SEP-10), allowances, payouts, stats, health
+  api/                   auth (signed challenge), allowances, payouts, stats, health
   dashboard/  stats/  allowances/[id]/
 src/server/
   service/               allowance + payout state machines, auth, stats

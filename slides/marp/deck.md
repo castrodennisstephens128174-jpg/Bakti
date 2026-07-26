@@ -176,12 +176,12 @@ He doesn't use crypto. He uses the corner pickup shop.
 <div class="stat"><span class="num">Soroban</span><span class="lbl">Permissionless escrow · on-chain</span></div>
 <div class="stat"><span class="num">USDC</span><span class="lbl">Circle-issued · native on Stellar</span></div>
 <div class="stat"><span class="num">SEP-24</span><span class="lbl">Standard cash off-ramp</span></div>
-<div class="stat"><span class="num">SEP-10/23</span><span class="lbl">Auth + muxed attribution</span></div>
+<div class="stat"><span class="num">SEP-23</span><span class="lbl">Muxed attribution per family</span></div>
 </div>
 
 ![w:360](assets/stellar-vs.png)
 
-<span class="pill">SEP-10</span> auth per family &nbsp; <span class="pill">SEP-23</span> muxed attribution &nbsp; <span class="pill">SEP-24</span> standardized off-ramp
+<span class="pill">SEP-23</span> muxed attribution &nbsp; <span class="pill">SEP-24</span> standardized off-ramp &nbsp; <span class="pill">SEP-7</span> QR pay links
 
 <p class="source">Source: stellar.org/developers · stellar.org/case-studies/moneygram</p>
 
@@ -215,7 +215,7 @@ He doesn't use crypto. He uses the corner pickup shop.
 **Phase 1 — shipped**
 - Soroban BaktiEscrow on mainnet
 - Non-custodial signing
-- SEP-10 / SEP-23 / SEP-7 wired
+- Signed-challenge auth (not SEP-10) · SEP-23 / SEP-7 wired
 - SEP-24 `cash_pickup`, simulated anchor
 - Payout proven end-to-end on testnet
 

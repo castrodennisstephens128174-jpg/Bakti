@@ -5,12 +5,13 @@
 ### 1. Onboarding (sender)
 ```
 Connect wallet (Freighter)
-  → SEP-10 challenge/verify
+  → signed-challenge issue/verify
   → session cookie set
 ```
 
 Server issues a nonce via `manageData("bakti_auth", nonce)`. Client signs it.
-Server verifies the signature and creates a session row.
+Server verifies the signature and creates a session row. This is Bakti's own
+signed challenge — not SEP-10, and it never produces an anchor JWT.
 
 ### 2. Create Allowance — XLM path (Soroban)
 ```
@@ -95,7 +96,7 @@ Sender confirms the parent collected the cash.
 | `src/server/stellar/payuri.ts` | SEP-7 pay URI builder |
 | `src/server/service/allowance.service.ts` | Allowance lifecycle + state machine |
 | `src/server/service/payout.service.ts` | Payout lifecycle + state machine |
-| `src/server/service/auth.service.ts` | SEP-10 challenge/verify |
+| `src/server/service/auth.service.ts` | Signed-challenge issue/verify (not SEP-10) |
 | `contracts/bakti-escrow/src/lib.rs` | Soroban contract: `create_schedule`, `release` |
 | `app/ui/wallet/WalletProvider.tsx` | Client wallet state machine |
 | `app/ui/wallet/stellarClient.ts` | Freighter sign + submit helpers |
@@ -112,7 +113,7 @@ Sender confirms the parent collected the cash.
 | SEP | Status | Used for |
 |-----|--------|----------|
 | SEP-7 | Wired | Pay URI deep links from allowance detail |
-| SEP-10 | Wired | Wallet authentication |
+| SEP-10 | Not implemented | Wallet auth uses Bakti's own signed challenge instead — real anchor SEP-10 is a Phase 2 dependency |
 | SEP-23 | Wired | Per-allowance muxed attribution on anchor account |
 | SEP-24 | Demo | Off-ramp cash-pickup reference (stubbed) |
 

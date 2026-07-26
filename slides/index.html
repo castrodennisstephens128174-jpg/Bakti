@@ -253,16 +253,16 @@
       <div class="stat"><div class="num">Soroban</div><div class="lbl">Permissionless escrow · on-chain</div></div>
       <div class="stat"><div class="num">USDC</div><div class="lbl">Circle-issued · native on Stellar</div></div>
       <div class="stat"><div class="num">SEP-24</div><div class="lbl">Standard cash off-ramp</div></div>
-      <div class="stat"><div class="num">SEP-10 / 23</div><div class="lbl">Auth + muxed account attribution</div></div>
+      <div class="stat"><div class="num">SEP-23</div><div class="lbl">Muxed account attribution</div></div>
     </div>
     <div class="row" style="margin-top: 32px; align-items: center;">
       <div class="chart-wrap">
         <canvas id="chart-stellar-vs"></canvas>
       </div>
       <div>
-        <p class="lede"><span class="pill"><i class="pi pi-shield"></i> SEP-10</span> auth per family</p>
-        <p class="lede" style="margin-top: 12px;"><span class="pill"><i class="pi pi-id-card"></i> SEP-23</span> muxed account attribution</p>
+        <p class="lede"><span class="pill"><i class="pi pi-id-card"></i> SEP-23</span> muxed account attribution</p>
         <p class="lede" style="margin-top: 12px;"><span class="pill"><i class="pi pi-link"></i> SEP-24</span> standardized off-ramp</p>
+        <p class="lede" style="margin-top: 12px;"><span class="pill"><i class="pi pi-qrcode"></i> SEP-7</span> QR pay links</p>
       </div>
     </div>
     <div class="source">Source: stellar.org/developers · stellar.org/case-studies/moneygram</div>
@@ -297,7 +297,7 @@
         <ul class="lede" style="padding-left: 20px; line-height: 1.7;">
           <li>Soroban BaktiEscrow deployed on Stellar mainnet.</li>
           <li>Non-custodial signing, every payment in the sender's own wallet.</li>
-          <li>SEP-10 auth, SEP-23 muxed attribution, SEP-7 pay links.</li>
+          <li>Signed-challenge auth (not SEP-10), SEP-23 muxed attribution, SEP-7 pay links.</li>
           <li>SEP-24 <code>cash_pickup</code> off-ramp built to spec, run against a simulated anchor.</li>
           <li>End-to-end payout — sign → verify → off-ramp → pickup — proven on testnet.</li>
         </ul>

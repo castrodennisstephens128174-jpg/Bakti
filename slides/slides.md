@@ -55,7 +55,7 @@ Step 4: They collect. Local cash in hand — no wallet, no crypto on their side.
 Non-custodial the whole way: Bakti never holds your keys or your funds.
 
 # THE FLOW
-Sender signs one payment in Freighter (SEP-10).
+Sender signs one payment in Freighter (Bakti's own signed challenge, not SEP-10).
 BaktiEscrow Soroban contract holds and releases one month per call.
 SEP-23 muxed account attributes the deposit to this family.
 SEP-24 anchor off-ramps to a cash-pickup reference.
@@ -65,7 +65,7 @@ Parent collects at a local pickup point near them.
 The only chain where this ends in cash.
 Anchors and SEP-24: a real standardized path from stablecoin to local cash pickup.
 Sub-cent fees: a $25 allowance is not eaten by the rails.
-SEP-10 and SEP-23: auth and per-family attribution built into the protocol.
+SEP-23: per-family attribution built into the protocol. Anchor SEP-10 auth is Phase 2.
 USDC on Stellar: natively issued by Circle. No bridged assets. No counterparty risk.
 Soroban escrow: permissionless keeper release. Non-custodial. Auditable on-chain.
 
@@ -85,11 +85,11 @@ Signed by a real Freighter wallet, verified against Horizon, off-ramped to a cas
 
 # ANCHOR INTEGRATION
 SEP-24: standardized off-ramp. Bakti is the SEP-24 wallet client.
-SEP-10: user signs the challenge; Bakti server exchanges it for an anchor JWT.
 POST /withdraw/interactive: Bakti sends destination (muxed), asset, amount.
 GET /transaction: polls until status=completed; pickup_ref = transaction_id.
+Target flow once a real anchor signs: user completes anchor SEP-10, exchanges for an anchor JWT — not implemented yet, Bakti's own login today is a separate signed challenge.
 Integration targets: MoneyGram Access (live on Stellar, 170+ countries), Coins.ph (Philippines, Bangko Sentral ng Pilipinas registered VASP).
-Off-ramp is implemented to the SEP-24 spec today; going live with either target is a config swap, not a rewrite.
+Off-ramp is implemented to the SEP-24 spec today; going live with either target adds real anchor SEP-10, not a rewrite of the flow.
 
 # TRY IT YOURSELF
 Open the app: bakti-stellar.vercel.app → Dashboard → Connect Freighter (mainnet).
