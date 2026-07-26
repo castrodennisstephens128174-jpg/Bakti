@@ -161,7 +161,8 @@
       <span class="tag">ILLUSTRATIVE PERSONA · NOT A CLAIMED INTERVIEW</span>
       <p class="quote" style="margin-top:22px;">Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Some months she remembers to send money home; some months a double shift pushes it to next week.</p>
       <p class="lede" style="margin-top:24px;color:var(--brand);font-weight:700;">She doesn't want to "remember to send." She wants a standing plan she sets up once, then signs each month on a habit — not from memory.</p>
-      <p class="small" style="margin-top:16px;">Today the recipient still needs a Stellar address, and Linh signs every transfer herself. Bakti does not send automatically.</p>
+      <p class="lede" style="margin-top:16px;font-size:16px;">Her mother, back home, has never used a banking app — a wallet address is not something Linh can ask her to learn. The real prize isn't the transfer. It's her mother collecting cash without touching a screen.</p>
+      <p class="small" style="margin-top:16px;">Today the recipient still needs a Stellar address, and Linh signs every transfer herself. Bakti does not send automatically. Cash pickup for her mother is the target, not built yet.</p>
     </div>
   </section>
 
@@ -199,9 +200,9 @@
       <div class="flow" role="img" aria-label="Current Bakti flow from sender through Stellar to a planned anchor to the receiver in Vietnam">
         <div class="node"><strong>Sender</strong><span>Vietnamese worker abroad</span></div><div class="arrow" aria-hidden="true">→</div>
         <div class="node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div><div class="arrow" aria-hidden="true">→</div>
-        <div class="node"><strong>Receiver</strong><span>Family in Vietnam</span></div>
+        <div class="node"><strong>Receiver</strong><span>Her mother — cash in hand, no wallet needed</span></div>
       </div>
-      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (SEP-24 cash-out, target not connected) → VND in hand</strong></div>
+      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (SEP-24 cash-out, target not connected) → VND in hand, no wallet needed for the receiver</strong></div>
     </div>
   </section>
 
@@ -210,11 +211,11 @@
     <p class="kicker">Why Stellar; why these providers</p>
     <h2 id="s6-title">Verifiable rails now; the anchor is still a target</h2>
     <div class="grid-2">
-      <div class="card current"><h3>Why this customer</h3><ul class="clean"><li>700,000+ Vietnamese already on formal labor contracts abroad</li><li>Government-brokered placement → recurring, predictable monthly income</li><li>Japan/Taiwan/Korea are the longest-running, largest programs</li></ul></div>
-      <div class="card future"><h3>Why these provider candidates</h3><ul class="clean"><li><strong>Lightnet</strong> — listed on Stellar's own Anchor Directory, Vietnam in its 150+ country coverage, SEP-24, cross-border-payments focus. No live stellar.toml found — unverified today.</li><li><strong>MoneyGram Ramps</strong> — real, live Stellar anchor, but confirmed countries are Kenya, Philippines, Mexico. Vietnam is not on that list.</li><li>Neither is a confirmed partner yet — Bakti is currently reaching out to both.</li></ul>
+      <div class="card current"><h3>Why this customer</h3><ul class="clean"><li>700,000+ Vietnamese already on formal labor contracts abroad</li><li>Government-brokered placement → recurring, predictable monthly income</li><li>Japan/Taiwan/Korea are the longest-running, largest programs</li><li>The recipient is often an older parent — the target design ends in cash pickup, not a wallet they'd have to learn</li></ul></div>
+      <div class="card future"><h3>Why these provider candidates</h3><ul class="clean"><li><strong>Lightnet</strong> — listed on Stellar's own Anchor Directory, Vietnam in its 150+ country coverage, SEP-24, cross-border-payments focus. No live stellar.toml found — unverified today.</li><li><strong>MoneyGram Ramps</strong> — real, live Stellar anchor. Funds settle to MoneyGram's own Stellar address; the recipient collects cash via phone number/code + ID, no wallet needed on their side. This exact no-wallet pattern already runs in Kenya, Philippines, and Mexico (third-party analysis, chaingain.io — not MoneyGram's own docs) — proven mechanism, Vietnam just isn't on the country list yet.</li><li>Neither is a confirmed partner yet — Bakti is currently reaching out to both.</li></ul>
       </div>
     </div>
-    <div class="source">Sources: anchors.stellar.org (Anchor Directory) · developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps</div>
+    <div class="source">Sources: anchors.stellar.org (Anchor Directory) · developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps · chaingain.io (independent analysis of the settlement flow)</div>
   </section>
 
   <section class="slide" data-slide="7" aria-labelledby="s7-title">
@@ -240,10 +241,10 @@
 
   <section class="slide" data-slide="9" aria-labelledby="s9-title">
     <span class="slide-num">9 / 9</span>
-    <p class="kicker">The value, in one line</p>
-    <h2 id="s9-title">A sender signs. A family collects. No blockchain to think about.</h2>
+    <p class="kicker">The target value, in one line</p>
+    <h2 id="s9-title">A sender signs. Her mother collects cash. No blockchain to learn.</h2>
     <div class="card" style="margin-top:8px;">
-      <p class="lede" style="font-size:19px;">A sender signs once a month. Family in Vietnam collects the support. Nobody but the sender ever has to think about the blockchain underneath.</p>
+      <p class="lede" style="font-size:19px;">A sender signs once a month. Her mother walks in and collects the cash — no wallet, no app, no blockchain to learn. That last part isn't built yet; it's what the anchor connection is for.</p>
     </div>
     <div class="source">bakti-stellar.vercel.app · Bakti · GitHub · Stellar APAC Hackathon 2026 · Track A</div>
   </section>

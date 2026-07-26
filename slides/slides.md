@@ -12,7 +12,8 @@ Stellar mainnet product · licensed cash-out is the next integration
 Illustrative persona — not a claimed interview
 Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Some months she remembers to send money home; some months a double shift pushes it to next week.
 She doesn't want to "remember to send." She wants a standing plan she sets up once, then signs each month on a habit — not from memory.
-Today the recipient still needs a Stellar address, and Linh signs every transfer herself — Bakti does not send automatically.
+Her mother, back home, has never used a banking app — a wallet address is not something Linh can ask her to learn. The real prize isn't the transfer. It's her mother collecting cash without touching a screen.
+Today the recipient still needs a Stellar address, and Linh signs every transfer herself — Bakti does not send automatically. Cash pickup for her mother is the target, not built yet.
 
 # EVIDENCE
 Corridor evidence — signal, not TAM
@@ -52,7 +53,7 @@ Soroban demonstrates pre-funded XLM release rules.
 Stellar anchors connect network assets to off-chain rails.
 SEP-24 is a hosted interactive deposit/withdrawal flow with anchor authentication and KYC.
 Lightnet is listed on Stellar's own Anchor Directory with Vietnam in its 150+ country coverage and SEP-24 support, but its stellar.toml 404s — unverified today.
-MoneyGram Ramps is a real, live Stellar anchor, but its confirmed countries are Kenya, Philippines, and Mexico — Vietnam is not on that list.
+MoneyGram Ramps is a real, live Stellar anchor. Funds settle to MoneyGram's own Stellar address; the recipient collects cash via phone number/code + ID, no wallet needed on their side — this exact pattern already runs in Kenya, Philippines, and Mexico (chaingain.io independent analysis), just not confirmed for Vietnam yet.
 Neither is a confirmed partner yet — Bakti is currently reaching out to both.
 Sources: anchors.stellar.org (Anchor Directory); Stellar anchors/SEP-24 docs; MoneyGram Ramps integration docs
 
@@ -87,4 +88,4 @@ Proof: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33
 
 # VALUE
 The value, in one line
-A sender signs once a month. Family in Vietnam collects the support. Nobody but the sender ever has to think about the blockchain underneath.
+A sender signs once a month. Her mother walks in and collects the cash — no wallet, no app, no blockchain to learn. That last part isn't built yet; it's what the anchor connection is for.

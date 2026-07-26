@@ -48,7 +48,7 @@ The target last mile is a certified SEP-24 integration with a licensed Stellar a
 **No anchor has a publicly verified live VND rail today.** The two closest candidates:
 
 - **Lightnet.** Listed on Stellar's own [Anchor Directory](https://anchors.stellar.org/) with Vietnam among its 150+ country coverage, SEP-24 support, and a cross-border-payments focus. Its listed `stellar.toml` URL (`lightnet.io/.well-known/stellar.toml`) returns 404 — the directory listing is not independently verifiable against a live anchor endpoint.
-- **MoneyGram Ramps.** A real, live Stellar anchor, but its own supported-countries sheet confirms only Kenya, Philippines, and Mexico for direct deposit. Vietnam does not appear in any MoneyGram Ramps source checked.
+- **MoneyGram Ramps.** A real, live Stellar anchor. Funds settle to a MoneyGram-controlled Stellar address; the recipient collects cash via phone number/code plus ID — no Stellar wallet needed on the receiving side. That exact no-wallet mechanism already runs in Kenya, Philippines, and Mexico (independent analysis, [chaingain.io](https://chaingain.io/moneygram-stellar-crypto-remittance-2026/) — not MoneyGram's own docs, which were inaccessible for direct verification). It's a proven pattern; Vietnam does not appear in any MoneyGram Ramps source checked.
 
 Neither is a confirmed partner yet — Bakti is currently reaching out to both.
 

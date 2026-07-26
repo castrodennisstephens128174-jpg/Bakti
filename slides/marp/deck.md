@@ -127,7 +127,9 @@ Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor con
 
 **She doesn't want to "remember to send." She wants a standing plan she sets up once, then signs each month on a habit — not from memory.**
 
-Today the recipient still needs a Stellar address, and Linh signs every transfer herself — Bakti does not send automatically.
+Her mother, back home, has never used a banking app — a wallet address is not something Linh can ask her to learn. **The real prize isn't the transfer. It's her mother collecting cash without having to touch a screen.**
+
+Today the recipient still needs a Stellar address, and Linh signs every transfer herself — Bakti does not send automatically. Cash pickup for her mother is the target, not built yet.
 
 ---
 
@@ -190,10 +192,10 @@ No public source breaks HCMC's remittance dollars down by sending country — wo
 <span class="flow-arrow">→</span>
 <div class="flow-node target"><strong>Anchor</strong><span>SEP-24 cash-out — target, not connected</span></div>
 <span class="flow-arrow">→</span>
-<div class="flow-node"><strong>Receiver</strong><span>Family in Vietnam</span></div>
+<div class="flow-node"><strong>Receiver</strong><span>Her mother — cash in hand, no wallet needed</span></div>
 </div>
 
-Solid border = built today. Dashed = planned, not yet connected.
+Solid border = built today. Dashed = planned, not yet connected. The last box is the whole point: once the anchor connects, the receiving side never touches a wallet, an app, or crypto.
 
 ---
 
@@ -208,19 +210,20 @@ Solid border = built today. Dashed = planned, not yet connected.
 <li>700,000+ Vietnamese already on formal labor contracts abroad</li>
 <li>Government-brokered placement → recurring, predictable monthly income</li>
 <li>Japan/Taiwan/Korea are the longest-running, largest programs</li>
+<li>The recipient is often an older parent — the target design ends in cash pickup, not a wallet they'd have to learn</li>
 </ul>
 </div>
 <div class="card">
 <p class="card-title">Why these provider candidates</p>
 <ul>
 <li><strong>Lightnet</strong> — listed on Stellar's own Anchor Directory, Vietnam in its 150+ country coverage, SEP-24, cross-border-payments focus. No live <code>stellar.toml</code> found — unverified today.</li>
-<li><strong>MoneyGram Ramps</strong> — real, live Stellar anchor, but its confirmed countries are Kenya, Philippines, Mexico. Vietnam is not on that list.</li>
+<li><strong>MoneyGram Ramps</strong> — real, live Stellar anchor. Funds settle to MoneyGram's own Stellar address; the recipient collects cash via phone number/code + ID, no wallet needed on their side. This exact no-wallet pattern already runs in Kenya, Philippines, and Mexico (third-party analysis, chaingain.io — not MoneyGram's own docs) — proven mechanism, Vietnam just isn't on the country list yet.</li>
 <li>Neither is a confirmed partner yet — Bakti is currently reaching out to both.</li>
 </ul>
 </div>
 </div>
 
-<p class="source">Sources: anchors.stellar.org (Anchor Directory) · developer.moneygram.com/integrate-moneygram-ramps</p>
+<p class="source">Sources: anchors.stellar.org (Anchor Directory) · developer.moneygram.com/integrate-moneygram-ramps · chaingain.io (independent analysis of the settlement flow)</p>
 
 ---
 
@@ -283,9 +286,9 @@ Solid border = built today. Dashed = planned, not yet connected.
 
 <!-- _class: lead -->
 
-# The value, in one line.
+# The target value, in one line.
 
-A sender signs once a month. Family in Vietnam collects the support. Nobody but the sender ever has to think about the blockchain underneath.
+A sender signs once a month. Her mother walks in and collects the cash — no wallet, no app, no blockchain to learn. That last part isn't built yet; it's what the anchor connection is for.
 
 <div class="stats">
 <div class="stat"><span class="num">bakti-stellar.vercel.app</span><span class="lbl">Live app</span></div>

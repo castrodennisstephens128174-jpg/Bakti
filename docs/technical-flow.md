@@ -188,7 +188,7 @@ None of these steps is implemented in the current endpoints.
 
 The core gap in this target design is open, not yet answered by any source:
 
-- **No confirmed Vietnam VND anchor.** MoneyGram Ramps' own supported-countries sheet confirms only Kenya, Philippines, and Mexico for direct deposit — Vietnam is not listed. Lightnet appears on Stellar's own [Anchor Directory](https://anchors.stellar.org/) with Vietnam among its 150+ country coverage and SEP-24 support, but its listed `stellar.toml` (`lightnet.io/.well-known/stellar.toml`) returns 404, so its actual VND rail, limits, and KYC flow are unverified. Neither is a confirmed partner yet — Bakti is currently reaching out to both.
+- **No confirmed Vietnam VND anchor.** MoneyGram Ramps settles funds to its own Stellar address and lets the recipient collect cash via phone number/code plus ID, no wallet needed on their side — a proven no-wallet cash-pickup mechanism, already running in Kenya, Philippines, and Mexico ([chaingain.io](https://chaingain.io/moneygram-stellar-crypto-remittance-2026/) independent analysis; MoneyGram's own docs were inaccessible for direct verification). Vietnam is not on MoneyGram's confirmed-country list. Lightnet appears on Stellar's own [Anchor Directory](https://anchors.stellar.org/) with Vietnam among its 150+ country coverage and SEP-24 support, but its listed `stellar.toml` (`lightnet.io/.well-known/stellar.toml`) returns 404, so its actual VND rail, limits, and KYC flow are unverified. Neither is a confirmed partner yet — Bakti is currently reaching out to both.
 
 MoneyGram's published off-ramp limits also need a caveat: the integration docs list 5–950 USDC on-ramp and 5–2,500 USDC off-ramp, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides, and a separate Production Preview/certification tier caps test transactions at 10–20 USDC (100 USDC aggregate) — treat these as three different figures from three different sources, not one clean number, and note that Vietnam isn't confirmed on any of them.
 
@@ -197,6 +197,7 @@ Sources:
 - https://developers.stellar.org/docs/learn/fundamentals/anchors
 - https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
 - https://anchors.stellar.org/
+- https://chaingain.io/moneygram-stellar-crypto-remittance-2026/
 - https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
 - https://stellar.moneygram.com/stellaradapterservice/sep24/info
 - https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
