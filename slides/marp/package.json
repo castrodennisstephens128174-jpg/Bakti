@@ -1,0 +1,10 @@
+{
+  "name": "bakti-deck-marp",
+  "private": true,
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.5.0"
+  },
+  "dependencies": {
+    "primeicons": "^8.0.0"
+  }
+}

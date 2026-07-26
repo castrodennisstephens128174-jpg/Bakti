@@ -1,45 +1,39 @@
-import puppeteer from 'puppeteer';
-import { writeFile } from 'node:fs/promises';
+import { chromium } from '@playwright/test';
+import { writeFile, mkdir } from 'node:fs/promises';
+import path from 'node:path';
 
 const url = 'file://' + process.cwd() + '/index.html';
-const out = 'deck.pdf';
+const total = 10;
+const perSlideDir = path.resolve(process.cwd(), '../public');
 
-const browser = await puppeteer.launch({
-  headless: 'new',
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-});
-const page = await browser.newPage();
-await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 2 });
-await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
-await page.waitForFunction(() => typeof Chart !== 'undefined' && document.querySelectorAll('canvas').length >= 6, { timeout: 15000 });
-await new Promise(r => setTimeout(r, 1500));
+const browser = await chromium.launch({ args: ['--no-sandbox'] });
+const page = await browser.newPage({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 2 });
+await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
 
-const total = 9;
-const pdfBuffers = [];
+await page.waitForFunction(
+  () => typeof Chart !== 'undefined' && document.querySelectorAll('canvas').length >= 6,
+  { timeout: 15000 },
+);
+await page.waitForTimeout(500);
+
+await mkdir(perSlideDir, { recursive: true });
+
 for (let i = 1; i <= total; i++) {
   await page.evaluate((n) => {
-    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.slide').forEach((s) => s.classList.remove('active'));
     document.querySelector(`[data-slide="${n}"]`).classList.add('active');
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
   }, i);
-  await new Promise(r => setTimeout(r, 600));
+  await page.waitForTimeout(400);
   const buf = await page.pdf({
     width: '1280px',
     height: '720px',
     printBackground: true,
     margin: { top: 0, bottom: 0, left: 0, right: 0 },
   });
-  pdfBuffers.push(buf);
-  console.log(`rendered slide ${i}/${total} (${buf.length}B)`);
+  const outPath = path.join(perSlideDir, `slide_${i}.pdf`);
+  await writeFile(outPath, buf);
+  console.log(`rendered slide ${i}/${total} -> ${outPath} (${buf.length}B)`);
 }
 
-const merged = await page.pdf({
-  width: '1280px',
-  height: '720px',
-  printBackground: true,
-  margin: { top: 0, bottom: 0, left: 0, right: 0 },
-});
-
-await writeFile(out, merged);
-console.log(`wrote ${out} (${merged.length}B)`);
 await browser.close();
+console.log(`done. Per-slide PDFs written to ${perSlideDir}. Merge separately (see slides output).`);

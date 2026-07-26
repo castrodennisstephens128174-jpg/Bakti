@@ -52,7 +52,7 @@ Enforced by `nextAllowanceStatus()` in
 Stored as free-text in `allowances.corridor`. Displayed in the dashboard select.
 Corridor list is hard-coded in `app/dashboard/page.tsx` as `CORRIDORS`.
 
-Current corridors (demo, anchor TBD):
+Current corridors (demo; anchor integration targets: MoneyGram Access, Coins.ph):
 
 - Philippines · Cash pickup
 - Indonesia · Cash pickup

@@ -6,6 +6,14 @@
 - **Network:** Stellar public (mainnet)
 - **Soroban contract:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
 - **Explorer:** https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
+- **Pitch deck:** [PDF](slides/marp/deck.pdf) · [PPTX](slides/marp/deck.pptx) · [source](slides/marp/deck.md) — built with [Marp](https://github.com/marp-team/marp-cli), theme `gaia`
+- **Deck (HTML, legacy):** [`slides/index.html`](slides/index.html) · [PDF](slides/bakti_pitch_deck.pdf)
+
+The escrow contract and app are deployed and running on mainnet. The full
+sign → verify → off-ramp → cash-pickup flow has been run end to end and
+proven on Stellar **testnet** — see [Current vs target](#-current-vs-target)
+below for exactly what's real today versus what a production anchor
+partnership unlocks.
 
 
 # 🫶 Bakti — a monthly allowance your parents collect as cash
@@ -20,7 +28,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![Mainnet-ready](https://img.shields.io/badge/Mainnet--ready-network--aware-d97706)
 
-**Live demo → https://bakti-sooty.vercel.app**
+**Live demo → https://bakti-stellar.vercel.app**
 
 <img src="screen-shot/01-landing.jpg" width="780" alt="Bakti landing — send your parents a monthly allowance they collect as cash" />
 
@@ -42,7 +50,7 @@ Bakti is a standing-order layer built on **classic Stellar primitives**. A worki
 
 ## 🔁 How it works
 
-1. **Connect** — link a Stellar wallet. Bakti proves ownership with a SEP-10 challenge (a signed, non-submitted transaction), pinned to testnet whatever the wallet's active network.
+1. **Connect** — link a Stellar wallet. Bakti proves ownership with a SEP-10 challenge (a signed, non-submitted transaction), pinned to the app's active network regardless of the wallet's own network setting.
 2. **Add a parent** — name them, paste their Stellar address, pick a pickup corridor, an asset (XLM by default, USDC opt-in), a monthly amount, and a payout day.
 3. **Sign the month** — one tap sends the allowance as a single payment. The server re-derives and verifies it against Horizon before recording anything.
 4. **Off-ramp** — the anchor issues a cash-pickup reference (SEP-24), attributed per family with a SEP-23 muxed address; a Horizon SSE stream shows the payment landing.
@@ -60,10 +68,12 @@ Bakti is a standing-order layer built on **classic Stellar primitives**. A worki
 
 ## ⛓️ The on-chain flow — Soroban contract (XLM) + classic (USDC)
 
-Bakti ships a **BaktiEscrow Soroban contract** (`source-code/contracts/bakti-escrow`) that backs the XLM allowance path: the sender pre-funds the whole run (`monthly_amount * months`) into the contract's own escrow at `create_schedule`, and each monthly send is a permissionless `release` that pays exactly one period from that escrow to the recipient. USDC allowances stay on the classic Horizon-verified payment path (see below) — the contract binds a single escrow token (native XLM SAC) at `initialize`.
+Bakti ships a **BaktiEscrow Soroban contract** (`contracts/bakti-escrow`) that backs the XLM allowance path: the sender pre-funds the whole run (`monthly_amount * months`) into the contract's own escrow at `create_schedule`, and each monthly send is a permissionless `release` that pays exactly one period from that escrow to the recipient. USDC allowances stay on the classic Horizon-verified payment path (see below) — the contract binds a single escrow token (native XLM SAC) at `initialize`.
 
-Contract id (Stellar testnet): `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`
-Explorer: https://stellar.expert/explorer/testnet/contract/CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ
+Contract id (Stellar mainnet): `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
+Explorer: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
+
+The contract id is env-driven (`SOROBAN_BAKTI_CONTRACT_ID`, see `src/server/stellar/network.ts`) — a testnet id, `CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ`, backs local/testnet dev.
 
 | Primitive | Role in Bakti |
 | --- | --- |
@@ -73,13 +83,24 @@ Explorer: https://stellar.expert/explorer/testnet/contract/CATFEIDC4CQ3ZSYTWAEM4
 | Horizon verification | Server re-derives and confirms each classic (USDC) payout on-chain before recording |
 | Soroban RPC | Server assembles/simulates contract invokes for the sender/keeper to sign, then submits and polls to `SUCCESS` |
 | SEP-23 muxed accounts | Per-allowance attribution on one anchor collection account |
-| SEP-24 | Interactive off-ramp to a local cash-pickup reference (testnet simulation) |
+| SEP-24 | Interactive off-ramp to a local cash-pickup reference (simulated anchor today; see [Current vs target](#-current-vs-target)) |
 | SEP-7 | Payment request URI for QR pay from any wallet |
 | Horizon SSE | Live settlement indicator on the allowance page |
 
-`LEDGERS_PER_PERIOD = 60` (~5 minutes of testnet ledgers) is a deliberate testnet-demo cadence, not a real 30-day month — see `source-code/contracts/bakti-escrow/src/lib.rs` and `docs/technical-flow.txt`.
+`LEDGERS_PER_PERIOD = 60` (~5 minutes of ledgers) is a deliberate demo cadence, not a real 30-day month — see `contracts/bakti-escrow/src/lib.rs` and `docs/technical-flow.md`. Production is a config swap to `30 * 17_280 = 518_400` ledgers.
 
-> **Testnet honesty:** the contract escrow and every payment are real on Stellar testnet. The cash-pickup step (MoneyGram / Hana) is a clearly-labeled simulation of a SEP-24 anchor off-ramp — the reference code is what a live anchor would issue.
+## 🔭 Current vs target
+
+| | Phase 1 — shipped | Phase 2 — target | Phase 3 — target |
+| --- | --- | --- | --- |
+| Escrow contract | ✅ Soroban `BaktiEscrow` deployed on Stellar mainnet | Same contract, real 30-day cadence | — |
+| Signing | ✅ Non-custodial, sender signs every payment (Freighter) | — | — |
+| Auth / attribution | ✅ SEP-10 auth, SEP-23 muxed accounts, SEP-7 pay links | — | — |
+| Off-ramp | ✅ SEP-24 `cash_pickup` flow implemented against the published spec, run against a simulated anchor | 🎯 Production anchor: **MoneyGram Access** (live on Stellar, 170+ countries) and/or **Coins.ph** (BSP-registered PH VASP) — going live is a config swap, not a rewrite | 🎯 Multi-anchor per corridor |
+| End-to-end payout | ✅ Sign → verify → off-ramp → pickup-reference proven on Stellar **testnet** | 🎯 Same flow proven on mainnet with a live anchor | — |
+| Corridors | ✅ PH / ID / VN / MY / TH selectable, cash-pickup labeled | 🎯 Pilot corridor live with one anchor | 🎯 Licensed rail, multi-corridor |
+
+> **What's real today:** the contract, the app, and every signed payment are on Stellar mainnet. The cash-pickup leg runs against a simulated SEP-24 anchor built to the real spec — swapping in a live anchor changes config, not code.
 
 ## FRONTEND → CONTRACT WIRING (where to look)
 
@@ -175,7 +196,7 @@ USDC allowances never reach these functions — they stay on the classic Horizon
 
 ## 🧱 Tech stack
 
-- **Soroban / Rust** — `bakti-escrow` contract (`source-code/contracts`), `soroban-sdk` 22
+- **Soroban / Rust** — `bakti-escrow` contract (`contracts`), `soroban-sdk` 22
 - **Next.js 16** (App Router) · **React 19** · **TypeScript** strict
 - **@stellar/stellar-sdk** (Horizon + Soroban RPC) + **Freighter** for signing
 - **Drizzle ORM** on **Postgres**
@@ -214,5 +235,5 @@ docs/                    SUBMISSION, design, technical-flow, description (plain 
 ```
 
 <div align="center">
-<sub>Bakti · a monthly allowance for the parents back home · built on Stellar · testnet</sub>
+<sub>Bakti · a monthly allowance for the parents back home · built on Stellar · mainnet</sub>
 </div>

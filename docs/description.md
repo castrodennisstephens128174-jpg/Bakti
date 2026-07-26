@@ -8,5 +8,8 @@ pickup point without needing a smartphone or a crypto wallet.
 
 Built on Stellar mainnet with a Soroban BaktiEscrow contract backing XLM
 allowances. USDC allowances use classic Horizon-verified payments. SEP-10 auth,
-SEP-23 muxed attribution, and SEP-7 pay links are wired. The off-ramp is
-currently demo; a live SEP-24 anchor partnership is in progress.
+SEP-23 muxed attribution, and SEP-7 pay links are wired. The end-to-end flow —
+sign, verify, off-ramp, cash pickup — has been proven on testnet. The SEP-24
+off-ramp is implemented to the published spec and runs against a simulated
+anchor; integration targets are MoneyGram Access and Coins.ph, and going live
+is a config swap, not a rewrite.

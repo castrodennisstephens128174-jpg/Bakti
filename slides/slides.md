@@ -50,7 +50,7 @@ Dignity matters: no complex apps, no seed phrases.
 Bakti = a standing order. One Stellar payment per month. Parent collects local cash.
 Step 1: Add a parent. Name, Stellar address, corridor, amount, payout day.
 Step 2: Sign the month. One XLM or USDC payment signed in your own wallet.
-Step 3: Anchor off-ramps. A cash-pickup reference is issued (demo mode until live anchor signs).
+Step 3: Anchor off-ramps. A cash-pickup reference is issued (simulated anchor today, built to the live SEP-24 spec).
 Step 4: They collect. Local cash in hand — no wallet, no crypto on their side.
 Non-custodial the whole way: Bakti never holds your keys or your funds.
 
@@ -76,11 +76,11 @@ Off-ramp: SEP-24 anchor issues pickup reference; SEP-23 attributes it per family
 Tech: Next.js 16, React 19, TypeScript, Stellar SDK, Soroban, Rust, Drizzle, Postgres.
 
 # LIVE PROOF
-Not a mockup. A real mainnet payout.
+Not a mockup. Contract and app live on mainnet.
 Live app: bakti-stellar.vercel.app
 Soroban contract (mainnet): CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
-On-chain release: cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
-stellar.expert/explorer/public/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
+End-to-end payout proven on testnet: cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
+stellar.expert/explorer/testnet/tx/cfa17a939f5cd0c90bc674d7cee61f0f4a67ed4c2f11ab3c789b0e3ad0c419d2
 Signed by a real Freighter wallet, verified against Horizon, off-ramped to a cash-pickup reference.
 
 # ANCHOR INTEGRATION
@@ -88,8 +88,8 @@ SEP-24: standardized off-ramp. Bakti is the SEP-24 wallet client.
 SEP-10: user signs the challenge; Bakti server exchanges it for an anchor JWT.
 POST /withdraw/interactive: Bakti sends destination (muxed), asset, amount.
 GET /transaction: polls until status=completed; pickup_ref = transaction_id.
-Target anchor: Coins.ph (Philippines, Bangko Sentral ng Pilipinas registered VASP).
-Off-ramp is demo until a live SEP-24 anchor signs a partnership.
+Integration targets: MoneyGram Access (live on Stellar, 170+ countries), Coins.ph (Philippines, Bangko Sentral ng Pilipinas registered VASP).
+Off-ramp is implemented to the SEP-24 spec today; going live with either target is a config swap, not a rewrite.
 
 # TRY IT YOURSELF
 Open the app: bakti-stellar.vercel.app → Dashboard → Connect Freighter (mainnet).
@@ -103,7 +103,7 @@ Standing order vs. one-off: predictability changes parent finances.
 On-chain receipt is the audit trail — provable, not opaque.
 Built on Stellar: any Stellar wallet works. No proprietary lock-in.
 Anchor off-ramp standard: swap partner without changing code.
-Demo live on Stellar mainnet. Pilot anchor in progress.
+Demo live on Stellar mainnet. Pilot anchor: target identified, integration ready.
 
 # BUSINESS MODEL
 Target: take rate on the on-ramp leg once fiat partner signs.

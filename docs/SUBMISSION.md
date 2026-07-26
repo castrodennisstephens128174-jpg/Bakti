@@ -33,6 +33,10 @@ cash with a reference code.**
 - For USDC: classic Horizon-verified payment per period.
 - Anchor off-ramps to a cash-pickup reference. Parent walks to a pickup point
   and collects local money — no wallet, no crypto on their side.
+- End-to-end flow proven on Stellar testnet. Off-ramp is implemented to the
+  SEP-24 spec against a simulated anchor; integration targets are MoneyGram
+  Access (live on Stellar, 170+ countries) and Coins.ph (BSP-registered PH
+  VASP) — going live is a config swap.
 
 ## Business Model
 

@@ -71,7 +71,9 @@ settled payout triggers makePickupRef(corridor, period)
   → "BAKTI-YYYYMM-XXXXXX"
 ```
 
-On mainnet, a live SEP-24 anchor replaces this with its own `transaction_id`.
+A live SEP-24 anchor (integration targets: MoneyGram Access, Coins.ph) replaces
+this with its own `transaction_id` — the flow already matches the SEP-24 spec,
+so going live swaps a config, not the code.
 
 ### 7. Collection
 ```
