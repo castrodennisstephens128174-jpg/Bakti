@@ -75,6 +75,7 @@ style: |
   .row { display: flex; gap: 32px; align-items: flex-start; }
   .row > div { flex: 1; }
   .row img { width: 100%; }
+  .chart-img { max-width: 560px; max-height: 260px; width: auto; height: auto; align-self: center; object-fit: contain; }
 
   .bar-track { flex: 1; background: #f1f5f9; border-radius: 999px; height: 22px; overflow: hidden; }
   .bar-fill { display: block; height: 100%; border-radius: 999px; }
@@ -134,13 +135,9 @@ Maria works in Singapore, one of over 221,000 Filipino workers there. Payday com
 
 # One anchor in the Philippines reaches every market Filipino workers send from
 
-<div class="stats">
-<div class="stat"><span class="num">397,892</span><span class="lbl">Filipino workers in the UAE, 2025, the #1 destination</span></div>
-<div class="stat"><span class="num">386,699</span><span class="lbl">Filipino workers in Saudi Arabia, 2025, #2</span></div>
-<div class="stat"><span class="num">7.3%</span><span class="lbl">Share of all 2025 PH cash remittances sent from Singapore, #2 source after the US</span></div>
-</div>
+<img class="chart-img" src="assets/ofw-markets.png">
 
-The same Philippines anchor also covers Hong Kong (202,415 workers), Japan (60,748), South Korea (38,390), and Malaysia (35,052). Only the receiving side needs a Stellar anchor. Wherever the sender is, they just need XLM/USDC sitting in their own wallet.
+Only the receiving side needs a Stellar anchor. Wherever the sender is, they just need XLM/USDC sitting in their own wallet. Singapore's OFWs alone also account for 7.3% of all 2025 PH cash remittances, the #2 source country after the US.
 
 <p class="source">Sources: DMW/OFW deployment reporting via businessmirror.com.ph · Bangko Sentral ng Pilipinas cash remittance data</p>
 
@@ -185,7 +182,7 @@ The same Philippines anchor also covers Hong Kong (202,415 workers), Japan (60,7
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div>
 <span class="flow-arrow">→</span>
-<div class="flow-node target"><strong>Anchor</strong><span>MoneyGram Ramps, target, not connected</span></div>
+<div class="flow-node target"><strong>Anchor</strong><span>MoneyGram Ramps, real and live in PH, Bakti's connection is next</span></div>
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Receiver</strong><span>Her mother, cash in hand, no wallet needed</span></div>
 </div>
@@ -200,7 +197,7 @@ Solid border = built today. Dashed = planned, not yet connected. Once the anchor
 
 <div class="row">
 <div class="card">
-<p class="card-title">Why one anchor covers many markets</p>
+<span class="badge now">Architecture</span>
 <ul>
 <li>Only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange</li>
 <li>No separate integration per sending country, no separate deal per market</li>
@@ -208,16 +205,28 @@ Solid border = built today. Dashed = planned, not yet connected. Once the anchor
 </ul>
 </div>
 <div class="card">
-<p class="card-title">Why MoneyGram Ramps</p>
+<span class="badge now">Confirmed anchor</span>
 <ul>
-<li>Real, live Stellar anchor. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li>
+<li>MoneyGram Ramps is real and live. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li>
 <li>Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed</li>
-<li>Bakti already emailed MoneyGram Ramps about integrating. No reply yet, and nothing's confirmed</li>
+<li>What's still pending is Bakti's own connection to it: an email is out, no reply yet, nothing's confirmed as a partner</li>
 </ul>
 </div>
 </div>
 
 <p class="source">Sources: stellar.org/case-studies/moneygram-international (2021 launch) · developer.moneygram.com/integrate-moneygram-ramps</p>
+
+---
+
+## Why Bakti, not the alternatives
+
+# Classic remittance is transactional. Bakti is a standing habit with on-chain proof.
+
+<img class="chart-img" src="assets/fee-comparison.png">
+
+Classic apps and bank transfers are one-off: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti's target is different on all three: no wallet needed on the recipient's side, a verifiable Stellar transaction the sender can point to, and a monthly habit instead of "did I remember this month." The network layer itself costs next to nothing; the number still missing is the anchor's own cash-out quote.
+
+<p class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</p>
 
 ---
 
@@ -272,11 +281,10 @@ Solid border = built today. Dashed = planned, not yet connected. Once the anchor
 <li>Customer-discovery introductions among Filipino worker communities abroad</li>
 <li>Feedback on the planning job before adding automation</li>
 </ul>
-<p style="font-size:15px;color:#8291a3;margin-top:10px;"><strong>Not built:</strong> SEP-24, anchor API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling.</p>
 </div>
 </div>
 
-<p class="source">Contract: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR · stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</p>
+<p class="source">Not built: SEP-24, anchor API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling. Contract: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR, stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</p>
 
 ---
 
@@ -287,8 +295,8 @@ Solid border = built today. Dashed = planned, not yet connected. Once the anchor
 A sender signs once a month. Her mother just walks in and picks up cash. No wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet. It's exactly what the anchor connection is for.
 
 <div class="stats">
-<div class="stat"><span class="num">bakti-stellar.vercel.app</span><span class="lbl">Live app</span></div>
-<div class="stat"><span class="num">Bakti · GitHub</span><span class="lbl">Source & issues</span></div>
+<div class="stat"><span class="num pi pi-globe"></span><span class="lbl">bakti-stellar.vercel.app, live app</span></div>
+<div class="stat"><span class="num pi pi-github"></span><span class="lbl">Bakti · GitHub, source & issues</span></div>
 </div>
 
 Stellar APAC Hackathon 2026 · Track A

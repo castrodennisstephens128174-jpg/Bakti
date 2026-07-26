@@ -157,6 +157,8 @@ Key files:
 
 No price, take rate, unit economics, or provider margin has been validated.
 
+For context, the same World Bank dataset puts the bank-average cost to remit at 14.99% and the cheapest available option today at 3.29%; Bakti's target sits under the 6.36% global average, though the anchor's own cash-out quote is not yet known.
+
 ## GTM experiments
 
 1. Interview Filipino workers abroad (any market) around salary-day support behavior, recipient preferences, trust, and wallet constraints.

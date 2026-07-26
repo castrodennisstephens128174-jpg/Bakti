@@ -144,7 +144,7 @@
 <main id="deck" aria-label="Bakti pitch deck">
 
   <section class="slide active" data-slide="1" aria-labelledby="s1-title">
-    <span class="slide-num">1 / 9</span>
+    <span class="slide-num">1 / 10</span>
     <p class="kicker">Stellar APAC Hackathon 2026 · Product pitch</p>
     <h1 id="s1-title">Bakti</h1>
     <p class="lede" style="font-size:30px;color:var(--ink);font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;">Plan salary-day support. Verify the transfer.</p>
@@ -154,7 +154,7 @@
   </section>
 
   <section class="slide" data-slide="2" aria-labelledby="s2-title">
-    <span class="slide-num">2 / 9</span>
+    <span class="slide-num">2 / 10</span>
     <p class="kicker">The moment</p>
     <h2 id="s2-title">“I meant to send it. The week got away from me.”</h2>
     <div class="persona">
@@ -167,23 +167,16 @@
   </section>
 
   <section class="slide" data-slide="3" aria-labelledby="s3-title">
-    <span class="slide-num">3 / 9</span>
+    <span class="slide-num">3 / 10</span>
     <p class="kicker">Corridor evidence</p>
     <h2 id="s3-title">One anchor in the Philippines reaches every market Filipino workers send from</h2>
-    <div class="stat-grid" style="margin-top:8px;">
-      <div class="stat"><div class="num">397,892</div><div class="lbl">Filipino workers in the UAE, 2025, the #1 destination</div></div>
-      <div class="stat"><div class="num">386,699</div><div class="lbl">Filipino workers in Saudi Arabia, 2025, #2</div></div>
-      <div class="stat"><div class="num">7.3%</div><div class="lbl">Share of all 2025 PH cash remittances sent from Singapore, #2 source after the US</div></div>
-    </div>
-    <div class="card" style="margin-top:20px;">
-      <p class="lede" style="font-size:17px;">The same Philippines anchor also covers Hong Kong (202,415 workers), Japan (60,748), South Korea (38,390), and Malaysia (35,052).</p>
-      <p class="small" style="margin-top:12px;">Only the receiving side needs a Stellar anchor. Wherever the sender is, they just need XLM/USDC sitting in their own wallet.</p>
-    </div>
+    <img src="assets/ofw-markets.png" style="max-width:520px;align-self:center;margin-top:4px;">
+    <p class="small" style="margin-top:12px;">Only the receiving side needs a Stellar anchor. Wherever the sender is, they just need XLM/USDC sitting in their own wallet. Singapore's OFWs alone also account for 7.3% of all 2025 PH cash remittances, the #2 source country after the US.</p>
     <div class="source">Sources: DMW/OFW deployment reporting via businessmirror.com.ph · Bangko Sentral ng Pilipinas cash remittance data</div>
   </section>
 
   <section class="slide" data-slide="4" aria-labelledby="s4-title">
-    <span class="slide-num">4 / 9</span>
+    <span class="slide-num">4 / 10</span>
     <p class="kicker">Product today vs next</p>
     <h2 id="s4-title">Plan, sign, and verify on-chain today</h2>
     <div class="grid-2">
@@ -193,7 +186,7 @@
   </section>
 
   <section class="slide" data-slide="5" aria-labelledby="s5-title">
-    <span class="slide-num">5 / 9</span>
+    <span class="slide-num">5 / 10</span>
     <p class="kicker">One simple flow</p>
     <h2 id="s5-title">Sender → Stellar → Anchor → Receiver</h2>
     <div class="flow-wrap">
@@ -202,25 +195,34 @@
         <div class="node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div><div class="arrow" aria-hidden="true">→</div>
         <div class="node"><strong>Receiver</strong><span>Her mother, cash in hand, no wallet needed</span></div>
       </div>
-      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (MoneyGram Ramps, target not connected) → MoneyGram's Philippines agent network → cash in hand</strong></div>
+      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (MoneyGram Ramps, real and live in PH, Bakti's connection is next) → MoneyGram's Philippines agent network → cash in hand</strong></div>
     </div>
   </section>
 
   <section class="slide" data-slide="6" aria-labelledby="s6-title">
-    <span class="slide-num">6 / 9</span>
+    <span class="slide-num">6 / 10</span>
     <p class="kicker">Why Stellar; why one anchor is enough</p>
     <h2 id="s6-title">One Philippines anchor serves every sending market</h2>
     <div class="grid-2">
-      <div class="card current"><h3>Why one anchor covers many markets</h3><ul class="clean"><li>Only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange</li><li>No separate integration per sending country, no separate deal per market</li><li>The Philippines is the one place Bakti needs a licensed cash-out partner</li></ul></div>
-      <div class="card future"><h3>Why MoneyGram Ramps</h3><ul class="clean"><li>Real, live Stellar anchor. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li><li>Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed</li><li>Bakti already emailed MoneyGram Ramps about integrating. No reply yet, and nothing's confirmed</li></ul></div>
+      <div class="card current"><span class="tag">ARCHITECTURE</span><ul class="clean"><li>Only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange</li><li>No separate integration per sending country, no separate deal per market</li><li>The Philippines is the one place Bakti needs a licensed cash-out partner</li></ul></div>
+      <div class="card current"><span class="tag">CONFIRMED ANCHOR</span><ul class="clean"><li>MoneyGram Ramps is real and live. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US</li><li>Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed</li><li>What's still pending is Bakti's own connection to it: an email is out, no reply yet, nothing's confirmed as a partner</li></ul></div>
     </div>
     <div class="source">Sources: stellar.org/case-studies/moneygram-international (2021 launch) · developer.moneygram.com/integrate-moneygram-ramps</div>
   </section>
 
   <section class="slide" data-slide="7" aria-labelledby="s7-title">
-    <span class="slide-num">7 / 9</span>
+    <span class="slide-num">7 / 10</span>
+    <p class="kicker">Why Bakti, not the alternatives</p>
+    <h2 id="s7-title">Classic remittance is transactional. Bakti is a standing habit with on-chain proof.</h2>
+    <img src="assets/fee-comparison.png" style="max-width:460px;align-self:center;margin-top:4px;">
+    <p class="small" style="margin-top:12px;">Classic apps and bank transfers are one-off: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti's target is different on all three: no wallet needed on the recipient's side, a verifiable Stellar transaction the sender can point to, and a monthly habit instead of "did I remember this month." The network layer itself costs next to nothing; the number still missing is the anchor's own cash-out quote.</p>
+    <div class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</div>
+  </section>
+
+  <section class="slide" data-slide="8" aria-labelledby="s8-title">
+    <span class="slide-num">8 / 10</span>
     <p class="kicker">Business model + GTM</p>
-    <h2 id="s7-title">Hypotheses to test, not forecasts</h2>
+    <h2 id="s8-title">Hypotheses to test, not forecasts</h2>
     <div class="grid-2">
       <div class="card soft"><span class="tag">UNVALIDATED BUSINESS MODEL</span><ul class="clean"><li>Transparent sender service fee within a licensed provider quote, the world average cost to remit is 6.36% (World Bank, Q3 2025); target is to sit meaningfully under that</li><li>Provider referral/revenue share where permitted</li><li>Employer, cooperative, or worker-community distribution</li><li>No validated price, take rate, margin, or unit economics</li></ul></div>
       <div class="card"><span class="tag">GTM EXPERIMENTS</span><ul class="clean"><li>Interview Filipino workers abroad (any market) and family recipients in the Philippines</li><li>Test planning/reminder value before automation</li><li>Follow up on the MoneyGram Ramps email, without claiming a partnership</li><li>Map how senders in each market actually acquire XLM/USDC today (exchange on-ramps in UAE, Saudi Arabia, Singapore)</li><li>Run testnet usability studies for signing and address safety</li></ul></div>
@@ -228,21 +230,21 @@
     <div class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</div>
   </section>
 
-  <section class="slide" data-slide="8" aria-labelledby="s8-title">
-    <span class="slide-num">8 / 9</span>
+  <section class="slide" data-slide="9" aria-labelledby="s9-title">
+    <span class="slide-num">9 / 10</span>
     <p class="kicker">Build status + ask</p>
-    <h2 id="s8-title">A working mainnet core, with an honest last-mile gap</h2>
+    <h2 id="s9-title">A working mainnet core, with an honest last-mile gap</h2>
     <div class="grid-2">
-      <div class="card current"><span class="tag">BUILT</span><ul class="clean"><li>Contract itself: live on mainnet since 2026-07-12, creator key under review</li><li>Separately: a fresh, judge-facing demo transaction is pending, to be signed before submission</li><li>Direct payment verification and support-plan UI</li><li>Current endpoints stop at Verified on-chain</li></ul><p class="proof" style="margin-top:14px;">Contract: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</p><p class="proof" style="margin-top:8px;">Testnet dev history: contracts/DEPLOYMENT.md</p></div>
-      <div class="card future"><span class="tag">ASK</span><ul class="clean"><li>Warm introduction to MoneyGram Ramps, or feedback on the outreach email already sent</li><li>Customer-discovery introductions among Filipino worker communities abroad</li><li>Feedback on the planning job before adding automation</li></ul><p class="small" style="margin-top:16px;"><strong>Not built:</strong> SEP-24, anchor API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling.</p></div>
+      <div class="card current"><span class="tag">BUILT</span><ul class="clean"><li>Contract itself: live on mainnet since 2026-07-12, creator key under review</li><li>Separately: a fresh, judge-facing demo transaction is pending, to be signed before submission</li><li>Direct payment verification and support-plan UI</li><li>Current endpoints stop at Verified on-chain</li></ul></div>
+      <div class="card future"><span class="tag">ASK</span><ul class="clean"><li>Warm introduction to MoneyGram Ramps, or feedback on the outreach email already sent</li><li>Customer-discovery introductions among Filipino worker communities abroad</li><li>Feedback on the planning job before adding automation</li></ul></div>
     </div>
-    <div class="source">Mainnet proof: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</div>
+    <div class="source">Not built: SEP-24, anchor API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling. Contract: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR, stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</div>
   </section>
 
-  <section class="slide" data-slide="9" aria-labelledby="s9-title">
-    <span class="slide-num">9 / 9</span>
+  <section class="slide" data-slide="10" aria-labelledby="s10-title">
+    <span class="slide-num">10 / 10</span>
     <p class="kicker">The target value, in one line</p>
-    <h2 id="s9-title">A sender signs. Her mother collects cash. No blockchain to learn.</h2>
+    <h2 id="s10-title">A sender signs. Her mother collects cash. No blockchain to learn.</h2>
     <div class="card" style="margin-top:8px;">
       <p class="lede" style="font-size:19px;">A sender signs once a month. Her mother just walks in and picks up cash. No wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet. It's exactly what the anchor connection is for.</p>
     </div>
@@ -255,7 +257,7 @@
   <button type="button" id="next" aria-label="Next slide">→</button>
 </nav>
 <script>
-  const TOTAL = 9;
+  const TOTAL = 10;
   let current = 1;
   const progress = document.getElementById('progress');
   const slides = Array.from(document.querySelectorAll('.slide'));

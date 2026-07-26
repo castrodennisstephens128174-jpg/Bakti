@@ -1,5 +1,5 @@
 # Bakti Pitch Deck
-# Exactly 9 slides · Stellar APAC Hackathon 2026
+# Exactly 10 slides · Stellar APAC Hackathon 2026
 
 # TITLE
 Bakti
@@ -41,13 +41,20 @@ PHP cash-out, provider reference, provider-confirmed collection
 # FLOW
 One flow: solid is current, dashed is planned
 Sender → Stellar transfer or XLM escrow → recipient Stellar wallet
-Planned continuation: Anchor (MoneyGram Ramps, target not connected) → MoneyGram's Philippines agent network → cash in hand, no wallet needed
+Planned continuation: Anchor (MoneyGram Ramps, real and live in PH, Bakti's connection is next) → MoneyGram's Philippines agent network → cash in hand, no wallet needed
 
 # WHY
 Why Stellar; why one anchor is enough
-Why one anchor covers many markets: only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange. No separate integration per sending country. The Philippines is the one place Bakti needs a licensed cash-out partner.
-Why MoneyGram Ramps: real, live Stellar anchor. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US. Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed. Bakti already emailed MoneyGram Ramps about integrating. No reply yet, and nothing's confirmed.
+Architecture: only the receiving side needs a Stellar anchor. A sender in the UAE, Saudi Arabia, Singapore, or anywhere else just needs XLM/USDC in their own wallet, bought on any exchange. No separate integration per sending country. The Philippines is the one place Bakti needs a licensed cash-out partner.
+Confirmed anchor: MoneyGram Ramps is real and live. Been running in the Philippines since October 2021, one of the first four countries when MoneyGram launched this with Stellar, alongside Canada, Kenya, and the US. Funds land in MoneyGram's own Stellar account. The recipient just shows a reference number and photo ID to pick up cash, no wallet needed. What's still pending is Bakti's own connection to it: an email is out, no reply yet, nothing's confirmed as a partner.
 Sources: stellar.org/case-studies/moneygram-international (2021 launch); developer.moneygram.com/integrate-moneygram-ramps
+
+# USP
+Why Bakti, not the alternatives
+Classic remittance is transactional. Bakti is a standing habit with on-chain proof.
+Cost to remit, % of amount sent: Banks (avg) 14.99% | Global average 6.36% | Cheapest available today 3.29% | Stellar network fee ~$0.00001/tx
+Classic apps and bank transfers are one-off: no standing plan, no proof beyond a receipt, and the recipient still needs a bank account or a wallet of their own. Bakti's target is different on all three: no wallet needed on the recipient's side, a verifiable Stellar transaction the sender can point to, and a monthly habit instead of "did I remember this month." The network layer itself costs next to nothing; the number still missing is the anchor's own cash-out quote.
+Source: World Bank Remittance Prices Worldwide, Q3 2025
 
 # MODEL
 Business model + GTM hypotheses, unvalidated
