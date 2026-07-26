@@ -2,7 +2,7 @@
 
 ## Problem and customer
 
-Bakti focuses on a specific research customer: **a Filipino worker in Malaysia who plans support around salary day for a family member in the Philippines**.
+Bakti focuses on a specific research customer: **a Vietnamese contract worker abroad who plans support around salary day for a family member in Vietnam**.
 
 The job is not simply “send crypto.” It is to decide an amount, remember the commitment, direct it to the right family member, and know whether the transfer reached the intended Stellar address. The current prototype tests planning and on-chain proof. It does not yet solve fiat funding or family cash pickup.
 
@@ -10,16 +10,18 @@ The persona used in the pitch is illustrative and is not presented as a complete
 
 ## Corridor evidence
 
-BSP reports 2025 preliminary Philippine personal remittances of **US$39.619B** and cash remittances of **US$35.634B**, both up 3.3%. Jan–May 2026 preliminary figures were US$15.735B and US$14.110B respectively.
+Vietnam has **700,000+** workers on formal overseas labor contracts, remitting an estimated **US$3.5–4B/year**. New 2024 deployments were concentrated in three government-brokered markets: **Japan 62,722 · Taiwan 48,533 · Korea 10,877** — the longest-running, largest programs.
 
-BSP reports Malaysia-attributed Philippine cash remittances of **US$661.182M in 2024**, **US$675.153M in 2025 provisional**, and **US$279.807M in Jan–May 2026 provisional**.
+Ho Chi Minh City alone received **US$10.34B** in remittances in 2025 (+8.3% YoY); Asia-origin inflows were ~48.9% (~US$5.06B) of that total, reported as driven mainly by Japan/Korea/Taiwan.
 
-This is evidence that the national market matters and that Malaysia appears in the reported source tables. It is **not** a Malaysia → Philippines TAM calculation: BSP attribution reflects the immediate source of funds and may not be the remittance's true origin.
+This is evidence that the national market matters and that Japan/Taiwan/Korea are Vietnam's largest labor-export corridors. It is **not** a TAM calculation: no public source breaks HCMC's remittance dollars down by sending country, so the worker-deployment counts and the Asia-origin remittance total are two different figures, not one number.
 
 Sources:
 
-- https://www.bsp.gov.ph/statistics/external/ofw.aspx
-- https://www.bsp.gov.ph/statistics/external/ofw2.aspx
+- https://en.vietnamplus.vn/vietnam-aims-to-send-130000-workers-abroad-in-2024-post304865.vnp
+- https://en.sggp.org.vn/share113776.html
+- https://en.baochinhphu.vn/hcmc-absorbs-over-1034-billion-of-remittances-in-2025-111260123102358585.htm
+- https://kinhtevadubao.vn/dong-kieu-hoi-tang-tich-cuc-nho-xuat-khau-lao-dong-25022.html
 
 ## Product today
 
@@ -42,27 +44,25 @@ The reminder day is metadata only. There is no automatic monthly scheduler.
 ## Target product
 
 ```text
-Sender → Stellar → licensed anchor/provider → KYC → PHP cash-out → family member
+Sender → Stellar → licensed anchor/provider → KYC → VND cash-out → family member
 ```
 
-The target path is a certified SEP-24 integration with MoneyGram Ramps or another licensed anchor. Stellar anchors connect network assets to off-chain rails. SEP-24 is a hosted interactive deposit/withdrawal flow that requires anchor authentication and KYC.
+The target path is a certified SEP-24 integration with a licensed Stellar anchor. Stellar anchors connect network assets to off-chain rails. SEP-24 is a hosted interactive deposit/withdrawal flow that requires anchor authentication and KYC.
 
-MoneyGram Ramps is a target path, not a Bakti partner. Its integration requirements include domain allowlisting, SEP-1, SEP-10, SEP-24, KYC fields, testing/certification, KYB/compliance, and agreements. Its docs publish a 5–950 USDC on-ramp and 5–2,500 USDC off-ramp range, but the live production `/info` endpoint currently floors both sides at 1 USDC, and a separate Production Preview/certification tier caps test transactions at 10–20 USDC (100 USDC aggregate) — three figures, not one clean number. Its availability sheet lists Malaysia and the Philippines as cash-out only, which does not prove Malaysian salary cash-in or a Bakti Malaysia → Philippines route.
+Neither candidate anchor is a Bakti partner. **MoneyGram Ramps** is a real, live Stellar anchor with published integration requirements (domain allowlisting, SEP-1, SEP-10, SEP-24, KYC fields, testing/certification, KYB/compliance, agreements) and a 5–950 USDC on-ramp / 5–2,500 USDC off-ramp range on paper — but its live `/info` endpoint floors both sides at 1 USDC, a separate certification tier caps test transactions at 10–20 USDC (100 USDC aggregate), and none of its sources list Vietnam as a supported country. **Lightnet** appears on Stellar's own Anchor Directory with Vietnam among its 150+ country coverage and SEP-24 support, but its listed `stellar.toml` returns 404 — unverified against a live endpoint.
 
-Two parts of this target design are still open:
+The core gap in this target design is still open:
 
-- **Malaysia on-ramp.** No licensed Malaysian rail (checked TerraPay, Sunrate) offers a stablecoin capability today; MoneyGram Ramps itself lists Malaysia cash-out only.
-- **Third-party cash pickup.** Classic MoneyGram lets a recipient collect with just a reference number and matching photo ID — no account or KYC of their own. Whether MoneyGram Ramps preserves that for a Stellar withdrawal is unconfirmed; Beans, the one live Stellar+MoneyGram wallet with a documented flow, requires both parties to hold their own KYC'd wallet instead.
+- **No confirmed Vietnam VND anchor.** Neither MoneyGram Ramps nor Lightnet has a publicly verifiable, live VND rail today. Both are contact targets for the next research phase, not integrations.
 
 Sources:
 
 - https://developers.stellar.org/docs/learn/fundamentals/anchors
 - https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
+- https://anchors.stellar.org/
 - https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
 - https://stellar.moneygram.com/stellaradapterservice/sep24/info
 - https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
-- https://www.moneygram.com/us/en/send-and-receive/receiving-money
-- https://www.beansapp.com/moneygram
 
 ## Why Stellar
 
@@ -81,9 +81,9 @@ No fee, margin, take rate, or unit economics is validated.
 
 ## GTM experiments
 
-1. Interview Filipino workers in Malaysia and family recipients in the Philippines.
+1. Interview Vietnamese contract workers in Japan/Taiwan/Korea and family recipients in Vietnam.
 2. Validate whether salary-day planning and reminders solve a real problem before adding automation.
-3. Identify compliant Malaysian funding rails and licensed Philippine payout providers.
+3. Contact Lightnet and MoneyGram about a Vietnam VND rail, and identify any other licensed payout provider covering Vietnam.
 4. Test the current mainnet flow for trust, signing comprehension, and address errors — using a testnet usability study to iterate cheaply before spending real XLM on later rounds.
 5. Pursue a provider sandbox or certification discussion without claiming partnership.
 
@@ -99,7 +99,7 @@ A fresh, team-signed mainnet release transaction is pending; the previously-cite
 
 ## Ask
 
-- Customer-discovery introductions to Filipino worker communities in Malaysia.
-- A technical/compliance conversation with a licensed anchor or MoneyGram Ramps integration team.
-- Review of the Malaysia funding and Philippines payout regulatory path.
+- Customer-discovery introductions to Vietnamese worker communities in Japan/Taiwan/Korea.
+- A warm introduction to Lightnet or MoneyGram Ramps about a Vietnam VND rail.
+- Review of the Vietnam payout regulatory path.
 - Feedback on whether the planning job is valuable before adding provider and scheduling complexity.

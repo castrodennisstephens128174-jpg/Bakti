@@ -90,6 +90,13 @@ style: |
   .badge.now { background: #dcfce7; color: #166534; }
   .badge.next { background: #fdf1e0; color: #92400e; }
   .card-title { font-size: 19px; font-weight: 800; color: #0b1b2b; margin: 0 0 4px; }
+
+  .flow-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+  .flow-node { background: #ffffff; border: 2px solid #0284c7; border-radius: 10px; padding: 14px 18px; text-align: center; }
+  .flow-node strong { display: block; font-size: 19px; }
+  .flow-node span { font-size: 14px; color: #51617a; }
+  .flow-node.target { border-style: dashed; border-color: #d18b2c; background: #fdf1e0; }
+  .flow-arrow { font-size: 24px; color: #94a3b8; }
 ---
 
 <!-- _class: lead -->
@@ -98,7 +105,7 @@ style: |
 
 Plan salary-day support. Verify the transfer.
 
-Filipino workers in Malaysia → family in the Philippines
+Vietnamese workers abroad → family in Vietnam
 
 <div class="stats">
 <div class="stat"><span class="num pi pi-check-circle"></span><span class="lbl">Stellar mainnet product</span></div>
@@ -110,38 +117,35 @@ Filipino workers in Malaysia → family in the Philippines
 
 ---
 
-## Human problem / target persona
+## The moment
 
-# "I want support to be ready around salary day."
+# "I meant to send it. The week got away from me."
 
 <span class="badge next">Illustrative persona · not a claimed interview</span>
 
-Maria is a Filipino service worker in Kuala Lumpur. She wants to set aside support for her mother, remember the commitment, and know where the transfer went.
+Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Payday comes; some months she remembers to send money home, some months a double shift pushes it to next week.
 
-**Job: make family support intentional, legible, and verifiable.**
+**She doesn't want to "remember to send." She wants a standing plan she signs once and can verify landed.**
 
-Today Maria still needs her mother's Stellar address and signs every transfer. Bakti does not send automatically.
+Today the recipient still needs a Stellar address, and Linh signs every transfer herself — Bakti does not send automatically.
 
 ---
 
 ## Corridor evidence
 
-# A large national flow, with a measured Malaysia signal
+# Contract workers already send billions home
 
-<div class="bar-row">
-<span class="bar-label">Philippines cash remittances<br>2025 preliminary</span>
-<span class="bar-track"><span class="bar-fill context"></span></span>
-<span class="bar-value">US$35.634B</span>
-</div>
-<div class="bar-row">
-<span class="bar-label">Malaysia-attributed<br>2025 provisional</span>
-<span class="bar-track"><span class="bar-fill highlight"></span></span>
-<span class="bar-value">US$675.153M</span>
+<div class="stats">
+<div class="stat"><span class="num">700,000+</span><span class="lbl">Vietnamese on labor contracts abroad</span></div>
+<div class="stat"><span class="num">$3.5–4B</span><span class="lbl">Remitted by contract workers per year</span></div>
+<div class="stat"><span class="num">$10.34B</span><span class="lbl">Remittances to HCMC alone, 2025 (+8.3% YoY)</span></div>
 </div>
 
-Jan–May 2026 already US$279.807M Malaysia-attributed cash. Signal, not TAM — BSP source-country attribution reflects the immediate source of funds, not necessarily true origin.
+Where the workers are (new deployments, 2024): **Japan 62,722 · Taiwan 48,533 · Korea 10,877** — the three markets Vietnam's labor program has run longest.
 
-<p class="source">Source: Bangko Sentral ng Pilipinas · bsp.gov.ph/statistics/external/ofw.aspx, ofw2.aspx</p>
+No public source breaks HCMC's remittance dollars down by sending country — worker-deployment counts and the Asia-origin remittance total are two different figures, not one TAM. Treat Japan/Taiwan/Korea as a corridor signal, not a market-size claim.
+
+<p class="source">Sources: MOLISA via VietnamPlus/SGGP (2024 deployments) · baochinhphu.vn (HCMC 2025 remittances) · kinhtevadubao.vn (contract-worker remittance total)</p>
 
 ---
 
@@ -156,7 +160,7 @@ Jan–May 2026 already US$279.807M Malaysia-attributed cash. Signal, not TAM —
 <li>Freighter + custom signed <code>manageData</code> session, not SEP-10</li>
 <li>Support-plan records; reminder day is metadata only</li>
 <li>XLM escrow/release, 60-ledger demo cadence</li>
-<li>Direct XLM/USDC to entered recipient address</li>
+<li>Direct XLM/USDC to a recipient address the sender enters and confirms</li>
 <li>Horizon/RPC verification, SEP-7 link, recipient watcher</li>
 <li>Status ends at <strong>Verified on-chain</strong></li>
 </ul>
@@ -168,7 +172,7 @@ Jan–May 2026 already US$279.807M Malaysia-attributed cash. Signal, not TAM —
 <li>SEP-1 + provider SEP-10 + hosted SEP-24</li>
 <li>KYC, quote/limits, approved deposit routing</li>
 <li>Provider transaction status and reference</li>
-<li>PHP cash-out and provider-confirmed collection</li>
+<li>VND cash-out and provider-confirmed collection</li>
 </ul>
 </div>
 </div>
@@ -177,44 +181,46 @@ Jan–May 2026 already US$279.807M Malaysia-attributed cash. Signal, not TAM —
 
 ## One simple flow
 
-# Solid is current. Dashed is planned.
+# Sender → Stellar → Anchor → Receiver
 
-`Sender (Malaysia)` → `Bakti plan` → `Stellar (direct payment or XLM escrow)` → `Recipient wallet`
+<div class="flow-row">
+<div class="flow-node"><strong>Sender</strong><span>Vietnamese worker abroad</span></div>
+<span class="flow-arrow">→</span>
+<div class="flow-node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div>
+<span class="flow-arrow">→</span>
+<div class="flow-node target"><strong>Anchor</strong><span>SEP-24 cash-out — target, not connected</span></div>
+<span class="flow-arrow">→</span>
+<div class="flow-node"><strong>Receiver</strong><span>Family in Vietnam</span></div>
+</div>
 
-<span class="pill">Planned</span> Provider-approved deposit → licensed anchor → KYC → PHP cash-out → family member
+Solid border = built today. Dashed = planned, not yet connected.
 
 ---
 
-## Why Stellar; why the provider path
+## Why Stellar; why these providers
 
-# Verifiable rails now; regulated last mile next
+# Verifiable rails now; the anchor is still a target
 
 <div class="row">
 <div class="card">
-<p class="card-title">Why Stellar for this prototype</p>
+<p class="card-title">Why this customer</p>
 <ul>
-<li>Freighter keeps signing with the sender</li>
-<li>Horizon and Soroban RPC make transfers inspectable</li>
-<li>Soroban demonstrates pre-funded XLM release rules</li>
-<li>Anchors define how Stellar assets connect to off-chain rails</li>
-<li>SEP-24 is hosted and interactive — anchor auth + KYC required</li>
+<li>700,000+ Vietnamese already on formal labor contracts abroad</li>
+<li>Government-brokered placement → recurring, predictable monthly income</li>
+<li>Japan/Taiwan/Korea are the longest-running, largest programs</li>
 </ul>
 </div>
 <div class="card">
-<p class="card-title">MoneyGram Ramps as a target path</p>
+<p class="card-title">Why these provider candidates</p>
 <ul>
-<li>Not a Bakti partner or current feature</li>
-<li>Requires allowlisting, SEP-1/10/24, KYC, KYB, agreements</li>
-<li>Malaysia + Philippines both cash-out only — no MY cash-in route today</li>
+<li><strong>Lightnet</strong> — listed on Stellar's own Anchor Directory, Vietnam in its 150+ country coverage, SEP-24, cross-border-payments focus. No live <code>stellar.toml</code> found — unverified today.</li>
+<li><strong>MoneyGram Ramps</strong> — real, live Stellar anchor, but its confirmed countries are Kenya, Philippines, Mexico. Vietnam is not on that list.</li>
+<li>Neither is a Bakti partner. Both are contact targets, not integrations.</li>
 </ul>
-<div class="stats" style="margin-top:12px;">
-<div class="stat"><span class="num">$2,500</span><span class="lbl">Documented + live-API max</span></div>
-<div class="stat"><span class="num">$20</span><span class="lbl">Actual cert-tier cap today ($100 total)</span></div>
-</div>
 </div>
 </div>
 
-<p class="source">Sources: developers.stellar.org anchors/SEP-24 docs · developer.moneygram.com integrate-moneygram-ramps · stellar.moneygram.com live info endpoint</p>
+<p class="source">Sources: anchors.stellar.org (Anchor Directory) · developer.moneygram.com/integrate-moneygram-ramps</p>
 
 ---
 
@@ -235,9 +241,9 @@ Jan–May 2026 already US$279.807M Malaysia-attributed cash. Signal, not TAM —
 <div class="card">
 <span class="badge now">GTM experiments</span>
 <ul>
-<li>Interview Filipino workers in Malaysia and family recipients</li>
+<li>Interview Vietnamese contract workers in Japan/Taiwan/Korea and family recipients</li>
 <li>Test planning/reminder value before automation</li>
-<li>Map compliant Malaysia funding and Philippines payout partners</li>
+<li>Contact Lightnet and MoneyGram about a Vietnam VND rail</li>
 <li>Run testnet usability studies for signing and address safety</li>
 <li>Seek provider sandbox/certification conversations, no partnership claim</li>
 </ul>
@@ -263,11 +269,11 @@ Jan–May 2026 already US$279.807M Malaysia-attributed cash. Signal, not TAM —
 <div class="card">
 <span class="badge next">Ask</span>
 <ul>
-<li>Anchor review: confirm third-party cash pickup (no recipient wallet/KYC) and a Malaysia MYR on-ramp path</li>
-<li>Customer-discovery introductions in Malaysia</li>
+<li>Warm introduction to Lightnet or MoneyGram about a Vietnam VND rail</li>
+<li>Customer-discovery introductions among Vietnamese worker communities in Japan/Taiwan/Korea</li>
 <li>Feedback on the planning job before adding automation</li>
 </ul>
-<p style="font-size:15px;color:#8291a3;margin-top:10px;"><strong>Not built:</strong> SEP-24, MoneyGram API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling.</p>
+<p style="font-size:15px;color:#8291a3;margin-top:10px;"><strong>Not built:</strong> SEP-24, anchor API/webview, KYC, provider routing/status/reference, VND cash-out, automatic scheduling.</p>
 </div>
 </div>
 
@@ -277,9 +283,9 @@ Jan–May 2026 already US$279.807M Malaysia-attributed cash. Signal, not TAM —
 
 <!-- _class: lead -->
 
-# Thank you.
+# The value, in one line.
 
-Built on Stellar · Live on mainnet · Ready to pilot.
+A sender signs once a month. Family in Vietnam collects the support. Nobody but the sender ever has to think about the blockchain underneath.
 
 <div class="stats">
 <div class="stat"><span class="num">bakti-stellar.vercel.app</span><span class="lbl">Live app</span></div>

@@ -144,111 +144,108 @@
 <main id="deck" aria-label="Bakti pitch deck">
 
   <section class="slide active" data-slide="1" aria-labelledby="s1-title">
-    <span class="slide-num">1 / 8</span>
+    <span class="slide-num">1 / 9</span>
     <p class="kicker">Stellar APAC Hackathon 2026 · Product pitch</p>
     <h1 id="s1-title">Bakti</h1>
     <p class="lede" style="font-size:30px;color:var(--ink);font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;">Plan salary-day support. Verify the transfer.</p>
-    <p class="lede" style="margin-top:18px;">Filipino workers in Malaysia → family in the Philippines</p>
+    <p class="lede" style="margin-top:18px;">Vietnamese workers abroad → family in Vietnam</p>
     <span class="tag" style="margin-top:34px;align-self:flex-start;">STELLAR MAINNET PRODUCT</span>
     <div class="source">bakti-stellar.vercel.app — current recipient must have a Stellar address.</div>
   </section>
 
   <section class="slide" data-slide="2" aria-labelledby="s2-title">
-    <span class="slide-num">2 / 8</span>
-    <p class="kicker">Human problem / target persona</p>
-    <h2 id="s2-title">“I want support to be ready around salary day.”</h2>
+    <span class="slide-num">2 / 9</span>
+    <p class="kicker">The moment</p>
+    <h2 id="s2-title">“I meant to send it. The week got away from me.”</h2>
     <div class="persona">
       <span class="tag">ILLUSTRATIVE PERSONA · NOT A CLAIMED INTERVIEW</span>
-      <p class="quote" style="margin-top:22px;">Maria is a Filipino service worker in Kuala Lumpur. She wants to set aside support for her mother, remember the commitment, and know where the transfer went.</p>
-      <p class="lede" style="margin-top:24px;color:var(--brand);font-weight:700;">Job: make family support intentional, legible, and verifiable.</p>
-      <p class="small" style="margin-top:16px;">Today Maria still needs her mother's Stellar address and signs every transfer. Bakti does not send automatically.</p>
+      <p class="quote" style="margin-top:22px;">Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Some months she remembers to send money home; some months a double shift pushes it to next week.</p>
+      <p class="lede" style="margin-top:24px;color:var(--brand);font-weight:700;">She doesn't want to "remember to send." She wants a standing plan she signs once and can verify landed.</p>
+      <p class="small" style="margin-top:16px;">Today the recipient still needs a Stellar address, and Linh signs every transfer herself. Bakti does not send automatically.</p>
     </div>
   </section>
 
   <section class="slide" data-slide="3" aria-labelledby="s3-title">
-    <span class="slide-num">3 / 8</span>
+    <span class="slide-num">3 / 9</span>
     <p class="kicker">Corridor evidence</p>
-    <h2 id="s3-title">A large national flow, with a measured Malaysia signal</h2>
-    <div class="mag-compare" style="margin-top:8px;" role="img" aria-label="Malaysia-attributed cash remittances are about 1.9 percent of total Philippine cash remittances">
-      <div class="mag-row">
-        <div class="mag-label">Philippines cash remittances<br />2025 preliminary</div>
-        <div class="mag-track"><div class="mag-bar mag-bar--context"></div></div>
-        <div class="mag-value">US$35.634B</div>
-      </div>
-      <div class="mag-row">
-        <div class="mag-label">Malaysia-attributed<br />2025 provisional</div>
-        <div class="mag-track"><div class="mag-bar mag-bar--highlight" style="width:1.9%"></div></div>
-        <div class="mag-value">US$675.153M<span class="mag-pct">1.9%</span></div>
-      </div>
+    <h2 id="s3-title">Contract workers already send billions home</h2>
+    <div class="stat-grid" style="margin-top:8px;">
+      <div class="stat"><div class="num">700,000+</div><div class="lbl">Vietnamese on labor contracts abroad</div></div>
+      <div class="stat"><div class="num">$3.5–4B</div><div class="lbl">Remitted by contract workers per year</div></div>
+      <div class="stat"><div class="num">$10.34B</div><div class="lbl">Remittances to HCMC alone, 2025 (+8.3% YoY)</div></div>
     </div>
     <div class="card" style="margin-top:20px;">
-      <p class="lede" style="font-size:17px;">Jan–May 2026 already US$279.807M Malaysia-attributed cash.</p>
-      <p class="small" style="margin-top:12px;">Use these as a corridor signal, not TAM. BSP source-country attribution reflects the immediate source of funds, not necessarily true origin.</p>
+      <p class="lede" style="font-size:17px;">Where the workers are (new deployments, 2024): Japan 62,722 · Taiwan 48,533 · Korea 10,877 — the three markets Vietnam's labor program has run longest.</p>
+      <p class="small" style="margin-top:12px;">No public source breaks HCMC's remittance dollars down by sending country. Worker-deployment counts and the Asia-origin remittance total are two different figures, not one TAM — treat Japan/Taiwan/Korea as a corridor signal.</p>
     </div>
-    <div class="source">Source: Bangko Sentral ng Pilipinas · https://www.bsp.gov.ph/statistics/external/ofw.aspx · https://www.bsp.gov.ph/statistics/external/ofw2.aspx</div>
+    <div class="source">Sources: MOLISA via VietnamPlus/SGGP (2024 deployments) · baochinhphu.vn (HCMC 2025 remittances) · kinhtevadubao.vn (contract-worker remittance total)</div>
   </section>
 
   <section class="slide" data-slide="4" aria-labelledby="s4-title">
-    <span class="slide-num">4 / 8</span>
+    <span class="slide-num">4 / 9</span>
     <p class="kicker">Product today vs next</p>
     <h2 id="s4-title">Plan, sign, and verify on-chain today</h2>
     <div class="grid-2">
-      <div class="card current"><span class="tag">TODAY · WORKING</span><ul class="clean"><li>Freighter + custom signed manageData session, not SEP-10</li><li>Support-plan records; reminder day is metadata only</li><li>XLM escrow/release with 60-ledger demo cadence</li><li>Direct XLM/USDC to entered recipient address</li><li>Horizon/RPC verification, SEP-7 link, recipient watcher</li><li>Status ends at <strong>Verified on-chain</strong></li></ul></div>
-      <div class="card future"><span class="tag">NEXT · PLANNED</span><ul class="clean"><li>Licensed provider onboarding, KYB/compliance, agreements</li><li>SEP-1 + provider SEP-10 + hosted SEP-24</li><li>KYC, quote/limits, approved deposit routing</li><li>Provider transaction status and reference</li><li>PHP cash-out and provider-confirmed collection</li></ul></div>
+      <div class="card current"><span class="tag">TODAY · WORKING</span><ul class="clean"><li>Freighter + custom signed manageData session, not SEP-10</li><li>Support-plan records; reminder day is metadata only</li><li>XLM escrow/release with 60-ledger demo cadence</li><li>Direct XLM/USDC to a recipient address the sender enters and confirms</li><li>Horizon/RPC verification, SEP-7 link, recipient watcher</li><li>Status ends at <strong>Verified on-chain</strong></li></ul></div>
+      <div class="card future"><span class="tag">NEXT · PLANNED</span><ul class="clean"><li>Licensed provider onboarding, KYB/compliance, agreements</li><li>SEP-1 + provider SEP-10 + hosted SEP-24</li><li>KYC, quote/limits, approved deposit routing</li><li>Provider transaction status and reference</li><li>VND cash-out and provider-confirmed collection</li></ul></div>
     </div>
   </section>
 
   <section class="slide" data-slide="5" aria-labelledby="s5-title">
-    <span class="slide-num">5 / 8</span>
+    <span class="slide-num">5 / 9</span>
     <p class="kicker">One simple flow</p>
-    <h2 id="s5-title">Solid is current. Dashed is planned.</h2>
+    <h2 id="s5-title">Sender → Stellar → Anchor → Receiver</h2>
     <div class="flow-wrap">
-      <div class="flow" role="img" aria-label="Current Bakti flow from sender through Bakti and Stellar to recipient wallet">
-        <div class="node"><strong>Sender</strong><span>Filipino worker in Malaysia</span></div><div class="arrow" aria-hidden="true">→</div>
-        <div class="node"><strong>Bakti plan</strong><span>Recipient + amount + planning date</span></div><div class="arrow" aria-hidden="true">→</div>
-        <div class="node"><strong>Stellar</strong><span>Direct payment or XLM escrow release</span></div><div class="arrow" aria-hidden="true">→</div>
-        <div class="node"><strong>Recipient wallet</strong><span>Entered Stellar address</span></div>
+      <div class="flow" role="img" aria-label="Current Bakti flow from sender through Stellar to a planned anchor to the receiver in Vietnam">
+        <div class="node"><strong>Sender</strong><span>Vietnamese worker abroad</span></div><div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div><div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><strong>Receiver</strong><span>Family in Vietnam</span></div>
       </div>
-      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Provider-approved deposit → licensed anchor → KYC → PHP cash-out → family member</strong></div>
+      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (SEP-24 cash-out, target not connected) → VND in hand</strong></div>
     </div>
   </section>
 
   <section class="slide" data-slide="6" aria-labelledby="s6-title">
-    <span class="slide-num">6 / 8</span>
-    <p class="kicker">Why Stellar; why the provider path</p>
-    <h2 id="s6-title">Verifiable rails now; regulated last mile next</h2>
+    <span class="slide-num">6 / 9</span>
+    <p class="kicker">Why Stellar; why these providers</p>
+    <h2 id="s6-title">Verifiable rails now; the anchor is still a target</h2>
     <div class="grid-2">
-      <div class="card current"><h3>Why Stellar for this prototype</h3><ul class="clean"><li>Freighter keeps signing with the sender</li><li>Horizon and Soroban RPC make transfers inspectable</li><li>Soroban demonstrates pre-funded XLM release rules</li><li>Anchors define how Stellar assets connect to off-chain rails</li><li>SEP-24 is hosted and interactive; it requires anchor authentication and KYC</li></ul></div>
-      <div class="card future"><h3>MoneyGram Ramps as a target path</h3><ul class="clean"><li>Not a Bakti partner or current feature</li><li>Requires allowlisting, SEP-1/10/24, KYC, KYB, agreements</li><li>Malaysia + Philippines both cash-out only — no MY cash-in route today</li></ul>
-        <div class="stat-grid" style="grid-template-columns:1fr auto 1fr;margin-top:14px;">
-          <div class="stat stat-sm"><div class="num">$2,500</div><div class="lbl">Documented + live-API max</div></div>
-          <div class="small" style="align-self:center;text-align:center;">but the tier<br />you can test<br />today is</div>
-          <div class="stat stat-sm"><div class="num">$20</div><div class="lbl">Actual certification-tier cap ($100 total)</div></div>
-        </div>
+      <div class="card current"><h3>Why this customer</h3><ul class="clean"><li>700,000+ Vietnamese already on formal labor contracts abroad</li><li>Government-brokered placement → recurring, predictable monthly income</li><li>Japan/Taiwan/Korea are the longest-running, largest programs</li></ul></div>
+      <div class="card future"><h3>Why these provider candidates</h3><ul class="clean"><li><strong>Lightnet</strong> — listed on Stellar's own Anchor Directory, Vietnam in its 150+ country coverage, SEP-24, cross-border-payments focus. No live stellar.toml found — unverified today.</li><li><strong>MoneyGram Ramps</strong> — real, live Stellar anchor, but confirmed countries are Kenya, Philippines, Mexico. Vietnam is not on that list.</li><li>Neither is a Bakti partner. Both are contact targets, not integrations.</li></ul>
       </div>
     </div>
-    <div class="source">Sources: https://developers.stellar.org/docs/learn/fundamentals/anchors · Stellar SEP-24 guide · https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps · live endpoint: stellar.moneygram.com/stellaradapterservice/sep24/info</div>
+    <div class="source">Sources: anchors.stellar.org (Anchor Directory) · developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps</div>
   </section>
 
   <section class="slide" data-slide="7" aria-labelledby="s7-title">
-    <span class="slide-num">7 / 8</span>
+    <span class="slide-num">7 / 9</span>
     <p class="kicker">Business model + GTM</p>
     <h2 id="s7-title">Hypotheses to test — not forecasts</h2>
     <div class="grid-2">
       <div class="card soft"><span class="tag">UNVALIDATED BUSINESS MODEL</span><ul class="clean"><li>Transparent sender service fee within a licensed provider quote</li><li>Provider referral/revenue share where permitted</li><li>Employer, cooperative, or worker-community distribution</li><li>No validated price, take rate, margin, or unit economics</li></ul></div>
-      <div class="card"><span class="tag">GTM EXPERIMENTS</span><ul class="clean"><li>Interview Filipino workers in Malaysia and family recipients</li><li>Test planning/reminder value before automation</li><li>Map compliant Malaysia funding and Philippines payout partners</li><li>Run testnet usability studies for signing and address safety</li><li>Seek provider sandbox/certification conversations without claiming partnership</li></ul></div>
+      <div class="card"><span class="tag">GTM EXPERIMENTS</span><ul class="clean"><li>Interview Vietnamese contract workers in Japan/Taiwan/Korea and family recipients</li><li>Test planning/reminder value before automation</li><li>Contact Lightnet and MoneyGram about a Vietnam VND rail</li><li>Run testnet usability studies for signing and address safety</li><li>Seek provider sandbox/certification conversations without claiming partnership</li></ul></div>
     </div>
   </section>
 
   <section class="slide" data-slide="8" aria-labelledby="s8-title">
-    <span class="slide-num">8 / 8</span>
+    <span class="slide-num">8 / 9</span>
     <p class="kicker">Build status + ask</p>
     <h2 id="s8-title">A working mainnet core, with an honest last-mile gap</h2>
     <div class="grid-2">
       <div class="card current"><span class="tag">BUILT</span><ul class="clean"><li>Deployed on mainnet, creator key under review</li><li>Mainnet release transaction: pending, to be signed before submission</li><li>Direct payment verification and support-plan UI</li><li>Current endpoints stop at Verified on-chain</li></ul><p class="proof" style="margin-top:14px;">Contract: CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</p><p class="proof" style="margin-top:8px;">Testnet dev history: contracts/DEPLOYMENT.md</p></div>
-      <div class="card future"><span class="tag">ASK</span><ul class="clean"><li>Anchor review: confirm third-party cash pickup (no recipient wallet/KYC) and a Malaysia MYR on-ramp path</li><li>Customer-discovery introductions in Malaysia</li><li>Feedback on the planning job before adding automation</li></ul><p class="small" style="margin-top:16px;"><strong>Not built:</strong> SEP-24, MoneyGram API/webview, KYC, provider routing/status/reference, PHP cash-out, automatic scheduling.</p></div>
+      <div class="card future"><span class="tag">ASK</span><ul class="clean"><li>Warm introduction to Lightnet or MoneyGram about a Vietnam VND rail</li><li>Customer-discovery introductions among Vietnamese worker communities in Japan/Taiwan/Korea</li><li>Feedback on the planning job before adding automation</li></ul><p class="small" style="margin-top:16px;"><strong>Not built:</strong> SEP-24, anchor API/webview, KYC, provider routing/status/reference, VND cash-out, automatic scheduling.</p></div>
     </div>
     <div class="source">Mainnet proof: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</div>
+  </section>
+
+  <section class="slide" data-slide="9" aria-labelledby="s9-title">
+    <span class="slide-num">9 / 9</span>
+    <p class="kicker">The value, in one line</p>
+    <h2 id="s9-title">A sender signs. A family collects. No blockchain to think about.</h2>
+    <div class="card" style="margin-top:8px;">
+      <p class="lede" style="font-size:19px;">A sender signs once a month. Family in Vietnam collects the support. Nobody but the sender ever has to think about the blockchain underneath.</p>
+    </div>
+    <div class="source">bakti-stellar.vercel.app · Bakti · GitHub · Stellar APAC Hackathon 2026 · Track A</div>
   </section>
 
 </main>
@@ -257,7 +254,7 @@
   <button type="button" id="next" aria-label="Next slide">→</button>
 </nav>
 <script>
-  const TOTAL = 8;
+  const TOTAL = 9;
   let current = 1;
   const progress = document.getElementById('progress');
   const slides = Array.from(document.querySelectorAll('.slide'));

@@ -4,13 +4,13 @@
 
 Bakti currently serves a sender with a Stellar wallet. It helps that person record a family support plan and sign a transfer to a recipient Stellar address.
 
-The intended research corridor is **Malaysia → Philippines**. The initial target user is a Filipino worker in Malaysia planning salary-day support for a family member in the Philippines.
+The intended research corridor is **Đông Á → Vietnam** (Japan, Taiwan, Korea being Vietnam's largest, longest-running formal labor-export markets). The initial target user is a Vietnamese contract worker abroad planning salary-day support for a family member in Vietnam.
 
 The current experience does not hide the missing last mile:
 
 - The recipient must have a Stellar address.
-- No licensed anchor or MoneyGram integration is connected.
-- No KYC, quote, provider deposit route, pickup reference, PHP cash-out, or provider collection status exists.
+- No licensed anchor integration is connected.
+- No KYC, quote, provider deposit route, pickup reference, VND cash-out, or provider collection status exists.
 - The selected day is a reminder/planning field only.
 
 ## UX principles
@@ -31,7 +31,7 @@ Landing (public)
       → Create support plan
           - family member
           - recipient Stellar address
-          - Malaysia → Philippines research corridor
+          - Đông Á → Vietnam research corridor
           - XLM escrow or direct USDC plan
           - reminder day (planning only)
       → Support plan detail
@@ -96,12 +96,11 @@ The allowance detail screen should always explain that the following are planned
 5. Provider-approved deposit routing.
 6. Status, reference, cash-out, and collection confirmation.
 
-MoneyGram Ramps may be named only as a target path, never as a partner or existing route.
+Lightnet and MoneyGram Ramps may be named only as target paths, never as a partner or existing route.
 
-Two gaps in that target design are still open, not yet answered by any source:
+The gap in that target design is still open, not yet answered by any source:
 
-- **Malaysia on-ramp.** MoneyGram Ramps lists Malaysia cash-out only — no MYR→USDC deposit path exists through it. No Bank Negara Malaysia–licensed remittance operator found (checked TerraPay, Sunrate) offers a stablecoin capability; they are fiat-only.
-- **Third-party cash pickup.** Classic MoneyGram has always let the recipient collect with a reference number and matching photo ID, no wallet or KYC of their own required. Whether MoneyGram Ramps preserves that for a Stellar-funded withdrawal is unconfirmed. Beans, the one live Stellar+MoneyGram wallet with a documented flow, requires both sender and recipient to hold their own KYC'd wallet — the opposite of a recipient who just shows up and collects.
+- **No confirmed Vietnam VND anchor.** MoneyGram Ramps' supported-countries sheet confirms only Kenya, Philippines, and Mexico — Vietnam is not listed. Lightnet is on Stellar's own Anchor Directory (anchors.stellar.org) with Vietnam in its country coverage, but its `stellar.toml` 404s, so its actual VND rail is unverified.
 
 ## Metrics page
 

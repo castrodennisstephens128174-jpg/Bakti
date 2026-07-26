@@ -11,7 +11,7 @@ Sender → Bakti support-plan record → Stellar → recipient Stellar address
 Planned flow:
 
 ```text
-Sender → Stellar → certified anchor/provider → KYC and provider workflow → PHP cash-out
+Sender → Stellar → certified anchor/provider → KYC and provider workflow → VND cash-out
 ```
 
 The planned provider segment is not implemented.
@@ -186,23 +186,20 @@ A MoneyGram Ramps or other licensed anchor adapter would need, at minimum:
 
 None of these steps is implemented in the current endpoints.
 
-Two additional gaps in this target design are open, not yet answered by any source:
+The core gap in this target design is open, not yet answered by any source:
 
-- **Malaysia on-ramp.** MoneyGram Ramps' own coverage sheet lists Malaysia cash-out only — there is no MYR→USDC deposit path through it today. No Bank Negara Malaysia–licensed remittance operator found (TerraPay, Sunrate) offers a stablecoin capability; they are fiat-only. Classic (non-crypto) MoneyGram already runs a full send corridor out of Malaysia, but that path never touches Stellar or USDC.
-- **Third-party cash pickup.** Classic MoneyGram has always supported sender ≠ receiver — the recipient collects with a reference number and matching photo ID, no account or KYC of their own required. Whether MoneyGram Ramps preserves that for a Stellar-funded withdrawal is unconfirmed by MoneyGram's developer docs. Beans, the one live Stellar+MoneyGram wallet with a documented flow, requires both sender and recipient to hold their own KYC'd wallet. Decaf shows a friendlier sender-only-account + recipient-claim-link pattern feeding into MoneyGram cash-out, but its recipient KYC mechanics aren't publicly confirmed.
+- **No confirmed Vietnam VND anchor.** MoneyGram Ramps' own supported-countries sheet confirms only Kenya, Philippines, and Mexico for direct deposit — Vietnam is not listed. Lightnet appears on Stellar's own [Anchor Directory](https://anchors.stellar.org/) with Vietnam among its 150+ country coverage and SEP-24 support, but its listed `stellar.toml` (`lightnet.io/.well-known/stellar.toml`) returns 404, so its actual VND rail, limits, and KYC flow are unverified. Neither is a Bakti partner; both are contact targets.
 
-MoneyGram's published off-ramp limits also need a caveat: the integration docs list 5–950 USDC on-ramp and 5–2,500 USDC off-ramp, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides, and a separate Production Preview/certification tier caps test transactions at 10–20 USDC (100 USDC aggregate) — treat these as three different figures from three different sources, not one clean number.
+MoneyGram's published off-ramp limits also need a caveat: the integration docs list 5–950 USDC on-ramp and 5–2,500 USDC off-ramp, but the live production `/info` endpoint currently reports a 1 USDC floor on both sides, and a separate Production Preview/certification tier caps test transactions at 10–20 USDC (100 USDC aggregate) — treat these as three different figures from three different sources, not one clean number, and note that Vietnam isn't confirmed on any of them.
 
 Sources:
 
 - https://developers.stellar.org/docs/learn/fundamentals/anchors
 - https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started
+- https://anchors.stellar.org/
 - https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
 - https://stellar.moneygram.com/stellaradapterservice/sep24/info
 - https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
-- https://www.moneygram.com/us/en/send-and-receive/receiving-money
-- https://www.beansapp.com/moneygram
-- https://decaf.so/en/use-cases/remittance-senders
 
 ## 12. Verified mainnet deployment
 
