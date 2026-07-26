@@ -1,5 +1,5 @@
 # Bakti Pitch Deck
-# Exactly 9 slides · Stellar APAC Hackathon 2026
+# Exactly 10 slides · Stellar APAC Hackathon 2026
 
 # TITLE
 Bakti
@@ -56,6 +56,12 @@ Lightnet is listed on Stellar's own Anchor Directory with Vietnam in its 150+ co
 MoneyGram Ramps is a real, live Stellar anchor. Funds settle to MoneyGram's own Stellar address; the recipient collects cash via phone number/code + ID, no wallet needed on their side — this exact pattern already runs in Kenya, Philippines, and Mexico (chaingain.io independent analysis), just not confirmed for Vietnam yet.
 Neither is a confirmed partner yet — Bakti is currently reaching out to both.
 Sources: anchors.stellar.org (Anchor Directory); Stellar anchors/SEP-24 docs; MoneyGram Ramps integration docs
+
+# RAILS
+Vietnam is already building the rails — cash infrastructure exists, regulation is catching up
+Classic MoneyGram runs cash-pickup agents across Vietnam today — reference number + photo ID, no account needed. Unconfirmed: whether MoneyGram Ramps, the Stellar bridge, routes into that same Vietnam agent network.
+Vietnam's Resolution 05/2025/NQ-CP (Sep 2025) opened a 5-year regulated crypto pilot — VND-only settlement, up to 5 licensed exchanges. CAEX is a shortlisted candidate, backed by OKX Ventures and HashKey Capital — not a confirmed Stellar anchor.
+Sources: moneygram.com/intl/com-vn/en; Resolution 05/2025/NQ-CP (ssc.gov.vn); fintechnews.sg (CAEX investment)
 
 # MODEL
 Business model + GTM hypotheses — unvalidated

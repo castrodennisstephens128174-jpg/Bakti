@@ -52,6 +52,11 @@ The target last mile is a certified SEP-24 integration with a licensed Stellar a
 
 Neither is a confirmed partner yet — Bakti is currently reaching out to both.
 
+**Two reasons the target design is not pure speculation:**
+
+- **The cash-pickup network already exists in Vietnam.** Classic (non-crypto) MoneyGram runs agent locations across Vietnam today — a recipient can already collect cash with a reference number and photo ID, no account needed ([moneygram.com/intl/com-vn/en](https://www.moneygram.com/intl/com-vn/en/how-to-receive-money)). What's unconfirmed is only whether MoneyGram Ramps, the Stellar bridge, routes into that same agent network for Vietnam.
+- **A licensed VND crypto rail is opening.** Vietnam's Resolution 05/2025/NQ-CP (effective 2025-09-09) opened a five-year regulated crypto-asset pilot: VND-only settlement, up to five licensed exchanges selected by the Ministry of Finance, Ministry of Public Security, and the State Bank of Vietnam, with a VND 10 trillion (~US$380M) minimum charter capital. [CAEX](https://www.caex.com.vn/) is one shortlisted candidate, backed by OKX Ventures and HashKey Capital — it is not a confirmed Stellar anchor.
+
 ## Current product vs target product
 
 | Capability | Current prototype | Target product |
@@ -234,4 +239,9 @@ make test
 - MoneyGram, Integrate MoneyGram Ramps: https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps
 - MoneyGram Ramps, live `/info` endpoint: https://stellar.moneygram.com/stellaradapterservice/sep24/info
 - MoneyGram Ramps, supported-countries sheet: https://docs.google.com/spreadsheets/d/1batl_ykVzF9czFpYoW3zYDSLaHu4S3KnaFUoYaS-XdM
+- chaingain.io, MoneyGram + Stellar settlement flow analysis: https://chaingain.io/moneygram-stellar-crypto-remittance-2026/
+- MoneyGram Vietnam, how to receive money: https://www.moneygram.com/intl/com-vn/en/how-to-receive-money
+- Vietnam Resolution 05/2025/NQ-CP (State Securities Commission): https://ssc.gov.vn/cs/idcplg?IdcService=GET_FILE&allowInterrupt=1&dID=170615&dDocName=APPSSCGOVVN1620162698&filename=Resolution+No.05.pdf
+- CAEX, Vietnam's compliant crypto asset exchange: https://www.caex.com.vn/
+- Fintech Singapore, OKX and HashKey invest in CAEX: https://fintechnews.sg/129698/vietnam/okx-caex-investment-vietnam/
 - Stellar Expert, Bakti mainnet contract: https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR

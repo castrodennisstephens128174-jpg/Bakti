@@ -18,6 +18,7 @@ style: |
     display: flex;
     flex-direction: column;
     justify-content: safe center;
+    line-height: 1.45;
     gap: 16px;
     position: relative;
   }
@@ -57,7 +58,7 @@ style: |
   .stat { background: #fdf1e0; border-radius: 10px; border-bottom: 3px solid #0284c7; padding: 16px 20px; flex: 1; }
   .stat .num { font-size: 30px; font-weight: 800; color: #0b1b2b; display: block; }
   .stat .num.pi { font-size: 30px; color: #0284c7; }
-  .stat .lbl { font-size: 15px; color: #51617a; }
+  .stat .lbl { font-size: 15px; line-height: 1.3; color: #51617a; }
 
   .source { margin-top: 8px; font-size: 15px; color: #8291a3; }
   .pill {
@@ -71,7 +72,7 @@ style: |
     margin-right: 8px;
   }
   code { background: #f1f5f9; color: #0369a1; border-radius: 4px; padding: 1px 6px; }
-  .row { display: flex; gap: 32px; align-items: center; }
+  .row { display: flex; gap: 32px; align-items: flex-start; }
   .row > div { flex: 1; }
   .row img { width: 100%; }
 
@@ -80,7 +81,7 @@ style: |
   .bar-fill.context { width: 100%; background: #cbd5e1; }
   .bar-fill.highlight { width: 1.9%; min-width: 6px; background: #0284c7; }
   .bar-row { display: flex; align-items: center; gap: 16px; margin-top: 10px; }
-  .bar-label { width: 260px; font-size: 15px; color: #51617a; }
+  .bar-label { width: 260px; font-size: 15px; line-height: 1.3; color: #51617a; }
   .bar-value { width: 170px; font-size: 21px; font-weight: 800; color: #0b1b2b; text-align: right; }
 
   .card { background: #ffffff; border: 1px solid #e6e2d8; border-radius: 10px; padding: 20px 24px; flex: 1; }
@@ -94,7 +95,7 @@ style: |
   .flow-row { display: flex; align-items: stretch; gap: 10px; margin-top: 16px; }
   .flow-node { flex: 1; min-width: 0; background: #ffffff; border: 2px solid #0284c7; border-radius: 10px; padding: 16px 14px; text-align: center; }
   .flow-node strong { display: block; font-size: 19px; }
-  .flow-node span { font-size: 14px; color: #51617a; }
+  .flow-node span { font-size: 14px; line-height: 1.3; color: #51617a; }
   .flow-node.target { border-style: dashed; border-color: #d18b2c; background: #fdf1e0; }
   .flow-arrow { flex: 0 0 auto; align-self: center; font-size: 22px; color: #94a3b8; }
 ---
@@ -110,7 +111,7 @@ Vietnamese workers abroad → family in Vietnam
 <div class="stats">
 <div class="stat"><span class="num pi pi-check-circle"></span><span class="lbl">Stellar mainnet product</span></div>
 <div class="stat"><span class="num pi pi-shield"></span><span class="lbl">Non-custodial signing</span></div>
-<div class="stat"><span class="num pi pi-map-marker"></span><span class="lbl">Licensed cash-out: next integration</span></div>
+<div class="stat"><span class="num pi pi-map-marker"></span><span class="lbl">Licensed cash-out: next integration target</span></div>
 </div>
 
 <p class="source">bakti-stellar.vercel.app · Stellar APAC Hackathon 2026 · Track A</p>
@@ -123,13 +124,9 @@ Vietnamese workers abroad → family in Vietnam
 
 <span class="badge next">Illustrative persona · not a claimed interview</span>
 
-Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Payday comes; some months she remembers to send money home, some months a double shift pushes it to next week.
+Linh works a factory shift in Japan, one of over 700,000 Vietnamese on labor contracts abroad. Payday comes; some months she remembers to send money home, some months a double shift pushes it to next week. She wants a standing plan she sets up once, then signs each month on a habit — not from memory.
 
-**She doesn't want to "remember to send." She wants a standing plan she sets up once, then signs each month on a habit — not from memory.**
-
-Her mother, back home, has never used a banking app — a wallet address is not something Linh can ask her to learn. **The real prize isn't the transfer. It's her mother collecting cash without having to touch a screen.**
-
-Today the recipient still needs a Stellar address, and Linh signs every transfer herself — Bakti does not send automatically. Cash pickup for her mother is the target, not built yet.
+**Her mother has never used a banking app. The real prize isn't the transfer — it's her mother collecting cash without touching a screen.** Today the recipient still needs a Stellar address; cash pickup for her mother is the target, not built yet.
 
 ---
 
@@ -207,7 +204,7 @@ Solid border = built today. Dashed = planned, not yet connected. The last box is
 <div class="card">
 <p class="card-title">Why this customer</p>
 <ul>
-<li>700,000+ Vietnamese already on formal labor contracts abroad</li>
+<li>A large, already-counted population on formal labor contracts abroad (see corridor evidence)</li>
 <li>Government-brokered placement → recurring, predictable monthly income</li>
 <li>Japan/Taiwan/Korea are the longest-running, largest programs</li>
 <li>The recipient is often an older parent — the target design ends in cash pickup, not a wallet they'd have to learn</li>
@@ -224,6 +221,31 @@ Solid border = built today. Dashed = planned, not yet connected. The last box is
 </div>
 
 <p class="source">Sources: anchors.stellar.org (Anchor Directory) · developer.moneygram.com/integrate-moneygram-ramps · chaingain.io (independent analysis of the settlement flow)</p>
+
+---
+
+## Vietnam is already building the rails
+
+# Cash infrastructure exists. Regulation is catching up.
+
+<div class="row">
+<div class="card">
+<p class="card-title">Cash pickup already works here</p>
+<ul>
+<li>Classic MoneyGram runs cash-pickup agents across Vietnam today — reference number + photo ID, no account needed</li>
+<li>What that alone doesn't give Linh: a standing plan she sets once and on-chain proof it landed, instead of a one-off errand she has to remember and repeat by hand every month</li>
+</ul>
+</div>
+<div class="card">
+<p class="card-title">A licensed VND rail is opening</p>
+<ul>
+<li>Vietnam's Resolution 05/2025/NQ-CP (Sep 2025) opened a 5-year regulated crypto pilot — VND-only settlement, up to 5 licensed exchanges</li>
+<li><strong>CAEX</strong> is a shortlisted candidate, backed by OKX Ventures and HashKey Capital — not a confirmed Stellar anchor</li>
+</ul>
+</div>
+</div>
+
+<p class="source">Sources: moneygram.com/intl/com-vn/en · Resolution 05/2025/NQ-CP (ssc.gov.vn) · fintechnews.sg (CAEX investment)</p>
 
 ---
 
@@ -263,8 +285,8 @@ Solid border = built today. Dashed = planned, not yet connected. The last box is
 <div class="card">
 <span class="badge now">Built</span>
 <ul>
-<li>Deployed on mainnet, creator key under review</li>
-<li>Mainnet release transaction: pending, to be signed before submission</li>
+<li>Contract itself: live on mainnet since 2026-07-12 — creator key under review</li>
+<li>Separately: a fresh, judge-facing demo transaction is pending, to be signed before submission</li>
 <li>Direct payment verification and support-plan UI</li>
 <li>Current endpoints stop at Verified on-chain</li>
 </ul>
