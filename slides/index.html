@@ -87,7 +87,7 @@
   .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
   .stat { background: var(--accent); border-radius: 16px; padding: 22px; min-width: 0; }
   .stat .num { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif; font-size: 40px; font-weight: 750; letter-spacing: -.02em; }
-  .stat .lbl { font-size: 13px; color: var(--ink-soft); line-height: 1.4; margin-top: 4px; }
+  .stat .lbl { display: block; font-size: 13px; color: var(--ink-soft); line-height: 1.4; margin-top: 4px; }
   .stat-sm .num { font-size: 26px; }
   .mag-compare { margin-top: 18px; display: flex; flex-direction: column; gap: 12px; }
   .mag-row { display: grid; grid-template-columns: 230px 1fr 190px; align-items: center; gap: 14px; }
@@ -117,7 +117,7 @@
   .flow { display: grid; grid-template-columns: 1fr 44px 1fr 44px 1fr 44px 1fr; align-items: stretch; gap: 6px; }
   .node { border: 2px solid var(--brand-line); background: var(--white); border-radius: 18px; padding: 18px 14px; min-height: 126px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
   .node strong { font-size: 17px; }
-  .node span { margin-top: 7px; font-size: 12px; color: var(--ink-soft); line-height: 1.4; }
+  .node span { display: block; margin-top: 7px; font-size: 12px; color: var(--ink-soft); line-height: 1.4; }
   .arrow { display: grid; place-items: center; color: var(--brand); font-size: 28px; font-weight: 700; }
   .planned-flow { margin-top: 22px; border: 2px dashed var(--brand-line); border-radius: 18px; padding: 17px 20px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--ink-soft); text-align: center; }
   .planned-flow strong { color: var(--ink); }

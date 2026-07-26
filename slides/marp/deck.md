@@ -58,7 +58,7 @@ style: |
   .stat { background: #fdf1e0; border-radius: 10px; border-bottom: 3px solid #0284c7; padding: 16px 20px; flex: 1; }
   .stat .num { font-size: 30px; font-weight: 800; color: #0b1b2b; display: block; }
   .stat .num.pi { font-size: 30px; color: #0284c7; }
-  .stat .lbl { font-size: 15px; line-height: 1.3; color: #51617a; }
+  .stat .lbl { display: block; max-width: 100%; font-size: 15px; line-height: 1.3; color: #51617a; }
 
   .source { margin-top: 8px; font-size: 15px; color: #8291a3; }
   .pill {
@@ -95,7 +95,7 @@ style: |
   .flow-row { display: flex; align-items: stretch; gap: 10px; margin-top: 16px; }
   .flow-node { flex: 1; min-width: 0; background: #ffffff; border: 2px solid #0284c7; border-radius: 10px; padding: 16px 14px; text-align: center; }
   .flow-node strong { display: block; font-size: 19px; }
-  .flow-node span { font-size: 14px; line-height: 1.3; color: #51617a; }
+  .flow-node span { display: block; font-size: 14px; line-height: 1.3; color: #51617a; }
   .flow-node.target { border-style: dashed; border-color: #d18b2c; background: #fdf1e0; }
   .flow-arrow { flex: 0 0 auto; align-self: center; font-size: 22px; color: #94a3b8; }
 ---
