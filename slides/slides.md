@@ -63,7 +63,7 @@ Sources: DMW/OFW deployment reporting via businessmirror.com.ph; anchors.stellar
 Against the alternatives
 A one-off transfer versus a standing habit with proof attached
 Cost to remit, % of amount sent: Banks (avg) 14.99% | Global average 6.36% | Cheapest available today 3.29%
-Classic apps and bank transfers happen once: no standing plan, no proof beyond a receipt, and the recipient needs a bank account or wallet. Bakti skips that, gives the sender a Stellar transaction to point to, and turns "did I remember" into a habit already set up. This chart is the classic-rail cost stack; Bakti's own total, a 2% fee plus whatever PeraHub charges to cash out, isn't on it, since PeraHub's rate isn't public yet.
+Classic apps and bank transfers happen once: no standing plan, no proof beyond a receipt, and the recipient needs a bank account or wallet. Bakti skips that. The sender gets a Stellar transaction to point to, and "did I remember" turns into a habit already set up. This chart is the classic-rail cost stack; Bakti's own total, a 2% fee plus whatever PeraHub charges to cash out, isn't on it, since PeraHub's rate isn't public yet.
 Source: World Bank Remittance Prices Worldwide, Q3 2025
 
 # MARKET
