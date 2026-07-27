@@ -239,7 +239,7 @@ Solid border marks what's built today; dashed marks what's still ahead. Once the
 
 ---
 
-## Why Bakti, not the alternatives
+## Against the alternatives
 
 # A one-off transfer versus a standing habit with proof attached
 
@@ -308,17 +308,16 @@ Classic apps and bank transfers happen once: no standing plan, no proof beyond a
 <div class="card roomy">
 <span class="badge now">Phase 1, built and tested</span>
 <ul>
-<li>Mainnet contract live and working well</li>
+<li>Mainnet contract live</li>
 <li>Direct payment plus on-chain verification</li>
-<li>Honest boundary: status stops at Verified on-chain</li>
+<li>App never shows a cash-out status it can't prove</li>
 </ul>
 </div>
 <div class="card roomy">
 <span class="badge next">Phase 2, in progress now</span>
 <ul>
 <li>Testnet SEP-31 verified: real SEP-10 auth, KYC, and payment intent against Stellar's Anchor Platform</li>
-<li>Reaching out to PeraHub now for early integration support</li>
-<li>Awaiting feedback</li>
+<li>PeraHub contacted; waiting on a reply</li>
 </ul>
 </div>
 </div>
@@ -331,7 +330,7 @@ Classic apps and bank transfers happen once: no standing plan, no proof beyond a
 
 # No wallet, no app, just cash in hand
 
-A sender signs once a month. Their family just walks in and picks up cash, no wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet; the anchor connection is what gets us there.
+A sender signs once a month. Their family walks into a branch and picks up cash — nothing to install, nothing about blockchain to learn. That part isn't built yet; the anchor connection is what gets us there.
 
 <div class="stats">
 <div class="stat"><span class="num pi pi-globe"></span><span class="lbl">bakti-stellar.vercel.app, live app</span></div>

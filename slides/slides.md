@@ -60,7 +60,7 @@ Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); now reaching out to Pe
 Sources: DMW/OFW deployment reporting via businessmirror.com.ph; anchors.stellar.org (PeraHub, SEP-31); perahub.com.ph (BSP regulation); developer.moneygram.com/integrate-moneygram-ramps
 
 # USP
-Why Bakti, not the alternatives
+Against the alternatives
 A one-off transfer versus a standing habit with proof attached
 Cost to remit, % of amount sent: Banks (avg) 14.99% | Global average 6.36% | Cheapest available today 3.29%
 Classic apps and bank transfers happen once: no standing plan, no proof beyond a receipt, and the recipient needs a bank account or wallet. Bakti skips that, gives the sender a Stellar transaction to point to, and turns "did I remember" into a habit already set up. This chart is the classic-rail cost stack; Bakti's own total, a 2% fee plus whatever PeraHub charges to cash out, isn't on it, since PeraHub's rate isn't public yet.
@@ -91,16 +91,15 @@ Source: World Bank Remittance Prices Worldwide, Q3 2025
 # STATUS
 Phase 1 done, Phase 2 underway
 PHASE 1, BUILT AND TESTED
-Mainnet contract live and working well
+Mainnet contract live
 Direct payment plus on-chain verification
-Honest boundary: status stops at Verified on-chain
+App never shows a cash-out status it can't prove
 PHASE 2, IN PROGRESS NOW
 Running the product, finding real users
 Testnet SEP-31 verified: real SEP-10 auth, KYC, and payment intent against Stellar's Anchor Platform
-Reaching out to PeraHub now for early integration support
-Awaiting feedback
+PeraHub contacted; waiting on a reply
 Contract live on Stellar mainnet since 2026-07-12: stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
 
 # VALUE
 No wallet, no app, just cash in hand
-A sender signs once a month. Their family just walks in and picks up cash, no wallet, no app to install, nothing about blockchain to figure out. That part isn't built yet; the anchor connection is what gets us there.
+A sender signs once a month. Their family walks into a branch and picks up cash — nothing to install, nothing about blockchain to learn. That part isn't built yet; the anchor connection is what gets us there.
