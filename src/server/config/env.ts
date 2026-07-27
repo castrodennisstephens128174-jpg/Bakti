@@ -68,6 +68,12 @@ const envSchema = z.object({
     .string()
     .default('GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5'),
 
+  // SEP-1/10/12/31 anchor client (src/server/stellar/anchor). Unset in production —
+  // this is a testnet-only integration against a local Anchor Platform stand-in,
+  // not a connection to PeraHub (which has no public testnet endpoint yet).
+  ANCHOR_HOME_DOMAIN: z.string().optional(),
+  SECRET_ANCHOR_SIGNING_SEED: z.string().optional(),
+
   // Optional keys excluded from public stats (seed / internal demo wallets).
   STATS_EXCLUDE_KEYS: z.string().optional(),
 

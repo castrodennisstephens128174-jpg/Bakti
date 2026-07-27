@@ -1,0 +1,34 @@
+ACCOUNTS = ["GDXLIJKLBCE55IYHSBKAWSTPU5CP4NBP4XGRMYHR4CJE4UEJQTTPVCQG"]
+VERSION = "0.1.0"
+SIGNING_KEY = "GAYNC2CGH2ZHTQVM4HH55MYWIXR6PDZIDKXEQTTKYOJAFOU4WH663JGZ"
+NETWORK_PASSPHRASE = "Test SDF Network ; September 2015"
+
+WEB_AUTH_ENDPOINT = "http://localhost:8180/auth"
+WEB_AUTH_FOR_CONTRACTS_ENDPOINT = "http://localhost:8180/sep45/auth"
+WEB_AUTH_CONTRACT_ID = "CD3LA6RKF5D2FN2R2L57MWXLBRSEWWENE74YBEFZSSGNJRJGICFGQXMX"
+KYC_SERVER = "http://localhost:8180/sep12"
+TRANSFER_SERVER = "http://localhost:8180/sep6"
+TRANSFER_SERVER_SEP0024 = "http://localhost:8180/sep24"
+DIRECT_PAYMENT_SERVER = "http://localhost:8180/sep31"
+ANCHOR_QUOTE_SERVER = "http://localhost:8180/sep38"
+
+[[CURRENCIES]]
+code = "native"
+status = "test"
+is_asset_anchored = false
+anchor_asset_type = "crypto"
+desc = "XLM, the native token of the Stellar network."
+
+[[CURRENCIES]]
+code = "USDC"
+issuer = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
+status = "test"
+is_asset_anchored = false
+anchor_asset_type = "crypto"
+desc = "USD Coin, testnet issuer. SEP-31 receive is enabled for this asset, standing in for PeraHub's PHP cash payout until PeraHub's own testnet endpoint is available."
+
+[DOCUMENTATION]
+ORG_NAME = "Bakti SEP-31 testnet stand-in (Stellar Anchor Platform)"
+ORG_URL = "https://github.com/bakti-stellar/bakti"
+ORG_DESCRIPTION = "Local Anchor Platform instance simulating a SEP-31 receiving anchor on Stellar testnet, standing in for PeraHub until PeraHub's own testnet endpoint is available."
+ORG_GITHUB = "stellar"

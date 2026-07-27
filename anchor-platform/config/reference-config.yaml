@@ -1,0 +1,29 @@
+app:
+  version: 0.0.1
+  isTest: true
+  port: 8091
+  horizonEndpoint: https://horizon-testnet.stellar.org
+  rpcEndpoint: https://soroban-testnet.stellar.org
+  platformApiEndpoint: http://platform:8085
+  distributionWallet: GDXLIJKLBCE55IYHSBKAWSTPU5CP4NBP4XGRMYHR4CJE4UEJQTTPVCQG
+  distributionWalletMemo:
+  distributionWalletMemoType:
+  enableTest: true
+  custodyEnabled: false
+  rpcEnabled: true
+  paymentSigningSeed: SBUYHTKV36YZ7OGD7F3YPYTT7SF2DDFCMKUDZPNZGMRGRTJWN34DQETL
+
+auth:
+  type: NONE
+  platformToAnchorSecret:
+  anchorToPlatformSecret:
+  expirationMilliseconds: 30000
+
+sep24:
+  interactiveJwtKey: "secret_sep24_interactive_url_jwt_secret"
+
+data:
+  url: reference-db:5433
+  database: postgres
+  user: postgres
+  password: password

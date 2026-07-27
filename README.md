@@ -61,7 +61,7 @@ The target last mile is a SEP-31 integration with PeraHub. It is not currently c
 
 **PeraHub, the retail brand of PETNET Inc., is listed on Stellar's own anchor directory (anchors.stellar.org) with SEP-31 support**: USDC in, PHP or USD out, cash payout, Philippines only. PETNET Inc. is regulated by the Bangko Sentral ng Pilipinas and sits in the UnionBank/UBX PH group, with 3,000+ branches nationwide. SEP-31 is an anchor-to-anchor cross-border payment API, so the recipient needs no Stellar wallet at all, a closer fit than a hosted SEP-24 webview.
 
-Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor, live in the Philippines since October 2021, SEP-24) about integrating; there was no response. PeraHub is the better-matched pick given its PHP-native listing and BSP-regulated parent, and outreach to PeraHub/Petnet hasn't started yet.
+Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor, live in the Philippines since October 2021, SEP-24) about integrating; there was no response. PeraHub is the better-matched pick given its PHP-native listing and BSP-regulated parent, and Bakti is now reaching out to PeraHub/Petnet directly for SEP-31 integration support.
 
 ## Current product vs target product
 
@@ -75,7 +75,7 @@ Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor,
 | Verification | Horizon verification and Soroban RPC confirmation | On-chain plus provider transaction/status reconciliation |
 | Payment link | SEP-7 direct pay URI to recipient | Provider-aware payment/deposit instructions if certified |
 | Live watcher | Horizon recipient-payment watcher | Provider webhook/polling plus user notifications |
-| Provider/KYC | Not implemented | Hosted SEP-24 flow, authentication, KYC, quote/status |
+| Provider/KYC | SEP-10/12/31 client, tested against a local testnet Anchor Platform stand-in — not yet wired into the live payout flow | SEP-1/10/12/31 against PeraHub itself, once they respond |
 | Cash-out | Not implemented | Licensed PHP cash-out and provider reference |
 | Collection | Not implemented | Provider-confirmed collection status |
 | Scheduling | No automatic scheduler | Only after legal, operational, and user validation |
@@ -92,14 +92,14 @@ Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor,
 - SEP-7 direct payment URI.
 - Best-effort Horizon SSE watcher for payments to the recipient account.
 - Transaction hashes linked to the configured network explorer.
+- SEP-1/10/12/31 client (`src/server/stellar/anchor/`), verified end-to-end on Stellar testnet against a local Anchor Platform stand-in — real challenge-signed SEP-10 auth, real SEP-12 customer registration, a real SEP-31 transaction with a live `pending_sender` status and Stellar payment account/memo. See `anchor-platform/README.md`. Not wired into the live payout flow, and not connected to PeraHub (they have no testnet endpoint yet).
 
 ## Not implemented
 
-- SEP-24 or SEP-31.
-- Anchor authentication.
-- PeraHub or MoneyGram Ramps API integration.
+- SEP-24.
+- PeraHub or MoneyGram Ramps API integration (no production anchor connection).
 - Any anchor partnership, certification, or commercial agreement.
-- KYC/KYB/compliance workflows.
+- Production KYC/KYB/compliance workflows (the testnet SEP-12 call above is protocol plumbing, not a real compliance check).
 - Provider quote, fees, limits, status, webhooks, or deposit routing.
 - A provider-approved anchor or muxed payment destination.
 - Pickup reference or fiat cash pickup.
@@ -119,11 +119,27 @@ Any licensed anchor integration requires more than sending an asset to an addres
 - Testing and certification.
 - Provider transaction status and operational handling.
 
-PeraHub is confirmed on Stellar's own anchor directory (anchors.stellar.org) with SEP-31 support, USDC in, PHP or USD out, cash payout, Philippines only. Its published integration requirements (fee schedule, per-transaction limits, KYC fields) aren't public on perahub.com.ph or Petnet's own site; those would need direct outreach to confirm, which hasn't started yet. MoneyGram Ramps, by contrast, is confirmed with SEP-24 and has full public developer docs, but no PHP-specific listing on the directory and no reply to Bakti's earlier email.
+PeraHub is confirmed on Stellar's own anchor directory (anchors.stellar.org) with SEP-31 support, USDC in, PHP or USD out, cash payout, Philippines only. Its published integration requirements (fee schedule, per-transaction limits, KYC fields) aren't public on perahub.com.ph or Petnet's own site; those would need direct outreach to confirm — outreach to PeraHub/Petnet is now underway. MoneyGram Ramps, by contrast, is confirmed with SEP-24 and has full public developer docs, but no PHP-specific listing on the directory and no reply to Bakti's earlier email.
 
 Sources: [Stellar Anchor Directory](https://anchors.stellar.org), [PeraHub / PETNET Inc.](https://perahub.com.ph), [Integrate MoneyGram Ramps](https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps).
 
 Stellar anchors connect on-chain assets with off-chain rails. SEP-31 is an anchor-to-anchor API for cross-border payments (no recipient wallet required); SEP-24 is an anchor-hosted interactive deposit/withdrawal webview. Sources: [Stellar anchors](https://developers.stellar.org/docs/learn/fundamentals/anchors) and [SEP-24 getting started](https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started).
+
+### Testnet anchor integration (dev)
+
+`src/server/stellar/anchor/` is a SEP-1/10/12/31 client, tested against a
+local Stellar Anchor Platform instance since PeraHub has no testnet endpoint
+yet. Swapping `ANCHOR_HOME_DOMAIN` to PeraHub's domain once they respond
+needs no code changes.
+
+```bash
+cd anchor-platform && docker compose up -d
+cd .. && ANCHOR_HOME_DOMAIN=localhost:8180 pnpm test:anchor
+```
+
+See `anchor-platform/README.md` for what's running, the generated testnet
+keypairs, and a note on the anchor's async `pending_receiver` → `pending_sender`
+transition.
 
 ## Architecture
 
@@ -145,7 +161,7 @@ Stellar mainnet
   └─ Bakti XLM escrow contract
 
 Future provider adapter (not implemented)
-  └─ SEP-1 + SEP-10 + SEP-24 + KYC + quote/status + PHP cash-out
+  └─ SEP-1 + SEP-10 + SEP-31 + KYC + status + PHP cash-out
 ```
 
 Key files:
