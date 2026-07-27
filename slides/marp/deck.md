@@ -100,6 +100,13 @@ style: |
   .flow-node span { display: block; margin-top: 8px; font-size: 16px; line-height: 1.4; color: #51617a; }
   .flow-node.target { border-style: dashed; border-color: #d18b2c; background: #fdf1e0; }
   .flow-arrow { flex: 0 0 auto; align-self: center; font-size: 22px; color: #94a3b8; }
+
+  .table-clean { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  .table-clean th { background: #0284c7; color: #ffffff; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 14px; text-align: left; }
+  .table-clean th:nth-child(3) { text-align: right; }
+  .table-clean td { font-size: 17px; padding: 10px 14px; border-bottom: 1px solid #e6e2d8; color: #33465e; }
+  .table-clean td.pct { font-weight: 800; color: #0b1b2b; text-align: right; white-space: nowrap; }
+  .table-clean tbody tr:nth-child(even) td { background: #faf9f6; }
 ---
 
 <!-- _class: lead -->
@@ -124,25 +131,18 @@ Filipino workers abroad, family in the Philippines
 
 # A friend's problem, then 200 more
 
-<div class="row">
-<div class="card roomy">
-<span class="badge next">The complaint</span>
-<ul>
-<li>A friend back home: sending money is a hassle</li>
-<li>Parents don't know how to receive it</li>
-<li>Conversion fees eat into every transfer</li>
-</ul>
-</div>
-<div class="card roomy">
+<p style="font-size:19px;margin:0;"><span class="badge next">The complaint</span> A friend back home: sending money is a hassle, parents don't know how to receive it, conversion fees eat into every transfer.</p>
+
 <span class="badge now">The survey, 200 OFW community members</span>
-<ul>
-<li>"Send money home every month?" 78% yes</li>
-<li>"Want a fixed schedule tied to payday?" 69% yes</li>
-<li>"Pick up PHP cash with no wallet?" 78% yes</li>
-<li>"Want a receipt proving it was sent?" 81% yes</li>
-</ul>
-</div>
-</div>
+<table class="table-clean">
+<thead><tr><th>#</th><th>Question asked</th><th>Yes</th><th>Maps to Bakti</th></tr></thead>
+<tbody>
+<tr><td>Q1</td><td>Send money home every month?</td><td class="pct">78%</td><td>Baseline demand</td></tr>
+<tr><td>Q2</td><td>Want a fixed schedule tied to payday?</td><td class="pct">69%</td><td>Payday plan + reminder</td></tr>
+<tr><td>Q3</td><td>Pick up PHP cash with no wallet?</td><td class="pct">78%</td><td>PeraHub cash-out target</td></tr>
+<tr><td>Q4</td><td>Want a receipt proving it was sent?</td><td class="pct">81%</td><td>On-chain verified record</td></tr>
+</tbody>
+</table>
 
 <p class="source">Source: Bakti community survey, 200 respondents, Filipino overseas workers, 2026</p>
 

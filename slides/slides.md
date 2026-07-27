@@ -14,10 +14,10 @@ A friend back home: sending money is a hassle
 Parents don't know how to receive it
 Conversion fees eat into every transfer
 THE SURVEY, 200 OFW COMMUNITY MEMBERS
-"Send money home every month?" 78% yes
-"Want a fixed schedule tied to payday?" 69% yes
-"Pick up PHP cash with no wallet?" 78% yes
-"Want a receipt proving it was sent?" 81% yes
+Q1 | Send money home every month? | 78% yes | Baseline demand
+Q2 | Want a fixed schedule tied to payday? | 69% yes | Payday plan + reminder
+Q3 | Pick up PHP cash with no wallet? | 78% yes | PeraHub cash-out target
+Q4 | Want a receipt proving it was sent? | 81% yes | On-chain verified record
 Source: Bakti community survey, 200 respondents, Filipino overseas workers, 2026
 
 # WHAT BAKTI DOES
