@@ -56,7 +56,7 @@ Only the receiving side needs a Stellar anchor; a sender anywhere just needs XLM
 CONFIRMED ANCHOR: PERAHUB
 PeraHub (PETNET Inc., BSP-regulated, UnionBank/UBX PH, 3,000+ branches) is on Stellar's own directory with SEP-31: USDC in, PHP or USD out, cash payout.
 SEP-31 needs no recipient wallet, a closer fit than a hosted webview.
-Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); PeraHub outreach hasn't started yet.
+Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); now reaching out to PeraHub directly for SEP-31 integration support.
 Sources: DMW/OFW deployment reporting via businessmirror.com.ph; anchors.stellar.org (PeraHub, SEP-31); perahub.com.ph (BSP regulation); developer.moneygram.com/integrate-moneygram-ramps
 
 # USP
@@ -68,10 +68,11 @@ Source: World Bank Remittance Prices Worldwide, Q3 2025
 
 # MARKET
 The same demand, counted in dollars
-TAM $9.3B: BSP 2025 remittances, 5 of the 7 markets from the corridor chart (Korea and Malaysia aren't broken out by BSP)
-SAM $1.6B: that same volume, cut down to senders who already hold crypto (UAE 25.3%, Singapore 24.4%, Saudi Arabia 15.0%, Hong Kong 14.3%, Japan 4.0%)
-SOM $16M: a 1% target slice of SAM for year one or two, a goal, not a promise
-Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025; Triple-A, State of Global Cryptocurrency Ownership 2024
+TAM (total market) $9.3B, SAM (reachable today) $1.6B, SOM (year-one target) $16M
+TAM: yearly remittances from the 5 biggest sending markets we track
+SAM: the part of that already sent by people who own crypto today
+SOM: 1% of SAM, Bakti's own year-one goal, not a promise
+Sources: BSP (Bangko Sentral ng Pilipinas) 2025 remittance data, 5 of 7 corridor markets; Triple-A, State of Global Cryptocurrency Ownership 2024
 
 # MODEL
 Revenue plan and a sequenced launch
@@ -95,7 +96,8 @@ Direct payment plus on-chain verification
 Honest boundary: status stops at Verified on-chain
 PHASE 2, IN PROGRESS NOW
 Running the product, finding real users
-Next: reach out to PeraHub for early integration
+Testnet SEP-31 integration running against Stellar's Anchor Platform
+Reaching out to PeraHub now for early integration support
 Awaiting feedback
 Contract live on Stellar mainnet since 2026-07-12: stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
 

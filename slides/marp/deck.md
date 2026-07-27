@@ -107,6 +107,14 @@ style: |
   .table-clean td { font-size: 17px; padding: 10px 14px; border-bottom: 1px solid #e6e2d8; color: #33465e; }
   .table-clean td.pct { font-weight: 800; color: #0b1b2b; text-align: right; white-space: nowrap; }
   .table-clean tbody tr:nth-child(even) td { background: #faf9f6; }
+
+  .funnel { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 12px 0; }
+  .funnel-bar { display: flex; align-items: center; justify-content: space-between; border-radius: 10px; padding: 11px 28px; color: #ffffff; }
+  .funnel-bar .fb-label { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9; }
+  .funnel-bar .fb-val { font-size: 27px; font-weight: 800; }
+  .funnel-bar.tam { width: 100%; background: #94a3b8; }
+  .funnel-bar.sam { width: 64%; background: #3b9fd4; }
+  .funnel-bar.som { width: 34%; background: #0284c7; box-shadow: 0 0 0 3px #fdf1e0; }
 ---
 
 <!-- _class: lead -->
@@ -222,7 +230,7 @@ Solid border marks what's built today; dashed marks what's still ahead. Once the
 <li>Only the receiving side needs a Stellar anchor; a sender anywhere just needs XLM/USDC in their own wallet</li>
 <li>PeraHub (PETNET Inc., BSP-regulated, UnionBank/UBX PH, 3,000+ branches) is on Stellar's own directory with SEP-31: USDC in, PHP or USD out, cash payout</li>
 <li>SEP-31 needs no recipient wallet, a closer fit than a hosted webview</li>
-<li>Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); PeraHub outreach hasn't started yet</li>
+<li>Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); now reaching out to PeraHub directly for SEP-31 integration support</li>
 </ul>
 </div>
 </div>
@@ -247,15 +255,19 @@ Classic apps and bank transfers happen once: no standing plan, no proof beyond a
 
 # The same demand, counted in dollars
 
-<img class="chart-img" src="assets/tam-sam-som.png">
+<div class="funnel">
+<div class="funnel-bar tam"><span class="fb-label">TAM, total market</span><span class="fb-val">$9.3B</span></div>
+<div class="funnel-bar sam"><span class="fb-label">SAM, reachable today</span><span class="fb-val">$1.6B</span></div>
+<div class="funnel-bar som"><span class="fb-label">SOM, year-one target</span><span class="fb-val">$16M</span></div>
+</div>
 
 <ul>
-<li>TAM $9.3B: BSP 2025 remittances, 5 of the 7 markets from the corridor chart (Korea and Malaysia aren't broken out by BSP)</li>
-<li>SAM $1.6B: that same volume, cut down to senders who already hold crypto in each market</li>
-<li>SOM $16M: a 1% target slice of SAM for year one or two, a goal, not a promise</li>
+<li>TAM: yearly remittances from the 5 biggest sending markets we track</li>
+<li>SAM: the part of that already sent by people who own crypto today</li>
+<li>SOM: 1% of SAM, Bakti's own year-one goal, not a promise</li>
 </ul>
 
-<p class="source">Sources: Bangko Sentral ng Pilipinas cash remittance data, 2025 · Triple-A, State of Global Cryptocurrency Ownership 2024</p>
+<p class="source">Sources: BSP (Bangko Sentral ng Pilipinas) 2025 remittance data, 5 of 7 corridor markets · Triple-A, State of Global Cryptocurrency Ownership 2024</p>
 
 ---
 
@@ -304,8 +316,8 @@ Classic apps and bank transfers happen once: no standing plan, no proof beyond a
 <div class="card roomy">
 <span class="badge next">Phase 2, in progress now</span>
 <ul>
-<li>Running the product, finding real users</li>
-<li>Next: reach out to PeraHub for early integration</li>
+<li>Testnet SEP-31 integration running against Stellar's Anchor Platform</li>
+<li>Reaching out to PeraHub now for early integration support</li>
 <li>Awaiting feedback</li>
 </ul>
 </div>
