@@ -14,10 +14,10 @@ A friend back home: sending money is a hassle
 Parents don't know how to receive it
 Conversion fees eat into every transfer
 THE SURVEY, 200 OFW COMMUNITY MEMBERS
-78% send money home every month
-69% want an automatic payday schedule
-78% would use wallet-free cash pickup
-81% want clear proof the money was sent
+"Send money home every month?" 78% yes
+"Want a fixed schedule tied to payday?" 69% yes
+"Pick up PHP cash with no wallet?" 78% yes
+"Want a receipt proving it was sent?" 81% yes
 Source: Bakti community survey, 200 respondents, Filipino overseas workers, 2026
 
 # WHAT BAKTI DOES

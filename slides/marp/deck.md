@@ -136,10 +136,10 @@ Filipino workers abroad, family in the Philippines
 <div class="card roomy">
 <span class="badge now">The survey, 200 OFW community members</span>
 <ul>
-<li>78% send money home every month</li>
-<li>69% want an automatic payday schedule</li>
-<li>78% would use wallet-free cash pickup</li>
-<li>81% want clear proof the money was sent</li>
+<li>"Send money home every month?" 78% yes</li>
+<li>"Want a fixed schedule tied to payday?" 69% yes</li>
+<li>"Pick up PHP cash with no wallet?" 78% yes</li>
+<li>"Want a receipt proving it was sent?" 81% yes</li>
 </ul>
 </div>
 </div>
