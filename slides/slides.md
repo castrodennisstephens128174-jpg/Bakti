@@ -96,7 +96,7 @@ Direct payment plus on-chain verification
 Honest boundary: status stops at Verified on-chain
 PHASE 2, IN PROGRESS NOW
 Running the product, finding real users
-Testnet SEP-31 integration running against Stellar's Anchor Platform
+Testnet SEP-31 verified: real SEP-10 auth, KYC, and payment intent against Stellar's Anchor Platform
 Reaching out to PeraHub now for early integration support
 Awaiting feedback
 Contract live on Stellar mainnet since 2026-07-12: stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR

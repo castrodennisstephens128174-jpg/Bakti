@@ -316,7 +316,7 @@ Classic apps and bank transfers happen once: no standing plan, no proof beyond a
 <div class="card roomy">
 <span class="badge next">Phase 2, in progress now</span>
 <ul>
-<li>Testnet SEP-31 integration running against Stellar's Anchor Platform</li>
+<li>Testnet SEP-31 verified: real SEP-10 auth, KYC, and payment intent against Stellar's Anchor Platform</li>
 <li>Reaching out to PeraHub now for early integration support</li>
 <li>Awaiting feedback</li>
 </ul>
