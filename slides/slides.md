@@ -13,7 +13,7 @@ THE COMPLAINT
 A friend back home: sending money is a hassle
 Parents don't know how to receive it
 Conversion fees eat into every transfer
-THE SURVEY, 200 OFW COMMUNITY MEMBERS
+THE SURVEY, 200 OFW COMMUNITY MEMBERS (OFW = Overseas Filipino Worker)
 Q1 | Send money home every month? | 78% yes | Baseline demand
 Q2 | Want a fixed schedule tied to payday? | 69% yes | Payday plan + reminder
 Q3 | Pick up PHP cash with no wallet? | 78% yes | PeraHub cash-out target

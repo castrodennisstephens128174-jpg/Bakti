@@ -133,7 +133,7 @@ Filipino workers abroad, family in the Philippines
 
 <p style="font-size:19px;margin:0;"><span class="badge next">The complaint</span> A friend back home: sending money is a hassle, parents don't know how to receive it, conversion fees eat into every transfer.</p>
 
-<span class="badge now">The survey, 200 OFW community members</span>
+<span class="badge now">The survey, 200 OFW community members</span> <span style="font-size:13px;color:#8291a3;">OFW = Overseas Filipino Worker</span>
 <table class="table-clean">
 <thead><tr><th>#</th><th>Question asked</th><th>Yes</th><th>Maps to Bakti</th></tr></thead>
 <tbody>
