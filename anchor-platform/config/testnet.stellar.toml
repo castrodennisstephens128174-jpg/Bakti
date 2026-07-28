@@ -1,0 +1,18 @@
+ACCOUNTS = ["GAYNC2CGH2ZHTQVM4HH55MYWIXR6PDZIDKXEQTTKYOJAFOU4WH663JGZ"]
+SIGNING_KEY = "GAYNC2CGH2ZHTQVM4HH55MYWIXR6PDZIDKXEQTTKYOJAFOU4WH663JGZ"
+NETWORK_PASSPHRASE = "Test SDF Network ; September 2015"
+DIRECT_PAYMENT_SERVER = "http://localhost:8080/sep31"
+WEB_AUTH_ENDPOINT = "http://localhost:8080/auth"
+TRANSFER_SERVER_SEP0012 = "http://localhost:8080/sep12"
+
+[[CURRENCIES]]
+code = "USDC"
+issuer = "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
+status = "test"
+is_asset_anchored = false
+desc = "USD Coin, testnet issuer, for the Bakti SEP-31 testnet stand-in"
+
+[DOCUMENTATION]
+ORG_NAME = "Bakti testnet anchor stand-in"
+ORG_URL = "https://github.com/bakti-stellar/bakti"
+ORG_DESCRIPTION = "Local Anchor Platform instance simulating a SEP-31 receiving anchor on Stellar testnet, standing in for PeraHub until PeraHub's own testnet endpoint is available."
