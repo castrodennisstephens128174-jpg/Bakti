@@ -4,6 +4,8 @@ Bakti is a Stellar mainnet product for **Filipino workers abroad planning salary
 
 **Current boundary:** the recipient needs a Stellar address. Bakti does not yet connect to a licensed cash-out provider, perform KYC, or deliver Philippine pesos.
 
+**Network:** Stellar mainnet by default — the escrow contract is confirmed live on-chain (see [Verified mainnet deployment](#verified-mainnet-deployment)). Testnet is opt-in for free local development only.
+
 **Pitch deck:** [`slides/marp/deck.pdf`](slides/marp/deck.pdf) · [visual HTML deck](slides/index.html)
 
 ## Problem and target user
@@ -196,6 +198,8 @@ No price, take rate, unit economics, or provider margin has been validated. For 
 - Existing database rows may contain legacy local `settled`/`collected` demo states; the UI labels them honestly and new endpoints do not create them.
 
 ## Verified mainnet deployment
+
+The escrow contract is live on Stellar mainnet today. What's still pending is a fresh, team-signed release transaction to serve as citable end-to-end proof — the contract being live and a specific release being verified are two different claims, and this repo only makes the one it can back.
 
 - **Contract:** `CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR`
 - **Contract explorer:** [Stellar Expert public](https://stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR), confirmed live on Stellar mainnet (created 2026-07-12, 7 recorded invocations as of this check).
