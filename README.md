@@ -77,7 +77,7 @@ Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor,
 | Verification | Horizon verification and Soroban RPC confirmation | On-chain plus provider transaction/status reconciliation |
 | Payment link | SEP-7 direct pay URI to recipient | Provider-aware payment/deposit instructions if certified |
 | Live watcher | Horizon recipient-payment watcher | Provider webhook/polling plus user notifications |
-| Provider/KYC | SEP-10/12/31 client, tested against a local testnet Anchor Platform stand-in — not yet wired into the live payout flow | SEP-1/10/12/31 against PeraHub itself, once they respond |
+| Provider/KYC | SEP-10/12/31 client, tested against a local Anchor Platform stand-in and a self-hosted anchor stub — not yet wired into the live payout flow | SEP-1/10/12/31 against PeraHub itself, once they respond |
 | Cash-out | Not implemented | Licensed PHP cash-out and provider reference |
 | Collection | Not implemented | Provider-confirmed collection status |
 | Scheduling | No automatic scheduler | Only after legal, operational, and user validation |
@@ -94,7 +94,7 @@ Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor,
 - SEP-7 direct payment URI.
 - Best-effort Horizon SSE watcher for payments to the recipient account.
 - Transaction hashes linked to the configured network explorer.
-- SEP-1/10/12/31 client (`src/server/stellar/anchor/`), verified end-to-end on Stellar testnet against a local Anchor Platform stand-in — real challenge-signed SEP-10 auth, real SEP-12 customer registration, a real SEP-31 transaction with a live `pending_sender` status and Stellar payment account/memo. See `anchor-platform/README.md`. Not wired into the live payout flow, and not connected to PeraHub (they have no testnet endpoint yet).
+- SEP-1/10/12/31 client (`src/server/stellar/anchor/`), verified end-to-end on Stellar testnet against a local Anchor Platform stand-in and against this app's own self-hosted anchor stub (`src/server/service/anchor-server.service.ts`) — real challenge-signed SEP-10 auth, real SEP-12 customer registration, a real SEP-31 transaction with a live `pending_sender` status and Stellar payment account/memo. See `anchor-platform/README.md` and `tests/integration/anchor-selfhost.test.ts`. Not wired into the live payout flow, and not connected to PeraHub (they have no testnet endpoint yet).
 
 ## Not implemented
 
@@ -131,8 +131,12 @@ Stellar anchors connect on-chain assets with off-chain rails. SEP-31 is an ancho
 
 `src/server/stellar/anchor/` is a SEP-1/10/12/31 client, tested against a
 local Stellar Anchor Platform instance since PeraHub has no testnet endpoint
-yet. Swapping `ANCHOR_HOME_DOMAIN` to PeraHub's domain once they respond
-needs no code changes.
+yet (the public `testanchor.stellar.org` reference anchor was also tried —
+its `/sep31/info` currently returns an empty `receive` map, so `POST
+/transactions` rejects every asset with `"has no fields definition"`; that's
+a gap on Stellar's own public instance, not this client). Swapping
+`ANCHOR_HOME_DOMAIN` to PeraHub's domain once they respond needs no code
+changes.
 
 ```bash
 cd anchor-platform && docker compose up -d
@@ -142,6 +146,15 @@ cd .. && ANCHOR_HOME_DOMAIN=localhost:8180 pnpm test:anchor
 See `anchor-platform/README.md` for what's running, the generated testnet
 keypairs, and a note on the anchor's async `pending_receiver` → `pending_sender`
 transition.
+
+Since neither of those needs to be reachable from a Vercel deploy,
+`src/server/service/anchor-server.service.ts` is a small **self-hosted**
+SEP-1/10/12/31 anchor stub served by this same app (`/.well-known/stellar.toml`
++ `/api/anchor/*`) — Bakti acting as its own receiving anchor for demo
+purposes, so the testnet Vercel deploy can run the full round trip live with
+no external host. `tests/integration/anchor-selfhost.test.ts` proves the
+client and this stub complete SEP-1 → SEP-10 → SEP-12 → SEP-31 against each
+other; see `.env.example` for `ANCHOR_STUB_SERVER_SIGNING_SEED`.
 
 ## Architecture
 

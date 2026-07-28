@@ -145,7 +145,7 @@
 <main id="deck" aria-label="Bakti pitch deck">
 
   <section class="slide active" data-slide="1" aria-labelledby="s1-title">
-    <span class="slide-num">1 / 11</span>
+    <span class="slide-num">1 / 10</span>
     <p class="kicker">Stellar APAC Hackathon 2026 · Product pitch</p>
     <h1 id="s1-title">Bakti</h1>
     <p class="lede" style="font-size:30px;color:var(--ink);font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;">Plan salary-day support. Verify the transfer.</p>
@@ -155,7 +155,7 @@
   </section>
 
   <section class="slide" data-slide="2" aria-labelledby="s2-title">
-    <span class="slide-num">2 / 11</span>
+    <span class="slide-num">2 / 10</span>
     <p class="kicker">What we heard</p>
     <h2 id="s2-title">A friend's problem, then 200 more</h2>
     <p style="font-size:16px;margin:0 0 4px;"><span class="tag">THE COMPLAINT</span> A friend back home: sending money is a hassle, parents don't know how to receive it, conversion fees eat into every transfer.</p>
@@ -178,7 +178,7 @@
   </section>
 
   <section class="slide" data-slide="3" aria-labelledby="s3-title">
-    <span class="slide-num">3 / 11</span>
+    <span class="slide-num">3 / 10</span>
     <p class="kicker">In plain terms</p>
     <h2 id="s3-title">What Bakti does</h2>
     <div class="stat-grid" style="margin-top:8px;">
@@ -190,17 +190,17 @@
   </section>
 
   <section class="slide" data-slide="4" aria-labelledby="s4-title">
-    <span class="slide-num">4 / 11</span>
+    <span class="slide-num">4 / 10</span>
     <p class="kicker">Product today vs next</p>
     <h2 id="s4-title">Plan, sign, and verify on-chain today</h2>
     <div class="grid-2">
-      <div class="card current"><span class="tag">TODAY · WORKING</span><ul class="clean"><li>Freighter + custom signed manageData session, not SEP-10</li><li>Support-plan records; reminder day is metadata only</li><li>XLM escrow/release with 60-ledger demo cadence</li><li>Direct XLM/USDC to a recipient address the sender enters and confirms</li><li>Horizon/RPC verification, SEP-7 link, recipient watcher</li><li>Status ends at <strong>Verified on-chain</strong></li></ul></div>
-      <div class="card future"><span class="tag">NEXT · PLANNED</span><ul class="clean"><li>Licensed provider onboarding, KYB/compliance, agreements</li><li>SEP-1 + provider SEP-10 + hosted SEP-24</li><li>KYC, quote/limits, approved deposit routing</li><li>Provider transaction status and reference</li><li>PHP cash-out and provider-confirmed collection</li></ul></div>
+      <div class="card current"><span class="tag">TODAY · WORKING</span><ul class="clean"><li>SEP-1/10/12/31 anchor flow integrated on Stellar testnet, tested end-to-end against a self-run reference anchor and Bakti's own anchor stub</li><li>Freighter + custom signed manageData session, not SEP-10</li><li>XLM escrow holds funds; sender signs release to the recipient wallet, on mainnet</li><li>Direct XLM/USDC payments, Horizon/RPC verification, SEP-7 link, recipient watcher</li><li>Status ends at <strong>Verified on-chain</strong></li></ul></div>
+      <div class="card future"><span class="tag">NEXT · PLANNED</span><ul class="clean"><li>Connect SEP-31 to a live receiving anchor (PeraHub) once onboarded</li><li>Support from anchors and the Stellar Foundation</li><li>Expand to other sending markets</li><li>PHP cash-out and provider-confirmed collection</li></ul></div>
     </div>
   </section>
 
   <section class="slide" data-slide="5" aria-labelledby="s5-title">
-    <span class="slide-num">5 / 11</span>
+    <span class="slide-num">5 / 10</span>
     <p class="kicker">One simple flow</p>
     <h2 id="s5-title">Sender → Stellar → Anchor → Receiver</h2>
     <div class="flow-wrap">
@@ -209,23 +209,23 @@
         <div class="node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div><div class="arrow" aria-hidden="true">→</div>
         <div class="node"><strong>Receiver</strong><span>Family member, cash in hand, no wallet needed</span></div>
       </div>
-      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (PeraHub, SEP-31 confirmed on the Stellar directory, outreach not started) → PeraHub's 3,000+ Philippines branches → cash in hand</strong></div>
+      <div class="planned-flow"><span class="tag">PLANNED</span><strong>Anchor (PeraHub, SEP-31 confirmed on the Stellar directory) → PeraHub's 3,000+ Philippines branches → cash in hand</strong></div>
     </div>
   </section>
 
   <section class="slide" data-slide="6" aria-labelledby="s6-title">
-    <span class="slide-num">6 / 11</span>
+    <span class="slide-num">6 / 10</span>
     <p class="kicker">Why one anchor, and who it is</p>
     <h2 id="s6-title">One Philippines anchor serves every sending market</h2>
     <div class="grid-2">
       <div style="display:flex;align-items:center;justify-content:center;"><img src="assets/ofw-markets.png" style="max-width:100%;"></div>
-      <div class="card current"><span class="tag">CONFIRMED ANCHOR: PERAHUB</span><ul class="clean"><li>Only the receiving side needs a Stellar anchor; a sender anywhere just needs XLM/USDC in their own wallet</li><li>PeraHub (PETNET Inc., BSP-regulated, UnionBank/UBX PH, 3,000+ branches) is on Stellar's own directory with SEP-31: USDC in, PHP or USD out, cash payout</li><li>SEP-31 needs no recipient wallet, a closer fit than a hosted webview</li><li>Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); now reaching out to PeraHub directly for SEP-31 integration support</li></ul></div>
+      <div class="card current"><span class="tag">CONFIRMED ANCHOR: PERAHUB</span><ul class="clean"><li>Only the receiving side needs a Stellar anchor; a sender anywhere just needs XLM/USDC in their own wallet</li><li>PeraHub (PETNET Inc., BSP-regulated, UnionBank/UBX PH, 3,000+ branches) is on Stellar's own directory with SEP-31: USDC in, PHP or USD out, cash payout</li><li>SEP-31 needs no recipient wallet, a closer fit than a hosted webview</li></ul></div>
     </div>
     <div class="source">Sources: DMW/OFW deployment reporting via businessmirror.com.ph · anchors.stellar.org (PeraHub, SEP-31) · perahub.com.ph (BSP regulation) · developer.moneygram.com/integrate-moneygram-ramps</div>
   </section>
 
   <section class="slide" data-slide="7" aria-labelledby="s7-title">
-    <span class="slide-num">7 / 11</span>
+    <span class="slide-num">7 / 10</span>
     <p class="kicker">Against the alternatives</p>
     <h2 id="s7-title">A one-off transfer versus a standing habit with proof attached</h2>
     <img src="assets/fee-comparison.png" style="max-width:460px;align-self:center;margin-top:4px;">
@@ -234,7 +234,7 @@
   </section>
 
   <section class="slide" data-slide="8" aria-labelledby="s8-title">
-    <span class="slide-num">8 / 11</span>
+    <span class="slide-num">8 / 10</span>
     <p class="kicker">Market size</p>
     <h2 id="s8-title">The same demand, counted in dollars</h2>
     <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin:10px 0;">
@@ -251,7 +251,7 @@
   </section>
 
   <section class="slide" data-slide="9" aria-labelledby="s9-title">
-    <span class="slide-num">9 / 11</span>
+    <span class="slide-num">9 / 10</span>
     <p class="kicker">Model and go-to-market</p>
     <h2 id="s9-title">Revenue plan and a sequenced launch</h2>
     <div class="grid-2">
@@ -262,20 +262,9 @@
   </section>
 
   <section class="slide" data-slide="10" aria-labelledby="s10-title">
-    <span class="slide-num">10 / 11</span>
-    <p class="kicker">Where we are</p>
-    <h2 id="s10-title">Phase 1 done, Phase 2 underway</h2>
-    <div class="grid-2">
-      <div class="card current"><span class="tag">PHASE 1, BUILT AND TESTED</span><ul class="clean"><li>Mainnet contract live</li><li>Direct payment plus on-chain verification</li><li>App never shows a cash-out status it can't prove</li></ul></div>
-      <div class="card future"><span class="tag">PHASE 2, IN PROGRESS NOW</span><ul class="clean"><li>Running the product, finding real users</li><li>Testnet SEP-31 verified: real SEP-10 auth, KYC, and payment intent against Stellar's Anchor Platform</li><li>PeraHub contacted; waiting on a reply</li></ul></div>
-    </div>
-    <div class="source">Contract live on Stellar mainnet since 2026-07-12: stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</div>
-  </section>
-
-  <section class="slide" data-slide="11" aria-labelledby="s11-title">
-    <span class="slide-num">11 / 11</span>
+    <span class="slide-num">10 / 10</span>
     <p class="kicker">The target value</p>
-    <h2 id="s11-title">No wallet, no app, just cash in hand</h2>
+    <h2 id="s10-title">No wallet, no app, just cash in hand</h2>
     <div class="card" style="margin-top:8px;">
       <p class="lede" style="font-size:19px;">A sender signs once a month. Their family walks into a branch and picks up cash — nothing to install, nothing about blockchain to learn. That part isn't built yet; the anchor connection is what gets us there.</p>
     </div>
@@ -292,7 +281,7 @@
   <button type="button" id="next" aria-label="Next slide">→</button>
 </nav>
 <script>
-  const TOTAL = 11;
+  const TOTAL = 10;
   let current = 1;
   const progress = document.getElementById('progress');
   const slides = Array.from(document.querySelectorAll('.slide'));

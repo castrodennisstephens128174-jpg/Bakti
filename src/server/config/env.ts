@@ -74,6 +74,13 @@ const envSchema = z.object({
   ANCHOR_HOME_DOMAIN: z.string().optional(),
   SECRET_ANCHOR_SIGNING_SEED: z.string().optional(),
 
+  // Self-hosted SEP-1/10/12/31 anchor stub (src/server/service/anchor-server.service.ts),
+  // served by this same app so a testnet Vercel deploy can demo the full SEP-31
+  // round-trip without depending on any externally hosted anchor. Testnet-only;
+  // unset in production. Distinct from SECRET_ANCHOR_SIGNING_SEED above, which is
+  // Bakti's client key when acting as the *sending* anchor.
+  ANCHOR_STUB_SERVER_SIGNING_SEED: z.string().optional(),
+
   // Optional keys excluded from public stats (seed / internal demo wallets).
   STATS_EXCLUDE_KEYS: z.string().optional(),
 

@@ -178,21 +178,19 @@ Filipino workers abroad, family in the Philippines
 <div class="card">
 <span class="badge now">Today · working</span>
 <ul>
+<li>SEP-1/10/12/31 anchor flow integrated on Stellar testnet, tested end-to-end against a self-run reference anchor and Bakti's own anchor stub</li>
 <li>Freighter + custom signed <code>manageData</code> session, not SEP-10</li>
-<li>Support-plan records; reminder day is metadata only</li>
-<li>XLM escrow/release, 60-ledger demo cadence</li>
-<li>Direct XLM/USDC to a recipient address the sender enters and confirms</li>
-<li>Horizon/RPC verification, SEP-7 link, recipient watcher</li>
+<li>XLM escrow holds funds; sender signs release to the recipient wallet, on mainnet</li>
+<li>Direct XLM/USDC payments, Horizon/RPC verification, SEP-7 link, recipient watcher</li>
 <li>Status ends at <strong>Verified on-chain</strong></li>
 </ul>
 </div>
 <div class="card">
 <span class="badge next">Next · planned</span>
 <ul>
-<li>Licensed provider onboarding, KYB/compliance, agreements</li>
-<li>SEP-1 + provider SEP-10 + hosted SEP-24</li>
-<li>KYC, quote/limits, approved deposit routing</li>
-<li>Provider transaction status and reference</li>
+<li>Connect SEP-31 to a live receiving anchor (PeraHub) once onboarded</li>
+<li>Support from anchors and the Stellar Foundation</li>
+<li>Expand to other sending markets</li>
 <li>PHP cash-out and provider-confirmed collection</li>
 </ul>
 </div>
@@ -209,7 +207,7 @@ Filipino workers abroad, family in the Philippines
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Stellar</strong><span>Direct payment or XLM escrow, signed by sender</span></div>
 <span class="flow-arrow">→</span>
-<div class="flow-node target"><strong>Anchor</strong><span>PeraHub, SEP-31 confirmed on the Stellar directory, outreach not started</span></div>
+<div class="flow-node target"><strong>Anchor</strong><span>PeraHub, SEP-31 confirmed on the Stellar directory</span></div>
 <span class="flow-arrow">→</span>
 <div class="flow-node"><strong>Receiver</strong><span>Family member, cash in hand, no wallet needed</span></div>
 </div>
@@ -230,7 +228,6 @@ Solid border marks what's built today; dashed marks what's still ahead. Once the
 <li>Only the receiving side needs a Stellar anchor; a sender anywhere just needs XLM/USDC in their own wallet</li>
 <li>PeraHub (PETNET Inc., BSP-regulated, UnionBank/UBX PH, 3,000+ branches) is on Stellar's own directory with SEP-31: USDC in, PHP or USD out, cash payout</li>
 <li>SEP-31 needs no recipient wallet, a closer fit than a hosted webview</li>
-<li>Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); now reaching out to PeraHub directly for SEP-31 integration support</li>
 </ul>
 </div>
 </div>
@@ -297,32 +294,6 @@ Classic apps and bank transfers happen once: no standing plan, no proof beyond a
 </div>
 
 <p class="source">Source: World Bank Remittance Prices Worldwide, Q3 2025</p>
-
----
-
-## Where we are
-
-# Phase 1 done, Phase 2 underway
-
-<div class="row">
-<div class="card roomy">
-<span class="badge now">Phase 1, built and tested</span>
-<ul>
-<li>Mainnet contract live</li>
-<li>Direct payment plus on-chain verification</li>
-<li>App never shows a cash-out status it can't prove</li>
-</ul>
-</div>
-<div class="card roomy">
-<span class="badge next">Phase 2, in progress now</span>
-<ul>
-<li>Testnet SEP-31 verified: real SEP-10 auth, KYC, and payment intent against Stellar's Anchor Platform</li>
-<li>PeraHub contacted; waiting on a reply</li>
-</ul>
-</div>
-</div>
-
-<p class="source">Contract live on Stellar mainnet since 2026-07-12: stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR</p>
 
 ---
 

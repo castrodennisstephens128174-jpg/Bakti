@@ -1,5 +1,5 @@
 # Bakti Pitch Deck
-# Exactly 11 slides · Stellar APAC Hackathon 2026
+# Exactly 10 slides · Stellar APAC Hackathon 2026
 
 # TITLE
 Bakti
@@ -30,22 +30,21 @@ Money moves on Stellar in between. That's the whole idea.
 # PRODUCT
 Product today vs next
 TODAY, WORKING
+SEP-1/10/12/31 anchor flow integrated on Stellar testnet, tested end-to-end against a self-run reference anchor and Bakti's own anchor stub
 Freighter connection + custom signed manageData session (not SEP-10)
-Support-plan records; reminder day is metadata only
-XLM Soroban escrow/release with 60-ledger demo cadence
-Direct XLM/USDC payment to a recipient address the sender enters and confirms
-Horizon/RPC verification, SEP-7 direct pay link, recipient watcher
+XLM escrow holds funds; sender signs release to the recipient wallet, on mainnet
+Direct XLM/USDC payments, Horizon/RPC verification, SEP-7 direct pay link, recipient watcher
 Status ends at Verified on-chain
 NEXT, PLANNED
-Licensed anchor/provider onboarding and agreements
-SEP-1 + provider SEP-10 + hosted SEP-24
-KYC, quote/limits, approved deposit routing, provider status
-PHP cash-out, provider reference, provider-confirmed collection
+Connect SEP-31 to a live receiving anchor (PeraHub) once onboarded
+Support from anchors and the Stellar Foundation
+Expand to other sending markets
+PHP cash-out and provider-confirmed collection
 
 # FLOW
 One flow: solid is current, dashed is planned
 Sender → Stellar transfer or XLM escrow → recipient Stellar wallet
-Planned continuation: Anchor (PeraHub, SEP-31 confirmed on the Stellar directory, outreach not started) → PeraHub's 3,000+ Philippines branches → cash in hand, no wallet needed
+Planned continuation: Anchor (PeraHub, SEP-31 confirmed on the Stellar directory) → PeraHub's 3,000+ Philippines branches → cash in hand, no wallet needed
 
 # WHY AND WHO
 One Philippines anchor serves every sending market
@@ -56,7 +55,6 @@ Only the receiving side needs a Stellar anchor; a sender anywhere just needs XLM
 CONFIRMED ANCHOR: PERAHUB
 PeraHub (PETNET Inc., BSP-regulated, UnionBank/UBX PH, 3,000+ branches) is on Stellar's own directory with SEP-31: USDC in, PHP or USD out, cash payout.
 SEP-31 needs no recipient wallet, a closer fit than a hosted webview.
-Bakti emailed MoneyGram Ramps earlier (SEP-24, no reply); now reaching out to PeraHub directly for SEP-31 integration support.
 Sources: DMW/OFW deployment reporting via businessmirror.com.ph; anchors.stellar.org (PeraHub, SEP-31); perahub.com.ph (BSP regulation); developer.moneygram.com/integrate-moneygram-ramps
 
 # USP
@@ -87,18 +85,6 @@ Land the PeraHub anchor connection first
 Seed users through OFW community groups
 Expand market by market as crypto access grows
 Source: World Bank Remittance Prices Worldwide, Q3 2025
-
-# STATUS
-Phase 1 done, Phase 2 underway
-PHASE 1, BUILT AND TESTED
-Mainnet contract live
-Direct payment plus on-chain verification
-App never shows a cash-out status it can't prove
-PHASE 2, IN PROGRESS NOW
-Running the product, finding real users
-Testnet SEP-31 verified: real SEP-10 auth, KYC, and payment intent against Stellar's Anchor Platform
-PeraHub contacted; waiting on a reply
-Contract live on Stellar mainnet since 2026-07-12: stellar.expert/explorer/public/contract/CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR
 
 # VALUE
 No wallet, no app, just cash in hand
