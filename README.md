@@ -156,6 +156,11 @@ no external host. `tests/integration/anchor-selfhost.test.ts` proves the
 client and this stub complete SEP-1 → SEP-10 → SEP-12 → SEP-31 against each
 other; see `.env.example` for `ANCHOR_STUB_SERVER_SIGNING_SEED`.
 
+```bash
+# with ANCHOR_STUB_SERVER_SIGNING_SEED set and pnpm dev already running:
+SELFHOST_ANCHOR_HOME_DOMAIN=localhost:3005 pnpm test:anchor tests/integration/anchor-selfhost.test.ts
+```
+
 ## Architecture
 
 ```text
@@ -175,8 +180,15 @@ Stellar mainnet
   ├─ classic payments to recipient address
   └─ Bakti XLM escrow contract
 
+SEP-1/10/12/31 anchor client (testnet dev, not wired into the payout flow)
+  ├─ local Anchor Platform stand-in, or
+  └─ this app's own self-hosted anchor stub (below)
+
+Self-hosted anchor stub (testnet dev): app/.well-known/stellar.toml, app/api/anchor/*
+  └─ Bakti acting as its own receiving anchor for a live Vercel demo
+
 Future provider adapter (not implemented)
-  └─ SEP-1 + SEP-10 + SEP-31 + KYC + status + PHP cash-out
+  └─ SEP-1 + SEP-10 + SEP-31 + KYC + status + PHP cash-out, against PeraHub
 ```
 
 Key files:
@@ -186,6 +198,8 @@ Key files:
 - `src/server/service/auth.service.ts`: custom `manageData` challenge/session.
 - `src/server/stellar/contract.ts`: Soroban transaction assembly and submission.
 - `src/server/stellar/horizon.ts`: classic payment verification.
+- `src/server/stellar/anchor/index.ts`: SEP-1/10/12/31 client (`sendViaAnchor`).
+- `src/server/service/anchor-server.service.ts`: self-hosted SEP-1/10/12/31 anchor stub.
 - `app/allowances/[id]/page.tsx`: direct pay tools, watcher, and planned last-mile panel.
 - `contracts/bakti-escrow/src/lib.rs`: XLM escrow contract.
 
