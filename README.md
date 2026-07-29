@@ -6,7 +6,7 @@ Bakti is a Stellar mainnet product for **Filipino workers abroad planning salary
 
 **Network:** Stellar mainnet by default — the escrow contract is confirmed live on-chain (see [Verified mainnet deployment](#verified-mainnet-deployment)). Testnet is opt-in for free local development only.
 
-**Pitch deck:** [`slides/marp/deck.pdf`](slides/marp/deck.pdf) · [visual HTML deck](slides/index.html)
+**Pitch deck:** [`slides/marp/deck.pdf`](slides/marp/deck.pdf) · [`slides/marp/deck.pptx`](slides/marp/deck.pptx) · [visual HTML deck](slides/index.html)
 
 **Live apps:** [bakti-stellar.vercel.app](https://bakti-stellar.vercel.app) (mainnet) · [bakti-testnet.vercel.app](https://bakti-testnet.vercel.app) (testnet, self-hosted SEP-31 anchor stub — see [Testnet anchor integration](#testnet-anchor-integration-dev))
 
