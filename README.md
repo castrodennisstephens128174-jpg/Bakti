@@ -8,6 +8,8 @@ Bakti is a Stellar mainnet product for **Filipino workers abroad planning salary
 
 **Pitch deck:** [`slides/marp/deck.pdf`](slides/marp/deck.pdf) · [visual HTML deck](slides/index.html)
 
+**Live apps:** [bakti-stellar.vercel.app](https://bakti-stellar.vercel.app) (mainnet) · [bakti-testnet.vercel.app](https://bakti-testnet.vercel.app) (testnet, self-hosted SEP-31 anchor stub — see [Testnet anchor integration](#testnet-anchor-integration-dev))
+
 ## Problem and target user
 
 The target user is a Filipino worker abroad on a formal contract who wants family support to be deliberate and easy to verify rather than an ad-hoc transfer remembered late in the month. The family member may ultimately prefer cash, but the present prototype stops at the recipient's Stellar wallet.
@@ -156,9 +158,17 @@ no external host. `tests/integration/anchor-selfhost.test.ts` proves the
 client and this stub complete SEP-1 → SEP-10 → SEP-12 → SEP-31 against each
 other; see `.env.example` for `ANCHOR_STUB_SERVER_SIGNING_SEED`.
 
+This is deployed and verified live at
+[bakti-testnet.vercel.app](https://bakti-testnet.vercel.app) — its own
+`ANCHOR_STUB_SERVER_SIGNING_SEED`, `SESSION_SECRET`, and `DRIZZLE_DATABASE_URL`
+are separate from the mainnet deploy's.
+
 ```bash
-# with ANCHOR_STUB_SERVER_SIGNING_SEED set and pnpm dev already running:
+# against a local pnpm dev:
 SELFHOST_ANCHOR_HOME_DOMAIN=localhost:3005 pnpm test:anchor tests/integration/anchor-selfhost.test.ts
+
+# against the live testnet deploy:
+SELFHOST_ANCHOR_HOME_DOMAIN=bakti-testnet.vercel.app pnpm test:anchor tests/integration/anchor-selfhost.test.ts
 ```
 
 ## Architecture
