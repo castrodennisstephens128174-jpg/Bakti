@@ -6,7 +6,7 @@ The deck that matters for submission/pitch is the **Google Drive file**, not jus
 
 - URL: https://docs.google.com/presentation/d/13DUG2OGNvDcSU8HmOKMINn3MitXbTLJp/edit
 - Drive file ID: `13DUG2OGNvDcSU8HmOKMINn3MitXbTLJp`
-- File name on Drive: `046-bakti-pitch.pptx`
+- File name on Drive: `bakti-pitch.pptx`
 - It is a raw `.pptx` upload, **not** a native Google Slides doc — the Slides API
   (`presentations.get`) rejects it ("document must not be an Office file"). Edit it via
   the **Drive API**, overwriting file content in place (same file ID → same URL).
