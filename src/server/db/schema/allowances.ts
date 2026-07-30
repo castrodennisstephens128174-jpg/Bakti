@@ -30,7 +30,10 @@ export const allowances = pgTable(
     escrowTxHash: text('escrow_tx_hash'),
     status: allowanceStatusEnum('status').notNull().default('active'),
     note: text('note'),
-    network: text('network').notNull().default('testnet'),
+    // SEP-12 KYC payload for SEP-31 corridors: {senderFirstName, senderLastName,
+    // receiverFirstName, receiverLastName, senderCustomerId?, receiverCustomerId?}
+    kycJson: text('kyc_json'),
+    network: text('network').notNull().default('public'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => ({ ownerIdx: index('allowances_owner_idx').on(t.publicKey) }),

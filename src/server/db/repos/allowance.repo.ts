@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, isNotNull, lte } from 'drizzle-orm';
 import { db } from '@/server/db/client';
 import {
   type Allowance,
@@ -13,11 +13,12 @@ export const allowanceRepo = {
     return created;
   },
 
-  async listByOwner(publicKey: string): Promise<Allowance[]> {
+  async listByOwner(publicKey: string, network?: string): Promise<Allowance[]> {
+    const owner = eq(allowances.publicKey, publicKey);
     return db
       .select()
       .from(allowances)
-      .where(eq(allowances.publicKey, publicKey))
+      .where(network ? and(owner, eq(allowances.network, network)) : owner)
       .orderBy(desc(allowances.createdAt));
   },
 
@@ -27,6 +28,32 @@ export const allowanceRepo = {
       .from(allowances)
       .where(and(eq(allowances.id, id), eq(allowances.publicKey, publicKey)))
       .limit(1);
+    return row;
+  },
+
+  /** Escrow-backed SEP-31 allowances whose payout day has arrived. */
+  async findDueSep31(network: string, dayOfMonth: number): Promise<Allowance[]> {
+    return db
+      .select()
+      .from(allowances)
+      .where(
+        and(
+          eq(allowances.corridor, 'sep31'),
+          eq(allowances.status, 'active'),
+          eq(allowances.network, network),
+          isNotNull(allowances.scheduleId),
+          lte(allowances.dayOfMonth, dayOfMonth),
+        ),
+      )
+      .orderBy(desc(allowances.createdAt));
+  },
+
+  async setKyc(id: string, kycJson: string): Promise<Allowance> {
+    const [row] = await db
+      .update(allowances)
+      .set({ kycJson })
+      .where(eq(allowances.id, id))
+      .returning();
     return row;
   },
 

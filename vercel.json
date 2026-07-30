@@ -4,5 +4,9 @@
       "DRIZZLE_DATABASE_URL": "postgres://placeholder:placeholder@localhost:5432/placeholder",
       "SESSION_SECRET": "bakti-build-time-placeholder-session-secret-32chars-min"
     }
-  }
+  },
+  "crons": [
+    { "path": "/api/cron/keeper", "schedule": "0 2 * * *" },
+    { "path": "/api/cron/reconcile", "schedule": "30 3 * * *" }
+  ]
 }

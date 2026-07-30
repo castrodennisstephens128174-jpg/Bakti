@@ -122,6 +122,9 @@
                 },
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                },
+                {
+                  "string": "sep31-memo-741b1f"
                 }
               ]
             }
@@ -144,6 +147,9 @@
                 },
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                },
+                {
+                  "string": "sep31-memo-741b1f"
                 }
               ]
             }
@@ -157,7 +163,7 @@
   ],
   "ledger": {
     "protocol_version": 22,
-    "sequence_number": 1060,
+    "sequence_number": 1002,
     "timestamp": 0,
     "network_id": "0000000000000000000000000000000000000000000000000000000000000000",
     "base_reserve": 0,
@@ -289,7 +295,7 @@
             },
             "ext": "v0"
           },
-          6313059
+          6313001
         ]
       ],
       [
@@ -419,7 +425,7 @@
                         "symbol": "next_due_ledger"
                       },
                       "val": {
-                        "u32": 1120
+                        "u32": 1004
                       }
                     },
                     {

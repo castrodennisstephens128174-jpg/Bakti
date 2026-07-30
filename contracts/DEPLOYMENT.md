@@ -10,6 +10,21 @@ The contract ID previously flagged in this document as "unverified" — `CBVAZDK
 
 **No fresh mainnet release transaction exists yet.** A team member still needs to sign one real `create_schedule` + `release` call with Freighter to produce a citable mainnet transaction hash. Do not cite any transaction hash as mainnet proof until it resolves at `https://horizon.stellar.org/transactions/<hash>`.
 
+## Contract v2 — built, not deployed anywhere yet
+
+`contracts/bakti-escrow/src/lib.rs` now builds a **different ABI** than either
+contract address below: `release` takes a required `memo` argument (the
+SEP-31 settlement reference, emitted in the `released` event for anchor
+reconciliation), and a new `set_recipient` entrypoint lets the schedule's
+sender re-point future releases. Neither the mainnet contract
+(`CBVAZDK2...`) nor the testnet contract (`CATFEIDC4...`) documented below
+runs this ABI — both still only accept the old 2-arg `release(schedule_id,
+caller)`. The keeper (`src/server/service/keeper.service.ts`) and
+`bakti-anchor/` integration are written against v2 and are **not runnable
+against either currently-deployed contract** until a v2 build is deployed
+and initialized on that network. Do not deploy v2 to mainnet without an
+explicit, separate go — it changes fund-release semantics.
+
 ## Verified mainnet configuration
 
 - Network: Stellar mainnet (`public`)
@@ -54,26 +69,27 @@ The contract ID previously flagged in this document as "unverified" — `CBVAZDK
 
 The Freighter-signed transaction contains an `invoke_host_function` operation and testnet asset balance changes showing the contract paying the recorded recipient. It proves an XLM contract release on testnet. It does not prove mainnet operation, provider settlement, cash pickup, or collection.
 
-## Contract behavior
+## Contract behavior (v2 source — not yet deployed; see callout above)
 
 | Method | Authorization | Effect |
 |---|---|---|
 | `initialize(admin, token)` | admin | One-time configuration of admin and escrow SAC token |
 | `create_schedule(sender, recipient, monthly_amount, months, first_due_ledger) -> u64` | sender | Transfers `monthly_amount × months` from sender to contract and stores a schedule |
-| `release(schedule_id, caller) -> u32` | caller/keeper | If due, transfers one period from contract to recorded recipient and advances the ledger deadline |
+| `release(schedule_id, caller, memo) -> u32` | caller/keeper | If due, transfers one period from contract to recorded recipient, advances the ledger deadline, and emits `memo` (the SEP-31 settlement reference) in the `released` event |
+| `set_recipient(schedule_id, new_recipient)` | schedule's sender only | Re-points where future releases settle (e.g. onboarding a new anchor) |
 | `schedule_status(schedule_id)` | view | Returns amount, periods, releases, and next due ledger |
 | `get_schedule(schedule_id)` | view | Returns the stored schedule |
 | `get_admin()` / `get_token()` | view | Returns configuration |
 
-`release` is permissionless: any caller may pay the transaction fee and trigger a due release, but funds always go to the recipient stored at schedule creation.
+`release` is permissionless: any caller may pay the transaction fee and trigger a due release, but funds always go to the recipient stored at schedule creation (or re-pointed via `set_recipient` by the sender).
 
 The deployed contract is initialized with the native XLM SAC, so this escrow deployment supports XLM. The app's USDC flow is a separate classic payment to the entered recipient address.
 
 ## Demo cadence
 
-`LEDGERS_PER_PERIOD = 60` is a deliberately short test/demo interval. It is not a calendar month and does not use the app's `dayOfMonth` field. This applies on both testnet and mainnet.
+Both currently-deployed contracts (mainnet and testnet, old ABI) use `LEDGERS_PER_PERIOD = 60` — a deliberately short test/demo interval, not a calendar month, and independent of the app's `dayOfMonth` field. The unreleased v2 source sets it to `2` for a faster live-demo cadence; that value only takes effect once v2 is built and deployed.
 
-The app does not run an automatic keeper or monthly scheduler. The current UI asks the sender to sign each release.
+`src/server/service/keeper.service.ts` is a cron-driven automated keeper, but it targets v2's `release(..., memo)` and is not wired against either currently-deployed (v1) contract — see the callout above. Until a v2 contract is deployed, releases against the live mainnet/testnet contracts still require the sender to sign each one from the UI.
 
 A production cadence would need an explicitly reviewed operational model; merely replacing 60 with an approximate month is not a complete production-readiness decision.
 

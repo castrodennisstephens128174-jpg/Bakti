@@ -27,11 +27,12 @@ use storage::{
 };
 pub use types::Schedule;
 
-use soroban_sdk::{contract, contractimpl, symbol_short, token, Address, Env};
+use soroban_sdk::{contract, contractimpl, symbol_short, token, Address, Env, String};
 
-/// Ledgers between allowance periods. Soroban ledgers close ~every 5s, so 60
-/// ledgers is ~5 minutes — a testnet-demo cadence, not a real 30-day month.
-pub const LEDGERS_PER_PERIOD: u32 = 60;
+/// Ledgers between allowance periods. Soroban ledgers close ~every 5s, so 2
+/// ledgers is ~10 seconds — a live-demo cadence, not a real 30-day month.
+/// A production deploy would set this to ~30 days (518_400 ledgers).
+pub const LEDGERS_PER_PERIOD: u32 = 2;
 
 #[contract]
 pub struct BaktiEscrow;
@@ -86,7 +87,17 @@ impl BaktiEscrow {
         Ok(id)
     }
 
-    pub fn release(env: Env, schedule_id: u64, caller: Address) -> Result<u32, Error> {
+    /// Release one due period to the recorded recipient. Permissionless: the
+    /// caller only pays the fee. `memo` is the settlement reference the
+    /// receiving anchor issued for this period (SEP-31); the contract does not
+    /// interpret it — it is emitted in the `released` event so the anchor (or
+    /// any indexer) can reconcile the on-chain payment with its own order book.
+    pub fn release(
+        env: Env,
+        schedule_id: u64,
+        caller: Address,
+        memo: String,
+    ) -> Result<u32, Error> {
         caller.require_auth();
         let mut schedule = load_schedule(&env, schedule_id)?;
 
@@ -110,9 +121,31 @@ impl BaktiEscrow {
 
         env.events().publish(
             (symbol_short!("released"), schedule_id),
-            (schedule.recipient.clone(), schedule.monthly_amount, schedule.periods_released),
+            (
+                schedule.recipient.clone(),
+                schedule.monthly_amount,
+                schedule.periods_released,
+                memo,
+            ),
         );
         Ok(schedule.periods_released)
+    }
+
+    /// Re-point where future releases settle (e.g. onboarding a new partner
+    /// anchor). Only the schedule's sender — the owner of the escrowed funds —
+    /// may change it; keepers and third parties cannot redirect money.
+    pub fn set_recipient(
+        env: Env,
+        schedule_id: u64,
+        new_recipient: Address,
+    ) -> Result<(), Error> {
+        let mut schedule = load_schedule(&env, schedule_id)?;
+        schedule.sender.require_auth();
+        schedule.recipient = new_recipient.clone();
+        save_schedule(&env, schedule_id, &schedule);
+        env.events()
+            .publish((symbol_short!("rerouted"), schedule_id), new_recipient);
+        Ok(())
     }
 
     pub fn schedule_status(env: Env, schedule_id: u64) -> Result<(i128, u32, u32, u32), Error> {

@@ -26,11 +26,11 @@ export function shortKey(key: string, lead = 4, tail = 4): string {
   return `${key.slice(0, lead)}…${key.slice(-tail)}`;
 }
 
-export function explorerTx(hash: string, network: string): string {
+export function explorerTx(hash: string, network = 'testnet'): string {
   return `https://stellar.expert/explorer/${network}/tx/${hash}`;
 }
 
-export function explorerAccount(addr: string, network: string): string {
+export function explorerAccount(addr: string, network = 'testnet'): string {
   return `https://stellar.expert/explorer/${network}/account/${addr}`;
 }
 
@@ -50,9 +50,9 @@ export function ordinal(n: number): string {
 }
 
 export const PAYOUT_LABEL: Record<PayoutStatus, string> = {
-  scheduled: 'Ready to send',
-  sent: 'Verified on-chain',
-  settled: 'Provider confirmed',
-  collected: 'Collection confirmed',
+  scheduled: 'Due now',
+  sent: 'Sent on-chain',
+  settled: 'Cash ready',
+  collected: 'Collected',
   failed: 'Failed',
 };

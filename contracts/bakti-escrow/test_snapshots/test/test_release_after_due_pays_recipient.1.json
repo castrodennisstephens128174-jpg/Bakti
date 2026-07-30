@@ -122,6 +122,9 @@
                 },
                 {
                   "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                },
+                {
+                  "string": "sep31-memo-741b1f"
                 }
               ]
             }
@@ -365,7 +368,7 @@
                         "symbol": "next_due_ledger"
                       },
                       "val": {
-                        "u32": 1060
+                        "u32": 1002
                       }
                     },
                     {

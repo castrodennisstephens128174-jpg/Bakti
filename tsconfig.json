@@ -18,6 +18,7 @@
     "paths": {
       "@/server/*": ["./src/server/*"],
       "@/ui/*": ["./src/ui/*"],
+      "@/shared/*": ["./src/shared/*"],
       "@/*": ["./*"]
     }
   },

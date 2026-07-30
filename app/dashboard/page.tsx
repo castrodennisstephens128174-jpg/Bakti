@@ -13,7 +13,8 @@ import {
   PayoutStatusBadge,
   SimulationNote,
 } from '@/ui/components/ui';
-import { fmtAmount, ordinal, shortKey } from '@/ui/lib/format';
+import { fmtAmount, fmtAsset, ordinal, shortKey } from '@/ui/lib/format';
+import { getClientNetworkId } from '@/ui/network/client-network';
 import { sign, WalletError } from '@/ui/wallet/stellarClient';
 import { useWallet } from '@/ui/wallet/WalletProvider';
 
@@ -31,7 +32,16 @@ type Allowance = {
   lastPayout: Payout | null;
 };
 
-const RESEARCH_CORRIDOR = 'Malaysia → Philippines · research corridor';
+/** All payouts now go through a SEP-31 partner anchor. */
+const SEP31_CORRIDOR = 'sep31';
+const SEP31_LABEL_TESTNET = 'Partner anchor · SEP-31 (testnet)';
+// No mainnet partner is signed yet — these are display-only samples.
+const MAINNET_SAMPLE_ANCHORS = ['Anchor A (sample — not yet integrated)', 'Anchor B (sample — not yet integrated)'];
+
+/** Human label for a stored corridor value (old rows may hold legacy names). */
+function corridorLabel(corridor: string): string {
+  return corridor === SEP31_CORRIDOR ? 'Partner anchor (SEP-31)' : corridor;
+}
 
 async function api(path: string, method = 'GET', body?: unknown) {
   const res = await fetch(path, {
@@ -57,12 +67,23 @@ export default function DashboardPage() {
     try {
       setAllowances(await api('/api/allowances'));
     } catch (e) {
-      toast.error('Could not load support plans', {
+      toast.error('Could not load allowances', {
         description: e instanceof Error ? e.message : undefined,
       });
     } finally {
       setLoading(false);
     }
+  }, [status]);
+
+  useEffect(() => {
+    if (status !== 'connected') return;
+    const timer = setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
+      void api('/api/allowances')
+        .then((d) => setAllowances(d))
+        .catch(() => {});
+    }, 10_000);
+    return () => clearInterval(timer);
   }, [status]);
 
   useEffect(() => {
@@ -72,9 +93,9 @@ export default function DashboardPage() {
 
   const stats = useMemo(() => {
     const active = allowances.filter((a) => a.status === 'active').length;
-    const recipients = new Set(allowances.map((a) => a.recipientAddress)).size;
-    const records = allowances.reduce((acc, a) => acc + a.payoutCount, 0);
-    return { active, recipients, records };
+    const parents = new Set(allowances.map((a) => a.recipientAddress)).size;
+    const delivered = allowances.reduce((acc, a) => acc + a.payoutCount, 0);
+    return { active, parents, delivered };
   }, [allowances]);
 
   return (
@@ -83,12 +104,9 @@ export default function DashboardPage() {
       <main className="mx-auto max-w-6xl px-5 py-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="font-display text-2xl font-bold text-ink sm:text-3xl">
-              Family support plans
-            </h1>
+            <h1 className="font-display text-2xl font-bold text-ink sm:text-3xl">My allowances</h1>
             <p className="mt-1 text-ink-soft">
-              Malaysia → Philippines · research corridor. The current prototype sends only to the
-              Stellar address you enter.
+              Standing monthly support for the parents who depend on you.
             </p>
           </div>
           {status === 'connected' && (
@@ -99,7 +117,7 @@ export default function DashboardPage() {
               className="btn-primary inline-flex h-11 items-center gap-2 rounded-full px-5 text-base font-semibold"
             >
               <Plus className="h-4 w-4" />
-              New support plan
+              New allowance
             </button>
           )}
         </div>
@@ -113,8 +131,8 @@ export default function DashboardPage() {
               Connect your wallet to begin
             </h2>
             <p className="max-w-md text-ink-soft">
-              Bakti uses a custom signed manageData challenge to create a session. It is not SEP-10.
-              You still approve every escrow action or direct payment in Freighter.
+              Bakti keeps no accounts and no passwords. Connect a Stellar wallet to create a monthly
+              allowance and sign each payout yourself — you always stay in control of the funds.
             </p>
             <button
               type="button"
@@ -133,20 +151,20 @@ export default function DashboardPage() {
               <StatCard
                 testid="stat-active"
                 icon={<HeartHandshake className="h-5 w-5" />}
-                label="Active plans"
+                label="Active allowances"
                 value={String(stats.active)}
               />
               <StatCard
                 testid="stat-parents"
                 icon={<Users className="h-5 w-5" />}
-                label="Recipient addresses"
-                value={String(stats.recipients)}
+                label="Parents supported"
+                value={String(stats.parents)}
               />
               <StatCard
                 testid="stat-delivered"
                 icon={<Wallet className="h-5 w-5" />}
-                label="Payment records"
-                value={String(stats.records)}
+                label="Payouts on record"
+                value={String(stats.delivered)}
               />
             </section>
 
@@ -164,13 +182,13 @@ export default function DashboardPage() {
             <section className="card mt-6 overflow-hidden">
               <div className="flex items-center justify-between border-b border-line px-5 py-4">
                 <h2 className="font-display text-lg font-bold text-ink">
-                  {publicKey ? `Signed in as ${shortKey(publicKey)}` : 'Your support plans'}
+                  {publicKey ? `Signed in as ${shortKey(publicKey)}` : 'Your allowances'}
                 </h2>
                 <span className="text-sm text-ink-soft">{allowances.length} total</span>
               </div>
 
               {loading ? (
-                <p className="px-5 py-10 text-center text-ink-soft">Loading your support plans…</p>
+                <p className="px-5 py-10 text-center text-ink-soft">Loading your allowances…</p>
               ) : allowances.length === 0 ? (
                 <div
                   data-testid="empty-state"
@@ -180,8 +198,9 @@ export default function DashboardPage() {
                     <HeartHandshake className="h-6 w-6" />
                   </span>
                   <p className="max-w-md text-ink-soft">
-                    Add a family member, their Stellar address, an amount, and a reminder date.
-                    Bakti will not send automatically; you decide when to sign the transfer.
+                    You have not set up any allowances yet. Add the parent you support, choose a
+                    monthly amount and a pickup corridor, and Bakti will line up the first payout
+                    for you to sign.
                   </p>
                   <button
                     type="button"
@@ -189,19 +208,19 @@ export default function DashboardPage() {
                     className="btn-primary mt-1 inline-flex h-11 items-center gap-2 rounded-full px-5 text-base font-semibold"
                   >
                     <Plus className="h-4 w-4" />
-                    Create your first plan
+                    Create your first allowance
                   </button>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[760px] text-left" data-testid="allowance-list">
+                  <table className="w-full min-w-[720px] text-left" data-testid="allowance-list">
                     <thead>
                       <tr className="border-b border-line text-xs uppercase tracking-wide text-ink-soft">
-                        <th className="px-5 py-3 font-semibold">Family member</th>
-                        <th className="px-5 py-3 font-semibold">Research corridor</th>
-                        <th className="px-5 py-3 font-semibold">Plan amount</th>
-                        <th className="px-5 py-3 font-semibold">Reminder date</th>
-                        <th className="px-5 py-3 font-semibold">Latest record</th>
+                        <th className="px-5 py-3 font-semibold">Parent</th>
+                        <th className="px-5 py-3 font-semibold">Corridor</th>
+                        <th className="px-5 py-3 font-semibold">Monthly</th>
+                        <th className="px-5 py-3 font-semibold">Payout day</th>
+                        <th className="px-5 py-3 font-semibold">This month</th>
                         <th className="px-5 py-3 font-semibold">Plan</th>
                       </tr>
                     </thead>
@@ -217,11 +236,13 @@ export default function DashboardPage() {
                             <Link href={`/allowances/${a.id}`} className="block">
                               <span className="font-semibold text-ink">{a.recipientName}</span>
                               <span className="mt-0.5 block font-mono text-xs text-ink-soft">
-                                {shortKey(a.recipientAddress, 6, 6)}
+                                {a.recipientAddress
+                                  ? shortKey(a.recipientAddress, 6, 6)
+                                  : 'cash pickup — no wallet'}
                               </span>
                             </Link>
                           </td>
-                          <td className="px-5 py-4 text-sm text-ink-soft">{a.corridor}</td>
+                          <td className="px-5 py-4 text-sm text-ink-soft">{corridorLabel(a.corridor)}</td>
                           <td className="px-5 py-4">
                             <span className="font-semibold tabular-nums text-ink">
                               {fmtAmount(a.monthlyAmount)}
@@ -229,7 +250,7 @@ export default function DashboardPage() {
                             <AssetBadge asset={a.asset} />
                           </td>
                           <td className="px-5 py-4 text-sm text-ink-soft">
-                            {ordinal(a.dayOfMonth)} · planning only
+                            {ordinal(a.dayOfMonth)}
                           </td>
                           <td className="px-5 py-4">
                             {a.lastPayout ? (
@@ -293,6 +314,19 @@ function CreateForm({
 }) {
   const [recipientName, setRecipientName] = useState('');
   const [recipientAddress, setRecipientAddress] = useState('');
+  const [corridor, setCorridor] = useState(SEP31_CORRIDOR);
+  const [kyc, setKyc] = useState({
+    senderFirstName: '',
+    senderLastName: '',
+    senderIdType: 'national_id',
+    senderIdNumber: '',
+    receiverFirstName: '',
+    receiverLastName: '',
+    receiverIdType: 'national_id',
+    receiverIdNumber: '',
+  });
+  const [isTestnet] = useState(() => getClientNetworkId() === 'testnet');
+  const isSep31 = corridor === SEP31_CORRIDOR;
   const [asset, setAsset] = useState<'XLM' | 'USDC'>('XLM');
   const [monthlyAmount, setMonthlyAmount] = useState('');
   const [dayOfMonth, setDayOfMonth] = useState('1');
@@ -305,28 +339,44 @@ function CreateForm({
     try {
       const base = {
         recipientName,
-        recipientAddress,
-        corridor: RESEARCH_CORRIDOR,
+        // SEP-31: the parent collects cash from the anchor — no wallet needed.
+        recipientAddress: isSep31 ? '' : recipientAddress,
+        corridor,
         asset,
         monthlyAmount,
         dayOfMonth,
         months,
+        ...(isSep31 ? { kyc } : {}),
       };
-      if (asset === 'XLM') {
-        if (!publicKey) throw new Error('Connect your wallet to pre-fund the XLM escrow.');
+      if (isSep31) {
+        if (!isTestnet) {
+          throw new Error('No partner anchor is live on mainnet yet — switch to Testnet to try SEP-31.');
+        }
+        if (asset === 'XLM') {
+          // Escrow the whole run into the contract; the keeper then pays the
+          // anchor automatically each period. KYC is registered (and approved)
+          // by the anchor BEFORE the signature locks any money.
+          if (!publicKey) throw new Error('Connect your wallet to pre-fund the on-chain schedule.');
+          const intent = await api('/api/allowances/escrow-intent', 'POST', base);
+          const signedXdr = await sign(intent.xdr, publicKey);
+          await api('/api/allowances', 'POST', { ...base, kyc: intent.kyc ?? kyc, signedXdr });
+        } else {
+          // USDC has no escrow contract — stays on the manual monthly path.
+          await api('/api/allowances', 'POST', base);
+        }
+      } else if (asset === 'XLM') {
+        if (!publicKey) throw new Error('Connect your wallet to pre-fund the on-chain schedule.');
         const intent = await api('/api/allowances/escrow-intent', 'POST', base);
         const signedXdr = await sign(intent.xdr, publicKey);
         await api('/api/allowances', 'POST', { ...base, signedXdr });
       } else {
         await api('/api/allowances', 'POST', base);
       }
-      toast.success('Support plan created', {
-        description: `${recipientName} is set up. No transfer has been scheduled automatically.`,
-      });
+      toast.success('Allowance created', { description: `${recipientName} is set up.` });
       onCreated();
     } catch (err) {
       const msg = err instanceof WalletError || err instanceof Error ? err.message : undefined;
-      toast.error('Could not create support plan', { description: msg });
+      toast.error('Could not create allowance', { description: msg });
     } finally {
       setSaving(false);
     }
@@ -335,7 +385,7 @@ function CreateForm({
   return (
     <section className="card mt-6 p-6" data-testid="create-allowance-form">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-lg font-bold text-ink">Set up a family support plan</h2>
+        <h2 className="font-display text-lg font-bold text-ink">Set up a monthly allowance</h2>
         <button
           type="button"
           aria-label="Close form"
@@ -348,41 +398,125 @@ function CreateForm({
 
       <form onSubmit={submit} className="mt-5 grid gap-4 sm:grid-cols-2">
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">Family member's name</span>
+          <span className="mb-1.5 block text-sm font-medium text-ink">Parent's name</span>
           <input
             data-testid="recipient-name"
             className="field"
             value={recipientName}
             onChange={(e) => setRecipientName(e.target.value)}
-            placeholder="e.g. Nanay Rosa"
+            placeholder="e.g. Bapak Bambang"
             required
           />
         </label>
 
-        <div className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">Research corridor</span>
-          <div className="field bg-paper-deep/30 text-sm">{RESEARCH_CORRIDOR}</div>
-          <p className="mt-1.5 text-xs text-ink-soft">
-            This label is research context only. No provider route is connected.
-          </p>
-        </div>
-
-        <label className="block sm:col-span-2">
-          <span className="mb-1.5 block text-sm font-medium text-ink">
-            Recipient Stellar address
-          </span>
-          <input
-            data-testid="recipient-address"
-            className="field font-mono text-sm"
-            value={recipientAddress}
-            onChange={(e) => setRecipientAddress(e.target.value)}
-            placeholder="G…"
-            required
-          />
-          <p className="mt-1.5 text-xs text-ink-soft">
-            Current transfers go directly to this address. It must be a valid Stellar account.
-          </p>
+        <label className="block">
+          <span className="mb-1.5 block text-sm font-medium text-ink">Pickup corridor</span>
+          <select
+            data-testid="corridor"
+            className="field"
+            value={corridor}
+            onChange={(e) => setCorridor(e.target.value)}
+          >
+            {isTestnet ? (
+              <option value={SEP31_CORRIDOR}>{SEP31_LABEL_TESTNET}</option>
+            ) : (
+              MAINNET_SAMPLE_ANCHORS.map((label) => (
+                <option key={label} value={SEP31_CORRIDOR} disabled>
+                  {label}
+                </option>
+              ))
+            )}
+          </select>
+          {!isTestnet && (
+            <p className="mt-1.5 text-xs text-ink-soft">
+              No partner anchor is live on mainnet yet — switch to Testnet in the header to
+              rehearse the SEP-31 flow.
+            </p>
+          )}
         </label>
+
+        {isSep31 && (
+          <div className="sm:col-span-2 grid gap-4 rounded-xl border border-amber-200 bg-amber-50/60 p-4 sm:grid-cols-2">
+            <p className="sm:col-span-2 text-xs text-amber-800">
+              The partner anchor requires KYC (SEP-12) for both sides: full name and a government
+              ID. The parent shows this exact ID at the cash-pickup counter.
+            </p>
+
+            <p className="sm:col-span-2 -mb-2 text-xs font-bold uppercase tracking-wide text-ink-soft">
+              You (sender)
+            </p>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">First name</span>
+              <input data-testid="kyc-sender-first" className="field" value={kyc.senderFirstName}
+                onChange={(e) => setKyc({ ...kyc, senderFirstName: e.target.value })} required />
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">Last name</span>
+              <input data-testid="kyc-sender-last" className="field" value={kyc.senderLastName}
+                onChange={(e) => setKyc({ ...kyc, senderLastName: e.target.value })} required />
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">ID type</span>
+              <select data-testid="kyc-sender-id-type" className="field" value={kyc.senderIdType}
+                onChange={(e) => setKyc({ ...kyc, senderIdType: e.target.value })}>
+                <option value="national_id">National ID card</option>
+                <option value="passport">Passport</option>
+                <option value="drivers_license">Driver's license</option>
+              </select>
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">ID number</span>
+              <input data-testid="kyc-sender-id-number" className="field font-mono text-sm"
+                value={kyc.senderIdNumber} placeholder="e.g. 079123456789"
+                onChange={(e) => setKyc({ ...kyc, senderIdNumber: e.target.value })} required />
+            </label>
+
+            <p className="sm:col-span-2 -mb-2 text-xs font-bold uppercase tracking-wide text-ink-soft">
+              Parent (receiver)
+            </p>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">First name</span>
+              <input data-testid="kyc-receiver-first" className="field" value={kyc.receiverFirstName}
+                onChange={(e) => setKyc({ ...kyc, receiverFirstName: e.target.value })} required />
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">Last name</span>
+              <input data-testid="kyc-receiver-last" className="field" value={kyc.receiverLastName}
+                onChange={(e) => setKyc({ ...kyc, receiverLastName: e.target.value })} required />
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">ID type</span>
+              <select data-testid="kyc-receiver-id-type" className="field" value={kyc.receiverIdType}
+                onChange={(e) => setKyc({ ...kyc, receiverIdType: e.target.value })}>
+                <option value="national_id">National ID card</option>
+                <option value="passport">Passport</option>
+                <option value="drivers_license">Driver's license</option>
+              </select>
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium text-ink">ID number</span>
+              <input data-testid="kyc-receiver-id-number" className="field font-mono text-sm"
+                value={kyc.receiverIdNumber} placeholder="ID shown at pickup"
+                onChange={(e) => setKyc({ ...kyc, receiverIdNumber: e.target.value })} required />
+            </label>
+          </div>
+        )}
+
+        {!isSep31 && (
+          <label className="block sm:col-span-2">
+            <span className="mb-1.5 block text-sm font-medium text-ink">
+              Parent's Stellar address
+            </span>
+            <input
+              data-testid="recipient-address"
+              className="field font-mono text-sm"
+              value={recipientAddress}
+              onChange={(e) => setRecipientAddress(e.target.value)}
+              placeholder="G…"
+              required
+            />
+          </label>
+        )}
 
         <div className="block">
           <span className="mb-1.5 block text-sm font-medium text-ink">Asset</span>
@@ -406,7 +540,7 @@ function CreateForm({
         </div>
 
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">Plan amount</span>
+          <span className="mb-1.5 block text-sm font-medium text-ink">Monthly amount</span>
           <input
             data-testid="monthly-amount"
             className="field tabular-nums"
@@ -419,7 +553,7 @@ function CreateForm({
         </label>
 
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">Reminder day of month</span>
+          <span className="mb-1.5 block text-sm font-medium text-ink">Payout day of month</span>
           <input
             data-testid="day-of-month"
             className="field tabular-nums"
@@ -430,13 +564,10 @@ function CreateForm({
             onChange={(e) => setDayOfMonth(e.target.value)}
             required
           />
-          <p className="mt-1.5 text-xs text-ink-soft">
-            Planning metadata only. There is no automatic monthly scheduler.
-          </p>
         </label>
 
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-ink">XLM escrow periods</span>
+          <span className="mb-1.5 block text-sm font-medium text-ink">Months to pre-fund</span>
           <input
             data-testid="months"
             className="field tabular-nums"
@@ -447,14 +578,13 @@ function CreateForm({
             onChange={(e) => setMonths(e.target.value)}
             required
           />
-          <p className="mt-1.5 text-xs text-ink-soft">Used only when the asset is XLM.</p>
         </label>
 
         <div className="sm:col-span-2">
           <SimulationNote>
             {asset === 'XLM'
-              ? 'XLM pre-funds the selected number of periods into the Bakti Soroban escrow. Releases use LEDGERS_PER_PERIOD=60, a short demo cadence, and still require a signed call in this app.'
-              : 'USDC is not escrowed or scheduled. When you choose Send now, Freighter signs a direct transfer to the recipient Stellar address.'}
+              ? 'Creating an XLM allowance escrows the whole run (monthly × months) into the Bakti Soroban contract up front. Each monthly send is a permissionless on-chain release from that escrow. The cash-pickup step is handled by a SEP-31 partner anchor (rehearsal anchor on testnet).'
+              : 'You send real Stellar payments. The cash-pickup step is handled by a SEP-31 partner anchor (rehearsal anchor on testnet; no mainnet partner is live yet).'}
           </SimulationNote>
         </div>
 
@@ -472,7 +602,7 @@ function CreateForm({
             disabled={saving}
             className="btn-primary h-11 rounded-full px-6 text-sm font-semibold disabled:opacity-60"
           >
-            {saving ? 'Creating…' : 'Create support plan'}
+            {saving ? 'Creating…' : 'Create allowance'}
           </button>
         </div>
       </form>

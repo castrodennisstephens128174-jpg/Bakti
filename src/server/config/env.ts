@@ -1,43 +1,5 @@
 import { z } from 'zod';
 
-const HORIZON_URL_BY_NETWORK = {
-  testnet: 'https://horizon-testnet.stellar.org',
-  public: 'https://horizon.stellar.org',
-  futurenet: 'https://horizon-futurenet.stellar.org',
-} as const;
-
-const NETWORK_PASSPHRASE_BY_NETWORK = {
-  testnet: 'Test SDF Network ; September 2015',
-  public: 'Public Global Stellar Network ; September 2015',
-  futurenet: 'Test SDF Future Network ; October 2022',
-} as const;
-
-const SOROBAN_RPC_URL_BY_NETWORK = {
-  testnet: 'https://soroban-testnet.stellar.org',
-  public: 'https://mainnet.sorobanrpc.com',
-  futurenet: 'https://rpc-futurenet.stellar.org',
-} as const;
-
-const BAKTI_CONTRACT_ID_BY_NETWORK: Record<StellarNetworkId, string> = {
-  testnet: 'CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ',
-  public: 'CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR',
-  futurenet: 'CATFEIDC4CQ3ZSYTWAEM4SHWUB5ZK4R7VGE5QO6XDWRQ6UC4ZLB34VCQ',
-};
-
-const NATIVE_SAC_ID_BY_NETWORK: Record<StellarNetworkId, string> = {
-  testnet: 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC',
-  public: 'CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA',
-  futurenet: 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC',
-};
-
-const USDC_ASSET_ISSUER_BY_NETWORK: Record<StellarNetworkId, string> = {
-  testnet: 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5',
-  public: 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN',
-  futurenet: 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5',
-};
-
-type StellarNetworkId = 'testnet' | 'public' | 'futurenet';
-
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
@@ -48,38 +10,49 @@ const envSchema = z.object({
 
   STELLAR_NETWORK: z.enum(['testnet', 'public', 'futurenet']).default('public'),
   NEXT_PUBLIC_STELLAR_NETWORK: z.enum(['testnet', 'public', 'futurenet']).default('public'),
-  STELLAR_HORIZON_URL: z.string().url().optional(),
-  STELLAR_NETWORK_PASSPHRASE: z.string().optional(),
+  STELLAR_HORIZON_URL: z.string().url().default('https://horizon.stellar.org'),
+  STELLAR_NETWORK_PASSPHRASE: z.string().default('Test SDF Network ; September 2015'),
 
-  SOROBAN_RPC_URL: z.string().url().optional(),
+  SOROBAN_RPC_URL: z.string().url().default('https://soroban-rpc.creit.tech'),
 
-  SOROBAN_BAKTI_CONTRACT_ID: z.string().optional(),
-  NEXT_PUBLIC_BAKTI_CONTRACT_ID: z.string().optional(),
+  // Deployed bakti-escrow Soroban contract that backs the on-chain allowance schedule.
+  // Defaults match STELLAR_NETWORK's own default ('public'/mainnet) — the verified
+  // live mainnet contract (contracts/DEPLOYMENT.md). Override only to pin a
+  // different contract than the network preset (src/shared/network-config.ts).
+  SOROBAN_BAKTI_CONTRACT_ID: z
+    .string()
+    .default('CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR'),
+  NEXT_PUBLIC_BAKTI_CONTRACT_ID: z
+    .string()
+    .default('CBVAZDK2GAX5MJ7SSSQKRLY33TO7Q6DG3ZGZK6WMZSGI63XRMIR2CTHR'),
   BAKTI_ADMIN_PUBLIC_KEY: z
     .string()
     .default('GBL5RJKF4QNJ4ZPLJZ7PS7K5A4J44VEZJRV2CRTFFDRVSY2N76AIIE47'),
-  NATIVE_SAC_ID: z.string().optional(),
+  NATIVE_SAC_ID_TESTNET: z
+    .string()
+    .default('CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA'),
 
   USDC_ASSET_CODE: z.string().default('USDC'),
-  USDC_ASSET_ISSUER: z.string().optional(),
-
-  // Reserved for a future anchor adapter. It is not a current payment destination.
-  ANCHOR_COLLECTION_PUBLIC_KEY: z
+  USDC_ASSET_ISSUER_TESTNET: z
     .string()
     .default('GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5'),
 
-  // SEP-1/10/12/31 anchor client (src/server/stellar/anchor). Unset in production —
-  // this is a testnet-only integration against a local Anchor Platform stand-in,
-  // not a connection to PeraHub (which has no public testnet endpoint yet).
-  ANCHOR_HOME_DOMAIN: z.string().optional(),
-  SECRET_ANCHOR_SIGNING_SEED: z.string().optional(),
 
-  // Self-hosted SEP-1/10/12/31 anchor stub (src/server/service/anchor-server.service.ts),
-  // served by this same app so a testnet Vercel deploy can demo the full SEP-31
-  // round-trip without depending on any externally hosted anchor. Testnet-only;
-  // unset in production. Distinct from SECRET_ANCHOR_SIGNING_SEED above, which is
-  // Bakti's client key when acting as the *sending* anchor.
-  ANCHOR_STUB_SERVER_SIGNING_SEED: z.string().optional(),
+  // SEP-31 partner-anchor integration (testnet rehearsal). The domain hosts the
+  // anchor's stellar.toml; the secret is Bakti's platform key for SEP-10 auth.
+  SEP31_ANCHOR_DOMAIN: z.string().optional(),
+  SEP31_SENDING_SECRET: z.string().optional(),
+  // Keeper channel keys (comma-separated secrets) + cron auth + callback URL.
+  KEEPER_SECRETS: z.string().optional(),
+  CRON_SECRET: z.string().optional(),
+  SEP31_CALLBACK_URL: z.string().optional(),
+  // AES-256-GCM key (hex, 32 bytes) for kyc_json at-rest encryption.
+  KYC_ENCRYPTION_KEY: z.string().optional(),
+  // Alert webhook for reconciliation mismatches (optional).
+  ALERT_WEBHOOK_URL: z.string().optional(),
+  // TESTNET DEMO ONLY: keeper periods tick per-minute instead of per-month,
+  // so an N-month plan plays out in N minutes.
+  KEEPER_FAST_PERIODS: z.string().optional(),
 
   // Optional keys excluded from public stats (seed / internal demo wallets).
   STATS_EXCLUDE_KEYS: z.string().optional(),
@@ -102,31 +75,12 @@ if (!parsed.success) {
 }
 
 const rawEnv = parsed.data;
-const resolvedNetwork: StellarNetworkId = rawEnv.STELLAR_NETWORK;
 
-/** Resolved Horizon URL for the configured network. Explicit env var wins if set. */
-export const STELLAR_HORIZON_URL_VALUE: string =
-  rawEnv.STELLAR_HORIZON_URL ?? HORIZON_URL_BY_NETWORK[resolvedNetwork];
+/** Resolved USDC issuer for the active Stellar network. */
+export const USDC_ASSET_ISSUER_VALUE: string = rawEnv.USDC_ASSET_ISSUER_TESTNET;
 
-/** Resolved network passphrase for the configured network. Explicit env var wins if set. */
-export const STELLAR_NETWORK_PASSPHRASE_VALUE: string =
-  rawEnv.STELLAR_NETWORK_PASSPHRASE ?? NETWORK_PASSPHRASE_BY_NETWORK[resolvedNetwork];
-
-/** Resolved Soroban RPC URL for the configured network. Explicit env var wins if set. */
-export const SOROBAN_RPC_URL_VALUE: string =
-  rawEnv.SOROBAN_RPC_URL ?? SOROBAN_RPC_URL_BY_NETWORK[resolvedNetwork];
-
-/** Resolved Bakti escrow contract id for the configured network. Explicit env var wins if set. */
-export const SOROBAN_BAKTI_CONTRACT_ID_VALUE: string =
-  rawEnv.SOROBAN_BAKTI_CONTRACT_ID ?? BAKTI_CONTRACT_ID_BY_NETWORK[resolvedNetwork];
-
-/** Resolved USDC issuer for the configured network. Explicit env var wins if set. */
-export const USDC_ASSET_ISSUER_VALUE: string =
-  rawEnv.USDC_ASSET_ISSUER ?? USDC_ASSET_ISSUER_BY_NETWORK[resolvedNetwork];
-
-/** Resolved native XLM Stellar Asset Contract (SAC) id for the configured network. */
-export const NATIVE_SAC_ID_VALUE: string =
-  rawEnv.NATIVE_SAC_ID ?? NATIVE_SAC_ID_BY_NETWORK[resolvedNetwork];
+/** Native XLM Stellar Asset Contract (SAC) id — the escrow contract's token. */
+export const NATIVE_SAC_ID_VALUE: string = rawEnv.NATIVE_SAC_ID_TESTNET;
 
 export const env = rawEnv;
 export type Env = typeof env;

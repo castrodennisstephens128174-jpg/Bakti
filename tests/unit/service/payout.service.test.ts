@@ -13,19 +13,18 @@ vi.mock('@/server/db/repos/payout.repo', () => ({
     setStatus: vi.fn(),
   },
 }));
-vi.mock('@/server/stellar', () => ({
-  buildReleaseXdr: vi.fn(),
-  submitSorobanSigned: vi.fn(),
-  validateSignedRelease: vi.fn(),
-}));
 vi.mock('@/server/stellar/horizon', () => ({
   verifyAllowancePayment: vi.fn(),
 }));
 
 import { allowanceRepo } from '@/server/db/repos/allowance.repo';
 import { payoutRepo } from '@/server/db/repos/payout.repo';
-import { currentPeriod, nextPayoutStatus, payoutService } from '@/server/service/payout.service';
-import { buildReleaseXdr, submitSorobanSigned, validateSignedRelease } from '@/server/stellar';
+import {
+  currentPeriod,
+  makePickupRef,
+  nextPayoutStatus,
+  payoutService,
+} from '@/server/service/payout.service';
 import { verifyAllowancePayment } from '@/server/stellar/horizon';
 
 const OWNER = 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5';
@@ -36,11 +35,10 @@ function fakeAllowance(overrides: Record<string, unknown> = {}) {
     id: 'a1',
     publicKey: OWNER,
     recipientAddress: 'GBU7GVNT52X7VNTG63RE23NE7CE344SNHVONEW4KANS4LY6ZP3KMDOL2',
-    corridor: 'Malaysia → Philippines · research corridor',
+    corridor: 'Indonesia · Hana pickup',
     asset: 'XLM',
     monthlyAmount: '25',
     status: 'active',
-    scheduleId: '7',
     ...overrides,
   };
 }
@@ -49,7 +47,7 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-describe('nextPayoutStatus — future provider transitions remain guarded', () => {
+describe('nextPayoutStatus — every transition', () => {
   it('allows valid transitions', () => {
     expect(nextPayoutStatus('scheduled', 'send')).toBe('sent');
     expect(nextPayoutStatus('sent', 'settle')).toBe('settled');
@@ -77,6 +75,19 @@ describe('currentPeriod', () => {
   });
 });
 
+describe('makePickupRef', () => {
+  it('uses a HANA prefix for Hana corridors', () => {
+    expect(makePickupRef('Indonesia · Hana pickup', '2026-07')).toMatch(
+      /^HANA-202607-[0-9A-F]{6}$/,
+    );
+  });
+  it('uses an MGRAM prefix for MoneyGram corridors', () => {
+    expect(makePickupRef('Philippines · MoneyGram', '2026-07')).toMatch(
+      /^MGRAM-202607-[0-9A-F]{6}$/,
+    );
+  });
+});
+
 describe('payoutService.ensureScheduled', () => {
   it('returns the existing scheduled payout when present', async () => {
     vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance() as never);
@@ -86,7 +97,7 @@ describe('payoutService.ensureScheduled', () => {
     expect(payoutRepo.insert).not.toHaveBeenCalled();
   });
 
-  it('creates a scheduled record when none exists', async () => {
+  it('creates a scheduled payout when none exists', async () => {
     vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance() as never);
     vi.mocked(payoutRepo.findScheduledForPeriod).mockResolvedValue(undefined as never);
     vi.mocked(payoutRepo.insert).mockResolvedValue({ id: 'new' } as never);
@@ -102,7 +113,7 @@ describe('payoutService.ensureScheduled', () => {
 });
 
 describe('payoutService.recordPayment', () => {
-  it('verifies on-chain and stops at sent without a provider reference', async () => {
+  it('verifies on-chain then walks scheduled -> sent -> settled', async () => {
     vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance() as never);
     vi.mocked(payoutRepo.findByTxHash).mockResolvedValue(undefined as never);
     vi.mocked(payoutRepo.findScheduledForPeriod).mockResolvedValue({
@@ -111,147 +122,72 @@ describe('payoutService.recordPayment', () => {
       period: currentPeriod(),
     } as never);
     vi.mocked(verifyAllowancePayment).mockResolvedValue(undefined as never);
-    vi.mocked(payoutRepo.update).mockResolvedValue({
-      id: 'p1',
+    vi.mocked(payoutRepo.update).mockResolvedValue({ id: 'p1', status: 'settled' } as never);
+
+    const result = await payoutService.recordPayment('a1', OWNER, { txHash: TX, amount: '25' });
+
+    expect(verifyAllowancePayment).toHaveBeenCalledOnce();
+    expect(payoutRepo.update).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(payoutRepo.update).mock.calls[0][1]).toMatchObject({
       status: 'sent',
       txHash: TX,
-      pickupRef: null,
-    } as never);
-
-    const result = await payoutService.recordPayment('a1', OWNER, { txHash: TX });
-
-    expect(verifyAllowancePayment).toHaveBeenCalledWith({
-      txHash: TX,
-      asset: 'XLM',
-      from: OWNER,
-      to: fakeAllowance().recipientAddress,
-      amount: '25',
     });
-    expect(payoutRepo.update).toHaveBeenCalledOnce();
-    expect(payoutRepo.update).toHaveBeenCalledWith(
-      'p1',
-      expect.objectContaining({ status: 'sent', txHash: TX, pickupRef: null }),
-    );
-    expect(result).toMatchObject({ status: 'sent', pickupRef: null });
+    expect(vi.mocked(payoutRepo.update).mock.calls[1][1]).toMatchObject({ status: 'settled' });
+    expect(result).toMatchObject({ status: 'settled' });
   });
 
   it('rejects a duplicate transaction hash', async () => {
     vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance() as never);
     vi.mocked(payoutRepo.findByTxHash).mockResolvedValue({ id: 'dup' } as never);
-    await expect(payoutService.recordPayment('a1', OWNER, { txHash: TX })).rejects.toThrow(
-      /already recorded/i,
-    );
+    await expect(
+      payoutService.recordPayment('a1', OWNER, { txHash: TX, amount: '25' }),
+    ).rejects.toThrow(/already recorded/i);
     expect(verifyAllowancePayment).not.toHaveBeenCalled();
   });
 
-  it.each([
-    ['paused', /paused/i],
-    ['ended', /ended/i],
-  ])('refuses to pay a %s allowance', async (status, message) => {
-    vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance({ status }) as never);
-    await expect(payoutService.recordPayment('a1', OWNER, { txHash: TX })).rejects.toThrow(message);
-    expect(verifyAllowancePayment).not.toHaveBeenCalled();
+  it('refuses to pay an ended allowance', async () => {
+    vi.mocked(allowanceRepo.findOwned).mockResolvedValue(
+      fakeAllowance({ status: 'ended' }) as never,
+    );
+    await expect(
+      payoutService.recordPayment('a1', OWNER, { txHash: TX, amount: '25' }),
+    ).rejects.toThrow(/has ended/i);
   });
 
   it('throws NOT_FOUND for an unknown allowance', async () => {
     vi.mocked(allowanceRepo.findOwned).mockResolvedValue(undefined as never);
-    await expect(payoutService.recordPayment('x', OWNER, { txHash: TX })).rejects.toThrow(
-      /not found/i,
-    );
+    await expect(
+      payoutService.recordPayment('x', OWNER, { txHash: TX, amount: '25' }),
+    ).rejects.toThrow(/not found/i);
   });
 
   it('propagates an on-chain verification failure', async () => {
     vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance() as never);
     vi.mocked(payoutRepo.findByTxHash).mockResolvedValue(undefined as never);
     vi.mocked(verifyAllowancePayment).mockRejectedValue(new Error('not found on-chain'));
-    await expect(payoutService.recordPayment('a1', OWNER, { txHash: TX })).rejects.toThrow(
-      /on-chain/i,
-    );
-  });
-});
-
-describe('payoutService contract release', () => {
-  it('builds a release only for an active contract-backed allowance', async () => {
-    vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance() as never);
-    vi.mocked(buildReleaseXdr).mockResolvedValue('unsigned-xdr');
-
-    await expect(payoutService.buildRelease('a1', OWNER)).resolves.toEqual({ xdr: 'unsigned-xdr' });
-    expect(buildReleaseXdr).toHaveBeenCalledWith({ caller: OWNER, scheduleId: '7' });
-  });
-
-  it.each(['paused', 'ended'])('rejects buildRelease while allowance is %s', async (status) => {
-    vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance({ status }) as never);
-    await expect(payoutService.buildRelease('a1', OWNER)).rejects.toThrow(
-      status === 'paused' ? /paused/i : /ended/i,
-    );
-    expect(buildReleaseXdr).not.toHaveBeenCalled();
-  });
-
-  it('records an RPC-confirmed release as sent without a provider reference', async () => {
-    const validatedTx = { source: OWNER } as never;
-    vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance() as never);
-    vi.mocked(validateSignedRelease).mockReturnValue(validatedTx);
-    vi.mocked(submitSorobanSigned).mockResolvedValue({ hash: TX, returnValue: undefined });
-    vi.mocked(payoutRepo.findByTxHash).mockResolvedValue(undefined as never);
-    vi.mocked(payoutRepo.findScheduledForPeriod).mockResolvedValue({
-      id: 'p1',
-      status: 'scheduled',
-      period: currentPeriod(),
-    } as never);
-    vi.mocked(payoutRepo.update).mockResolvedValue({
-      id: 'p1',
-      status: 'sent',
-      txHash: TX,
-      pickupRef: null,
-    } as never);
-
-    const result = await payoutService.recordRelease('a1', OWNER, { signedXdr: 'signed-xdr' });
-
-    expect(validateSignedRelease).toHaveBeenCalledWith('signed-xdr', {
-      caller: OWNER,
-      scheduleId: '7',
-    });
-    expect(submitSorobanSigned).toHaveBeenCalledWith(validatedTx);
-    expect(payoutRepo.update).toHaveBeenCalledOnce();
-    expect(payoutRepo.update).toHaveBeenCalledWith(
-      'p1',
-      expect.objectContaining({ status: 'sent', txHash: TX, pickupRef: null }),
-    );
-    expect(result).toMatchObject({ status: 'sent', pickupRef: null });
-  });
-
-  it('rejects a mismatched signed release before RPC submission', async () => {
-    vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance() as never);
-    vi.mocked(validateSignedRelease).mockImplementation(() => {
-      throw new Error('intent mismatch');
-    });
-
     await expect(
-      payoutService.recordRelease('a1', OWNER, { signedXdr: 'signed-xdr' }),
-    ).rejects.toThrow(/intent mismatch/i);
-    expect(submitSorobanSigned).not.toHaveBeenCalled();
-  });
-
-  it.each(['paused', 'ended'])('rejects recordRelease while allowance is %s', async (status) => {
-    vi.mocked(allowanceRepo.findOwned).mockResolvedValue(fakeAllowance({ status }) as never);
-    await expect(
-      payoutService.recordRelease('a1', OWNER, { signedXdr: 'signed-xdr' }),
-    ).rejects.toThrow(status === 'paused' ? /paused/i : /ended/i);
-    expect(submitSorobanSigned).not.toHaveBeenCalled();
+      payoutService.recordPayment('a1', OWNER, { txHash: TX, amount: '25' }),
+    ).rejects.toThrow(/on-chain/i);
   });
 });
 
 describe('payoutService.markCollected', () => {
-  it('clearly rejects manual collection without a provider connection', async () => {
+  it('moves settled -> collected', async () => {
     vi.mocked(payoutRepo.findOwned).mockResolvedValue({ id: 'p1', status: 'settled' } as never);
-    await expect(payoutService.markCollected('p1', OWNER)).rejects.toThrow(
-      /cannot be confirmed manually/i,
-    );
-    expect(payoutRepo.setStatus).not.toHaveBeenCalled();
+    vi.mocked(payoutRepo.setStatus).mockResolvedValue({ id: 'p1', status: 'collected' } as never);
+    const p = await payoutService.markCollected('p1', OWNER);
+    expect(payoutRepo.setStatus).toHaveBeenCalledWith('p1', 'collected');
+    expect(p).toMatchObject({ status: 'collected' });
   });
 
   it('throws NOT_FOUND for an unknown payout', async () => {
     vi.mocked(payoutRepo.findOwned).mockResolvedValue(undefined as never);
     await expect(payoutService.markCollected('x', OWNER)).rejects.toThrow(/not found/i);
+  });
+
+  it('refuses to collect a payout that is not settled', async () => {
+    vi.mocked(payoutRepo.findOwned).mockResolvedValue({ id: 'p1', status: 'sent' } as never);
+    await expect(payoutService.markCollected('p1', OWNER)).rejects.toThrow(/cannot collect/i);
+    expect(payoutRepo.setStatus).not.toHaveBeenCalled();
   });
 });

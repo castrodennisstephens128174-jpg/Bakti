@@ -1,9 +1,8 @@
-import { STELLAR_HORIZON_URL_VALUE, USDC_ASSET_ISSUER_VALUE } from '@/server/config/env';
 import type { AllowanceAsset } from '@/server/db/schema/allowances';
 import { toStroops } from '@/server/lib/amount';
 import { AppError } from '@/server/lib/http';
-
-const HORIZON = STELLAR_HORIZON_URL_VALUE;
+import type { BaktiNetworkConfig } from '@/shared/network-config';
+import { activeNetwork } from './network';
 
 type PaymentOp = {
   type: string;
@@ -19,22 +18,27 @@ type PaymentOp = {
  * Verify a REAL on-chain allowance payment: transaction `txHash` must be
  * successful, sourced from `from`, and contain a payment of the expected
  * asset/amount to `to`. Amounts are read from Horizon and never trusted from
- * the client. Current app flows pay the entered recipient G-account directly;
- * no anchor or muxed deposit destination is implied. Returns nothing on success
- * and throws on any mismatch.
+ * the client. `to` may be a muxed (M...) address; Horizon reports the muxed
+ * form on `to_muxed` while `to` holds the underlying G-account, so we match the
+ * base account. Returns nothing on success; throws on any mismatch.
  */
-export async function verifyAllowancePayment(params: {
-  txHash: string;
-  asset: AllowanceAsset;
-  from: string;
-  to: string;
-  amount: string;
-}): Promise<void> {
+export async function verifyAllowancePayment(
+  params: {
+    txHash: string;
+    asset: AllowanceAsset;
+    from: string;
+    to: string;
+    amount: string;
+  },
+  cfg?: BaktiNetworkConfig,
+): Promise<void> {
   const { txHash, asset, from, to, amount } = params;
+  const net = cfg ?? (await activeNetwork());
+  const HORIZON = net.horizonUrl;
 
   const txRes = await fetch(`${HORIZON}/transactions/${txHash}`);
   if (txRes.status === 404) {
-    throw new AppError('NOT_FOUND', 'Transaction not found on Stellar yet', 404);
+    throw new AppError('NOT_FOUND', `Transaction not found on Stellar ${net.label} yet`, 404);
   }
   if (!txRes.ok) throw new AppError('INTERNAL', `Horizon error ${txRes.status}`, 502);
   const tx = (await txRes.json()) as { successful?: boolean };
@@ -51,7 +55,7 @@ export async function verifyAllowancePayment(params: {
 
   const assetMatches = (op: PaymentOp): boolean => {
     if (asset === 'XLM') return op.asset_type === 'native' || op.type === 'createAccount';
-    return op.asset_code === 'USDC' && op.asset_issuer === USDC_ASSET_ISSUER_VALUE;
+    return op.asset_code === net.usdcCode && op.asset_issuer === net.usdcIssuer;
   };
 
   const match = ops.find(

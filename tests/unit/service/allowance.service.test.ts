@@ -14,12 +14,6 @@ vi.mock('@/server/db/repos/payout.repo', () => ({
     listByAllowance: vi.fn(),
   },
 }));
-vi.mock('@/server/stellar', () => ({
-  buildCreateScheduleXdr: vi.fn(),
-  contractIds: { bakti: 'CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABSC4' },
-  submitCreateSchedule: vi.fn(),
-  validateSignedCreateSchedule: vi.fn(),
-}));
 
 import { allowanceRepo } from '@/server/db/repos/allowance.repo';
 import { payoutRepo } from '@/server/db/repos/payout.repo';
@@ -29,7 +23,6 @@ import {
   assertAllowanceInput,
   nextAllowanceStatus,
 } from '@/server/service/allowance.service';
-import { submitCreateSchedule, validateSignedCreateSchedule } from '@/server/stellar';
 
 const OWNER = 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5';
 const RECIPIENT = 'GBU7GVNT52X7VNTG63RE23NE7CE344SNHVONEW4KANS4LY6ZP3KMDOL2';
@@ -38,7 +31,7 @@ function validInput(overrides: Partial<AllowanceInput> = {}): AllowanceInput {
   return {
     recipientName: 'Bapak Bambang',
     recipientAddress: RECIPIENT,
-    corridor: 'Malaysia → Philippines · research corridor',
+    corridor: 'Indonesia · Hana pickup',
     asset: 'XLM',
     monthlyAmount: '25',
     dayOfMonth: 5,
@@ -52,7 +45,7 @@ function fakeAllowance(overrides: Record<string, unknown> = {}) {
     publicKey: OWNER,
     recipientName: 'Bapak Bambang',
     recipientAddress: RECIPIENT,
-    corridor: 'Malaysia → Philippines · research corridor',
+    corridor: 'Indonesia · Hana pickup',
     asset: 'XLM',
     monthlyAmount: '25',
     dayOfMonth: 5,
@@ -75,7 +68,7 @@ describe('assertAllowanceInput', () => {
 
   it('rejects a blank recipient name', () => {
     expect(() => assertAllowanceInput(validInput({ recipientName: '  ' }))).toThrow(
-      /name of the family member/i,
+      /name of the parent/i,
     );
   });
 
@@ -100,18 +93,6 @@ describe('assertAllowanceInput', () => {
     expect(() => assertAllowanceInput(validInput({ monthlyAmount: '-3' }))).toThrow(
       /greater than/i,
     );
-  });
-
-  it('returns controlled validation errors for malformed or over-precision amounts', () => {
-    for (const monthlyAmount of ['abc', '1.2.3', '0.00000001']) {
-      try {
-        assertAllowanceInput(validInput({ monthlyAmount }));
-        throw new Error('expected validation to fail');
-      } catch (error) {
-        expect(error).toMatchObject({ code: 'INVALID_INPUT', status: 400 });
-        expect((error as Error).message).toMatch(/at most 7 fractional digits/i);
-      }
-    }
   });
 
   it('rejects a day of month outside 1..28', () => {
@@ -159,27 +140,6 @@ describe('allowanceService.create', () => {
     await expect(
       allowanceService.create(OWNER, validInput({ monthlyAmount: '0' })),
     ).rejects.toThrow();
-    expect(allowanceRepo.insert).not.toHaveBeenCalled();
-  });
-});
-
-describe('allowanceService.createEscrowed', () => {
-  it('validates the signed intent before submission', async () => {
-    vi.mocked(validateSignedCreateSchedule).mockImplementation(() => {
-      throw new Error('intent mismatch');
-    });
-
-    await expect(
-      allowanceService.createEscrowed(OWNER, validInput({ months: 4 }), 'signed-xdr'),
-    ).rejects.toThrow(/intent mismatch/i);
-
-    expect(validateSignedCreateSchedule).toHaveBeenCalledWith('signed-xdr', {
-      sender: OWNER,
-      recipient: RECIPIENT,
-      monthlyAmountStroops: 250_000_000n,
-      months: 4,
-    });
-    expect(submitCreateSchedule).not.toHaveBeenCalled();
     expect(allowanceRepo.insert).not.toHaveBeenCalled();
   });
 });

@@ -8,9 +8,9 @@ import {
   TransactionBuilder,
 } from '@stellar/stellar-sdk';
 import { env } from '@/server/config/env';
-import { stellar } from '@/server/config/stellar';
 import { authNonceRepo, sessionRepo } from '@/server/db/repos/auth.repo';
 import { AppError } from '@/server/lib/http';
+import { activeNetwork } from '@/server/stellar/network';
 
 const AUTH_KEY = 'bakti_auth';
 
@@ -29,9 +29,10 @@ export const authService = {
     const expiresAt = new Date(Date.now() + env.NONCE_TTL_SECONDS * 1000);
 
     const account = new Account(publicKey, '0');
+    const net = await activeNetwork();
     const tx = new TransactionBuilder(account, {
       fee: BASE_FEE,
-      networkPassphrase: stellar.passphrase,
+      networkPassphrase: net.passphrase,
     })
       .addOperation(Operation.manageData({ name: AUTH_KEY, value: Buffer.from(nonce) }))
       .setTimeout(env.NONCE_TTL_SECONDS)
@@ -50,8 +51,9 @@ export const authService = {
     }
 
     let tx: ReturnType<typeof TransactionBuilder.fromXDR>;
+    const net = await activeNetwork();
     try {
-      tx = TransactionBuilder.fromXDR(signedTxXdr, stellar.passphrase);
+      tx = TransactionBuilder.fromXDR(signedTxXdr, net.passphrase);
     } catch {
       throw new AppError('UNAUTHORIZED', 'Invalid transaction XDR', 401);
     }

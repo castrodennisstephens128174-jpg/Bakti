@@ -2,17 +2,17 @@ import {
   Account,
   Address,
   Contract,
-  Keypair,
   nativeToScVal,
   rpc,
   scValToNative,
-  Transaction,
+  type Transaction,
   TransactionBuilder,
-  type xdr,
+  xdr,
 } from '@stellar/stellar-sdk';
 import { toStroops } from '@/server/lib/amount';
 import { AppError } from '@/server/lib/http';
-import { contractIds, getNetworkPassphrase, network } from './network';
+import type { BaktiNetworkConfig } from '@/shared/network-config';
+import { activeNetwork, contractIds } from './network';
 
 /**
  * Bakti allowance-escrow contract glue.
@@ -29,163 +29,20 @@ import { contractIds, getNetworkPassphrase, network } from './network';
 const INCLUSION_FEE = '2000000';
 const FIRST_DUE_LEDGER_LAG = 0;
 
-function server(): rpc.Server {
-  const url = network.rpcUrl;
+function server(cfg: BaktiNetworkConfig): rpc.Server {
+  const url = cfg.rpcUrl;
   return new rpc.Server(url, { allowHttp: url.startsWith('http://') });
 }
 
-function baktiContract(): Contract {
-  if (!contractIds.bakti) {
+function baktiContract(cfg: BaktiNetworkConfig, overrideId?: string | null): Contract {
+  const id = overrideId || cfg.contractId;
+  if (!id) {
     throw new AppError('INTERNAL', 'Bakti escrow contract id is not configured.', 500);
   }
-  return new Contract(contractIds.bakti);
+  return new Contract(id);
 }
 
 export const BAKTI_CONTRACT_ID = contractIds.bakti;
-
-type ExpectedContractArg =
-  | { type: 'address'; value: string }
-  | { type: 'i128'; value: bigint }
-  | { type: 'u32'; value?: number }
-  | { type: 'u64'; value: bigint };
-
-type ContractInvocationIntent = {
-  source: string;
-  contractId: string;
-  method: string;
-  args: ExpectedContractArg[];
-};
-
-function invalidSignedIntent(message: string): never {
-  throw new AppError('INVALID_INPUT', message, 400);
-}
-
-function scValMatches(actual: xdr.ScVal, expected: ExpectedContractArg): boolean {
-  const switchName = actual.switch().name;
-  if (switchName !== `scv${expected.type[0].toUpperCase()}${expected.type.slice(1)}`) return false;
-
-  let native: unknown;
-  try {
-    native = scValToNative(actual);
-  } catch {
-    return false;
-  }
-
-  if (expected.type === 'address') return native === expected.value;
-  if (expected.type === 'i128' || expected.type === 'u64') return native === expected.value;
-  if (!Number.isInteger(native) || Number(native) < 0 || Number(native) > 0xffff_ffff) return false;
-  return expected.value === undefined || native === expected.value;
-}
-
-/**
- * Decode a signed Soroban transaction and bind it to a server-owned contract
- * intent before RPC submission. The source account signature is checked against
- * the configured network passphrase, then the single contract invocation and
- * each typed argument are matched exactly.
- */
-export function validateSignedContractInvocation(
-  signedXdr: string,
-  intent: ContractInvocationIntent,
-): Transaction {
-  let decoded: ReturnType<typeof TransactionBuilder.fromXDR>;
-  try {
-    decoded = TransactionBuilder.fromXDR(signedXdr, getNetworkPassphrase());
-  } catch {
-    invalidSignedIntent('Signed transaction could not be decoded.');
-  }
-  if (!(decoded instanceof Transaction)) {
-    invalidSignedIntent('Signed transaction must be a standard Soroban transaction.');
-  }
-  const tx = decoded as Transaction;
-
-  if (tx.source !== intent.source) {
-    invalidSignedIntent('Signed transaction source does not match the authenticated wallet.');
-  }
-
-  const sourceKey = Keypair.fromPublicKey(intent.source);
-  const sourceHint = sourceKey.signatureHint();
-  const txHash = tx.hash();
-  const hasValidSourceSignature = tx.signatures.some(
-    (signature) =>
-      signature.hint().equals(sourceHint) && sourceKey.verify(txHash, signature.signature()),
-  );
-  if (!hasValidSourceSignature) {
-    invalidSignedIntent('Signed transaction is missing a valid source signature.');
-  }
-
-  if (tx.operations.length !== 1) {
-    invalidSignedIntent('Signed transaction must contain exactly one contract invocation.');
-  }
-  const operation = tx.operations[0];
-  if (operation.type !== 'invokeHostFunction') {
-    invalidSignedIntent('Signed transaction must contain exactly one contract invocation.');
-  }
-  if (operation.source && operation.source !== intent.source) {
-    invalidSignedIntent('Contract invocation source does not match the authenticated wallet.');
-  }
-  if (operation.func.switch().name !== 'hostFunctionTypeInvokeContract') {
-    invalidSignedIntent('Signed transaction must invoke the configured Bakti contract.');
-  }
-
-  const invocation = operation.func.invokeContract();
-  if (Address.fromScAddress(invocation.contractAddress()).toString() !== intent.contractId) {
-    invalidSignedIntent('Signed transaction targets a different contract.');
-  }
-  if (invocation.functionName().toString() !== intent.method) {
-    invalidSignedIntent(`Signed transaction must invoke ${intent.method}.`);
-  }
-
-  const args = invocation.args();
-  if (args.length !== intent.args.length) {
-    invalidSignedIntent(`Signed ${intent.method} arguments do not match the requested action.`);
-  }
-  for (let index = 0; index < args.length; index++) {
-    if (!scValMatches(args[index], intent.args[index])) {
-      invalidSignedIntent(`Signed ${intent.method} arguments do not match the requested action.`);
-    }
-  }
-
-  return tx;
-}
-
-export function validateSignedCreateSchedule(
-  signedXdr: string,
-  params: { sender: string; recipient: string; monthlyAmountStroops: bigint; months: number },
-): Transaction {
-  return validateSignedContractInvocation(signedXdr, {
-    source: params.sender,
-    contractId: contractIds.bakti,
-    method: 'create_schedule',
-    args: [
-      { type: 'address', value: params.sender },
-      { type: 'address', value: params.recipient },
-      { type: 'i128', value: params.monthlyAmountStroops },
-      { type: 'u32', value: params.months },
-      { type: 'u32' },
-    ],
-  });
-}
-
-export function validateSignedRelease(
-  signedXdr: string,
-  params: { caller: string; scheduleId: string },
-): Transaction {
-  let scheduleId: bigint;
-  try {
-    scheduleId = BigInt(params.scheduleId);
-  } catch {
-    invalidSignedIntent('Stored escrow schedule id is invalid.');
-  }
-  return validateSignedContractInvocation(signedXdr, {
-    source: params.caller,
-    contractId: contractIds.bakti,
-    method: 'release',
-    args: [
-      { type: 'u64', value: scheduleId },
-      { type: 'address', value: params.caller },
-    ],
-  });
-}
 
 const accountLocks = new Map<string, Promise<unknown>>();
 
@@ -202,13 +59,26 @@ function withAccountLock<T>(account: string, fn: () => Promise<T>): Promise<T> {
   return next;
 }
 
-async function assembleForSigning(source: string, op: xdr.Operation): Promise<string> {
+async function assembleForSigning(
+  cfg: BaktiNetworkConfig,
+  source: string,
+  op: xdr.Operation,
+): Promise<string> {
   return withAccountLock(source, async () => {
-    const srv = server();
-    const account = await srv.getAccount(source);
+    const srv = server(cfg);
+    let account: Awaited<ReturnType<typeof srv.getAccount>>;
+    try {
+      account = await srv.getAccount(source);
+    } catch {
+      throw new AppError(
+        'INVALID_INPUT',
+        `Your wallet has no XLM on this network yet. On testnet, fund it first: https://friendbot.stellar.org/?addr=${source}`,
+        400,
+      );
+    }
     const tx = new TransactionBuilder(account, {
       fee: INCLUSION_FEE,
-      networkPassphrase: getNetworkPassphrase(),
+      networkPassphrase: cfg.passphrase,
     })
       .addOperation(op)
       .setTimeout(180)
@@ -220,6 +90,13 @@ async function assembleForSigning(source: string, op: xdr.Operation): Promise<st
       sim = await srv.simulateTransaction(tx);
     }
     if (rpc.Api.isSimulationError(sim)) {
+      if (/balance|underfunded|trustline/i.test(sim.error)) {
+        throw new AppError(
+          'INVALID_INPUT',
+          'Not enough balance to escrow the whole run (monthly × months + fees). Top up and try again.',
+          400,
+        );
+      }
       throw new AppError('INVALID_INPUT', `Simulation failed: ${sim.error}`, 400);
     }
     return rpc.assembleTransaction(tx, sim).build().toXDR();
@@ -227,8 +104,9 @@ async function assembleForSigning(source: string, op: xdr.Operation): Promise<st
 }
 
 /** Latest closed ledger sequence — the base for a schedule's first_due_ledger. */
-export async function currentLedger(): Promise<number> {
-  const latest = await server().getLatestLedger();
+export async function currentLedger(cfg?: BaktiNetworkConfig): Promise<number> {
+  const net = cfg ?? (await activeNetwork());
+  const latest = await server(net).getLatestLedger();
   return latest.sequence;
 }
 
@@ -238,19 +116,24 @@ export async function currentLedger(): Promise<number> {
  * contract. `firstDueLedger` defaults to the current ledger so the first period
  * is immediately releasable in a demo.
  */
-export async function buildCreateScheduleXdr(params: {
-  sender: string;
-  recipient: string;
-  monthlyAmount: string;
-  months: number;
-  firstDueLedger?: number;
-}): Promise<{ xdr: string; firstDueLedger: number }> {
+export async function buildCreateScheduleXdr(
+  params: {
+    sender: string;
+    recipient: string;
+    monthlyAmount: string;
+    months: number;
+    firstDueLedger?: number;
+  },
+  cfg?: BaktiNetworkConfig,
+): Promise<{ xdr: string; firstDueLedger: number }> {
+  const net = cfg ?? (await activeNetwork());
   if (!Address.fromString(params.sender)) {
     throw new AppError('INVALID_INPUT', 'Invalid sender address.', 400);
   }
-  const firstDueLedger = params.firstDueLedger ?? (await currentLedger()) + FIRST_DUE_LEDGER_LAG;
+  const firstDueLedger =
+    params.firstDueLedger ?? (await currentLedger(net)) + FIRST_DUE_LEDGER_LAG;
 
-  const op = baktiContract().call(
+  const op = baktiContract(net).call(
     'create_schedule',
     new Address(params.sender).toScVal(),
     new Address(params.recipient).toScVal(),
@@ -259,7 +142,7 @@ export async function buildCreateScheduleXdr(params: {
     nativeToScVal(firstDueLedger, { type: 'u32' }),
   );
 
-  const xdrStr = await assembleForSigning(params.sender, op);
+  const xdrStr = await assembleForSigning(net, params.sender, op);
   return { xdr: xdrStr, firstDueLedger };
 }
 
@@ -268,28 +151,47 @@ export async function buildCreateScheduleXdr(params: {
  * signs and pays the network fee, but the contract pays the recipient recorded
  * at create time from its own escrow.
  */
-export async function buildReleaseXdr(params: {
-  caller: string;
-  scheduleId: string;
-}): Promise<string> {
+export async function buildReleaseXdr(
+  params: {
+    caller: string;
+    scheduleId: string;
+    /** SEP-31 settlement memo — required by contract v2, absent on legacy v1 schedules. */
+    memo?: string;
+    /** Pin to the contract the schedule lives on (allowance.contractId); defaults to the network preset. */
+    contractId?: string | null;
+  },
+  cfg?: BaktiNetworkConfig,
+): Promise<string> {
+  const net = cfg ?? (await activeNetwork());
   if (!Address.fromString(params.caller)) {
     throw new AppError('INVALID_INPUT', 'Invalid caller address.', 400);
   }
-  const op = baktiContract().call(
-    'release',
+  const args = [
     nativeToScVal(BigInt(params.scheduleId), { type: 'u64' }),
     new Address(params.caller).toScVal(),
-  );
-  return assembleForSigning(params.caller, op);
+  ];
+  if (params.memo !== undefined) {
+    args.push(nativeToScVal(params.memo, { type: 'string' }));
+  }
+  const op = baktiContract(net, params.contractId).call('release', ...args);
+  return assembleForSigning(net, params.caller, op);
 }
 
-/** Submit a validated Soroban invoke, poll until it lands, and return hash + return value. */
+/** Submit a signed Soroban invoke, poll until it lands, and return hash + return value. */
 export async function submitSorobanSigned(
-  tx: Transaction,
+  signedXdr: string,
+  cfg?: BaktiNetworkConfig,
 ): Promise<{ hash: string; returnValue: xdr.ScVal | undefined }> {
+  const net = cfg ?? (await activeNetwork());
+  let tx: Transaction;
+  try {
+    tx = TransactionBuilder.fromXDR(signedXdr, net.passphrase) as Transaction;
+  } catch {
+    throw new AppError('INVALID_INPUT', 'Signed transaction could not be decoded.', 400);
+  }
   const source = tx.source;
   return withAccountLock(source, async () => {
-    const srv = server();
+    const srv = server(net);
     let sent = await srv.sendTransaction(tx);
     if (sent.status === 'TRY_AGAIN_LATER') {
       throw new AppError('TX_RETRY', 'Network busy — please retry.', 409);
@@ -321,9 +223,10 @@ export async function submitSorobanSigned(
 
 /** Submit a signed `create_schedule` and return the tx hash + the new schedule_id. */
 export async function submitCreateSchedule(
-  tx: Transaction,
+  signedXdr: string,
+  cfg?: BaktiNetworkConfig,
 ): Promise<{ hash: string; scheduleId: string }> {
-  const { hash, returnValue } = await submitSorobanSigned(tx);
+  const { hash, returnValue } = await submitSorobanSigned(signedXdr, cfg);
   if (!returnValue) {
     throw new AppError('INTERNAL', 'create_schedule returned no schedule id.', 502);
   }
@@ -344,16 +247,20 @@ function readSource(): Account {
   return new Account(contractIds.admin, '0');
 }
 
-async function simulateNative<T>(method: string, ...args: xdr.ScVal[]): Promise<T> {
-  const op = baktiContract().call(method, ...args);
+async function simulateNative<T>(
+  cfg: BaktiNetworkConfig,
+  method: string,
+  ...args: xdr.ScVal[]
+): Promise<T> {
+  const op = baktiContract(cfg).call(method, ...args);
   const tx = new TransactionBuilder(readSource(), {
     fee: INCLUSION_FEE,
-    networkPassphrase: getNetworkPassphrase(),
+    networkPassphrase: cfg.passphrase,
   })
     .addOperation(op)
     .setTimeout(60)
     .build();
-  const sim = await server().simulateTransaction(tx);
+  const sim = await server(cfg).simulateTransaction(tx);
   if (rpc.Api.isSimulationError(sim)) {
     throw new AppError('INTERNAL', `Read ${method} failed: ${sim.error}`, 502);
   }
@@ -370,11 +277,17 @@ export type ScheduleStatus = {
 };
 
 /** Read a schedule's running state from the contract (no signature). */
-export async function readScheduleStatus(scheduleId: string): Promise<ScheduleStatus> {
+export async function readScheduleStatus(
+  scheduleId: string,
+  cfg?: BaktiNetworkConfig,
+): Promise<ScheduleStatus> {
+  const net = cfg ?? (await activeNetwork());
   const idScv = nativeToScVal(BigInt(scheduleId), { type: 'u64' });
-  const [monthly, months, released, nextDue] = await simulateNative<
-    [bigint, number, number, number]
-  >('schedule_status', idScv);
+  const [monthly, months, released, nextDue] = await simulateNative<[bigint, number, number, number]>(
+    net,
+    'schedule_status',
+    idScv,
+  );
   return {
     monthlyAmountStroops: BigInt(monthly).toString(),
     months: Number(months),
