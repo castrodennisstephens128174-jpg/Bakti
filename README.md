@@ -173,6 +173,12 @@ SELFHOST_ANCHOR_HOME_DOMAIN=localhost:3005 pnpm test:anchor tests/integration/an
 SELFHOST_ANCHOR_HOME_DOMAIN=bakti-testnet.vercel.app pnpm test:anchor tests/integration/anchor-selfhost.test.ts
 ```
 
+A separate, more complete rehearsal anchor also exists as its own repo:
+[bakti-anchor](https://github.com/castrodennisstephens128174-jpg/bakti-anchor) —
+a standalone SEP-1/10/12/31 mock receiving anchor with Soroban-aware
+settlement detection, kept out of this repo since it's an independently
+deployed service, not part of this app.
+
 ## Architecture
 
 ```text
