@@ -79,11 +79,12 @@ Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor,
 | XLM | Soroban escrow and signed release | Production-reviewed contract parameters and operations |
 | USDC | Direct payment to entered recipient address | Provider-approved deposit routing where applicable |
 | Verification | Horizon verification and Soroban RPC confirmation | On-chain plus provider transaction/status reconciliation |
+| Payment link | SEP-7 direct pay URI to recipient | Provider-aware payment/deposit instructions if certified |
 | Live watcher | Horizon recipient-payment watcher | Provider webhook/polling plus user notifications |
-| Provider/KYC | SEP-10/12/31 client (`src/server/anchor/sep31.ts`) talking to `bakti-anchor/`, same-network config switch as the rest of the app | SEP-1/10/12/31 against PeraHub itself — outreach underway |
-| Scheduling | Automated keeper (`keeper.service.ts`), cron-driven — needs the v2 escrow contract deployed on the target network first | Reviewed operational model once live on mainnet |
+| Provider/KYC | SEP-10/12/31 client, tested against a local Anchor Platform stand-in and a self-hosted anchor stub — not yet wired into the live payout flow | SEP-1/10/12/31 against PeraHub itself, once they respond |
 | Cash-out | Not implemented | Licensed PHP cash-out and provider reference |
 | Collection | Not implemented | Provider-confirmed collection status |
+| Scheduling | No automatic scheduler | Only after legal, operational, and user validation |
 
 ## Implemented
 
@@ -94,11 +95,10 @@ Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor,
 - Direct XLM or USDC payments to a recipient Stellar address.
 - Horizon verification of direct payment sender, recipient, asset, and amount.
 - Soroban RPC simulation, submission, and confirmation.
+- SEP-7 direct payment URI.
 - Best-effort Horizon SSE watcher for payments to the recipient account.
 - Transaction hashes linked to the configured network explorer.
-- SEP-31 client (`src/server/anchor/sep31.ts`) talking to `bakti-anchor/`, a standalone SEP-1/10/12/31 anchor shipped in this repo — SEP-10 auth, SEP-12 customer registration, SEP-31 transaction + callback. Runs on whichever network `STELLAR_NETWORK` is set to, same as the rest of the app; a real receiving anchor (PeraHub) is the production target and outreach is underway (see below).
-- Automated keeper (`src/server/service/keeper.service.ts`, cron-driven): claims a due allowance period, opens the SEP-31 order, signs `release` with a channel key, syncs the anchor's settlement verdict. Needs the v2 escrow contract (`release(..., memo)` + `set_recipient`, see `contracts/DEPLOYMENT.md`) deployed on the target network — a one-time deploy step.
-- KYC-at-rest encryption (`src/server/lib/kyc-vault.ts`, AES-256-GCM) and a daily three-ledger reconciliation job (`src/server/service/sep31kyc.service.ts`, `app/api/cron/reconcile`) comparing Bakti's DB, the anchor's order book, and the chain.
+- SEP-1/10/12/31 client (`src/server/stellar/anchor/`), verified end-to-end on Stellar testnet against a local Anchor Platform stand-in and against this app's own self-hosted anchor stub (`src/server/service/anchor-server.service.ts`) — real challenge-signed SEP-10 auth, real SEP-12 customer registration, a real SEP-31 transaction with a live `pending_sender` status and Stellar payment account/memo. See `anchor-platform/README.md` and `tests/integration/anchor-selfhost.test.ts`. Not wired into the live payout flow, and not connected to PeraHub (they have no testnet endpoint yet).
 
 ## Not implemented
 
@@ -110,8 +110,8 @@ Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor,
 - A provider-approved anchor or muxed payment destination.
 - Pickup reference or fiat cash pickup.
 - Provider-confirmed settlement or collection.
+- Automatic monthly scheduling.
 - Production mainnet release proof.
-- The v2 contract (memo-tagged release, `set_recipient`) — written and unit-tested, pending its one-time deploy to the target network before the keeper can run against real funds.
 
 The code retains `settled` and `collected` status types for a future provider adapter, but current payment endpoints stop at `sent` / **Verified on-chain**. Manual collection confirmation is rejected.
 
@@ -131,30 +131,47 @@ Sources: [Stellar Anchor Directory](https://anchors.stellar.org), [PeraHub / PET
 
 Stellar anchors connect on-chain assets with off-chain rails. SEP-31 is an anchor-to-anchor API for cross-border payments (no recipient wallet required); SEP-24 is an anchor-hosted interactive deposit/withdrawal webview. Sources: [Stellar anchors](https://developers.stellar.org/docs/learn/fundamentals/anchors) and [SEP-24 getting started](https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep24/getting-started).
 
-### Anchor integration + automated keeper
+### Testnet anchor integration (dev)
 
-`bakti-anchor/` is a standalone Next.js SEP-1/10/12/31 anchor (own
-`package.json`, deployed separately from the main app) — SEP-10 auth, SEP-12
-customer registration, SEP-31 transactions + callback. `src/server/anchor/sep31.ts`
-is the client side in the main app. `src/server/service/keeper.service.ts` is
-a cron-driven keeper that claims due periods, opens the SEP-31 order, and
-signs `release` with a channel key; reconciliation runs daily
-(`app/api/cron/reconcile`) comparing Bakti's DB, the anchor's order book, and
-the chain.
+`src/server/stellar/anchor/` is a SEP-1/10/12/31 client, tested against a
+local Stellar Anchor Platform instance since PeraHub has no testnet endpoint
+yet (the public `testanchor.stellar.org` reference anchor was also tried —
+its `/sep31/info` currently returns an empty `receive` map, so `POST
+/transactions` rejects every asset with `"has no fields definition"`; that's
+a gap on Stellar's own public instance, not this client). Swapping
+`ANCHOR_HOME_DOMAIN` to PeraHub's domain once they respond needs no code
+changes.
 
-The app is mainnet-first by design: which network this whole path runs
-against — Horizon, Soroban RPC, contract id, native SAC, USDC issuer — is a
-single config switch (`STELLAR_NETWORK` / `src/shared/network-config.ts`),
-the same switch the rest of the app already uses. Going live on mainnet
-needs the v2 escrow contract (`release(schedule_id, caller, memo)` +
-`set_recipient`, see `contracts/DEPLOYMENT.md`) deployed on that network —
-a deliberate one-time deploy step, not new code.
+```bash
+cd anchor-platform && docker compose up -d
+cd .. && ANCHOR_HOME_DOMAIN=localhost:8180 pnpm test:anchor
+```
 
-A real receiving anchor (PeraHub) is the target for production; outreach to
-PeraHub/Petnet is underway (see [Anchor integration requirements](#anchor-integration-requirements)
-above). `bakti-anchor/` and Anchor Platform (`anchor-platform/`, local
-docker) are the reference SEP implementations this integration is built and
-tested against in the meantime.
+See `anchor-platform/README.md` for what's running, the generated testnet
+keypairs, and a note on the anchor's async `pending_receiver` → `pending_sender`
+transition.
+
+Since neither of those needs to be reachable from a Vercel deploy,
+`src/server/service/anchor-server.service.ts` is a small **self-hosted**
+SEP-1/10/12/31 anchor stub served by this same app (`/.well-known/stellar.toml`
++ `/api/anchor/*`) — Bakti acting as its own receiving anchor for demo
+purposes, so the testnet Vercel deploy can run the full round trip live with
+no external host. `tests/integration/anchor-selfhost.test.ts` proves the
+client and this stub complete SEP-1 → SEP-10 → SEP-12 → SEP-31 against each
+other; see `.env.example` for `ANCHOR_STUB_SERVER_SIGNING_SEED`.
+
+This is deployed and verified live at
+[bakti-testnet.vercel.app](https://bakti-testnet.vercel.app) — its own
+`ANCHOR_STUB_SERVER_SIGNING_SEED`, `SESSION_SECRET`, and `DRIZZLE_DATABASE_URL`
+are separate from the mainnet deploy's.
+
+```bash
+# against a local pnpm dev:
+SELFHOST_ANCHOR_HOME_DOMAIN=localhost:3005 pnpm test:anchor tests/integration/anchor-selfhost.test.ts
+
+# against the live testnet deploy:
+SELFHOST_ANCHOR_HOME_DOMAIN=bakti-testnet.vercel.app pnpm test:anchor tests/integration/anchor-selfhost.test.ts
+```
 
 ## Architecture
 
@@ -175,11 +192,12 @@ Stellar mainnet
   ├─ classic payments to recipient address
   └─ Bakti XLM escrow contract
 
-SEP-31 client + automated keeper (testnet dev, unreleased branch — needs v2 contract)
-  ├─ src/server/anchor/sep31.ts (client)
-  ├─ src/server/service/keeper.service.ts (cron: claim -> order -> release -> reconcile)
-  ├─ src/server/lib/kyc-vault.ts (AES-256-GCM KYC-at-rest)
-  └─ bakti-anchor/ — standalone SEP-1/10/12/31 mock anchor, deployed separately
+SEP-1/10/12/31 anchor client (testnet dev, not wired into the payout flow)
+  ├─ local Anchor Platform stand-in, or
+  └─ this app's own self-hosted anchor stub (below)
+
+Self-hosted anchor stub (testnet dev): app/.well-known/stellar.toml, app/api/anchor/*
+  └─ Bakti acting as its own receiving anchor for a live Vercel demo
 
 Future provider adapter (not implemented)
   └─ SEP-1 + SEP-10 + SEP-31 + KYC + status + PHP cash-out, against PeraHub
@@ -192,11 +210,10 @@ Key files:
 - `src/server/service/auth.service.ts`: custom `manageData` challenge/session.
 - `src/server/stellar/contract.ts`: Soroban transaction assembly and submission.
 - `src/server/stellar/horizon.ts`: classic payment verification.
-- `src/server/anchor/sep31.ts`: SEP-31 client talking to `bakti-anchor/`.
-- `src/server/service/keeper.service.ts`: automated cron keeper (needs v2 contract, see `contracts/DEPLOYMENT.md`).
-- `bakti-anchor/`: standalone SEP-1/10/12/31 mock anchor (separate deploy).
+- `src/server/stellar/anchor/index.ts`: SEP-1/10/12/31 client (`sendViaAnchor`).
+- `src/server/service/anchor-server.service.ts`: self-hosted SEP-1/10/12/31 anchor stub.
 - `app/allowances/[id]/page.tsx`: direct pay tools, watcher, and planned last-mile panel.
-- `contracts/bakti-escrow/src/lib.rs`: XLM escrow contract (v2 source, not yet deployed — old ABI still live).
+- `contracts/bakti-escrow/src/lib.rs`: XLM escrow contract.
 
 ## Market size: TAM, SAM, SOM
 

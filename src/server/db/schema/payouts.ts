@@ -6,10 +6,10 @@ export type PayoutStatus = (typeof PAYOUT_STATUSES)[number];
 export const payoutStatusEnum = pgEnum('payout_status', PAYOUT_STATUSES);
 
 /**
- * One month's drip on an allowance. `txHash` is the real, Horizon-verified
- * on-chain payment from the sender to the recipient/anchor. `pickupRef` is the
- * off-ramp cash-pickup code issued once the anchor settles (simulated on
- * testnet). Status walks: scheduled -> sent -> settled -> collected (or failed).
+ * One payment record for an allowance period. `txHash` is the Horizon- or
+ * RPC-confirmed on-chain transfer to the recipient. Current endpoints stop at
+ * `sent`; `settled`, `collected`, and `pickupRef` are reserved for a future
+ * provider adapter and must not be inferred from ledger confirmation.
  */
 export const payouts = pgTable(
   'payouts',
@@ -25,17 +25,8 @@ export const payouts = pgTable(
     status: payoutStatusEnum('status').notNull().default('scheduled'),
     txHash: text('tx_hash').unique(),
     pickupRef: text('pickup_ref'),
-    // SEP-31: the anchor-side transaction backing this payout (testnet rehearsal).
-    sep31Id: text('sep31_id'),
-    sep31Status: text('sep31_status'),
-    anchorDomain: text('anchor_domain'),
-    anchorAccount: text('anchor_account'),
-    anchorMemo: text('anchor_memo'),
-    anchorMemoType: text('anchor_memo_type'),
-    // Keeper idempotency: a period must be claimed atomically before release.
-    claimedAt: timestamp('claimed_at', { withTimezone: true }),
     memo: text('memo').notNull().default(''),
-    network: text('network').notNull().default('public'),
+    network: text('network').notNull().default('testnet'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },

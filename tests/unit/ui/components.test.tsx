@@ -28,8 +28,8 @@ describe('badges render key text', () => {
 
 describe('SimulationNote', () => {
   it('renders its explanatory children', () => {
-    render(<SimulationNote>Cash pickup is a mainnet simulation</SimulationNote>);
-    expect(screen.getByText(/mainnet simulation/i)).toBeInTheDocument();
+    render(<SimulationNote>Provider cash-out is not connected</SimulationNote>);
+    expect(screen.getByText(/not connected/i)).toBeInTheDocument();
   });
 });
 

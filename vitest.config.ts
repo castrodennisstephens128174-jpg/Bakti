@@ -34,7 +34,6 @@ export default defineConfig({
       '@/server': path.resolve(__dirname, './src/server'),
       '@/ui': path.resolve(__dirname, './src/ui'),
       '@/i18n': path.resolve(__dirname, './src/i18n'),
-      '@/shared': path.resolve(__dirname, './src/shared'),
       '@': path.resolve(__dirname, './'),
     },
   },

@@ -9,29 +9,17 @@ import {
   Operation,
   TransactionBuilder,
 } from '@stellar/stellar-sdk';
+import { publicEnv } from '@/server/config/env.public';
 import type { AssetCode } from '@/ui/lib/format';
-import { getClientNetworkConfig } from '@/ui/network/client-network';
-import type { BaktiNetworkId } from '@/shared/network-config';
 
-// Resolved per call so the header's Mainnet/Testnet toggle takes effect
-// without a rebuild. Callers touching an existing allowance pass its stored
-// network so old plans keep working whatever the toggle says. Signing stays
-// PINNED to the resolved network, never the wallet's own selection.
-function cfg(net?: BaktiNetworkId) {
-  return getClientNetworkConfig(net);
+const PASSPHRASE = publicEnv.networkPassphrase; // PINNED to the app network, not the wallet's.
+
+function server() {
+  return new Horizon.Server(publicEnv.horizonUrl);
 }
 
-function passphrase(net?: BaktiNetworkId): string {
-  return cfg(net).passphrase;
-}
-
-function server(net?: BaktiNetworkId) {
-  return new Horizon.Server(cfg(net).horizonUrl);
-}
-
-function assetFor(code: AssetCode, net?: BaktiNetworkId): Asset {
-  const c = cfg(net);
-  return code === 'XLM' ? Asset.native() : new Asset(c.usdcCode, c.usdcIssuer);
+function assetFor(code: AssetCode): Asset {
+  return code === 'XLM' ? Asset.native() : new Asset(publicEnv.usdcCode, publicEnv.usdcIssuer);
 }
 
 export class WalletError extends Error {}
@@ -54,28 +42,30 @@ export async function requestPublicKey(): Promise<string> {
 }
 
 /** Sign an XDR with Freighter, pinning the passphrase to the app network. */
-export async function sign(xdr: string, address: string, net?: BaktiNetworkId): Promise<string> {
-  const res = await signTransaction(xdr, { networkPassphrase: passphrase(net), address });
+export async function sign(xdr: string, address: string): Promise<string> {
+  const res = await signTransaction(xdr, { networkPassphrase: PASSPHRASE, address });
   if (res.error || !res.signedTxXdr) {
     throw new WalletError(res.error?.message ?? 'Signing was rejected in the wallet.');
   }
   return res.signedTxXdr;
 }
 
-async function loadAccount(pubkey: string, net?: BaktiNetworkId) {
+async function loadAccount(pubkey: string) {
   try {
-    return await server(net).loadAccount(pubkey);
+    return await server().loadAccount(pubkey);
   } catch {
     throw new WalletError(
-      'Your wallet is not funded on this network yet. On testnet, fund it with the Friendbot and try again.',
+      publicEnv.network === 'public'
+        ? 'Your wallet is not funded yet. Send it real XLM to activate the account, then try again.'
+        : 'Your wallet is not funded on testnet yet. Fund it with the Friendbot, then try again.',
     );
   }
 }
 
-async function submit(signedXdr: string, net?: BaktiNetworkId): Promise<string> {
-  const tx = TransactionBuilder.fromXDR(signedXdr, passphrase(net));
+async function submit(signedXdr: string): Promise<string> {
+  const tx = TransactionBuilder.fromXDR(signedXdr, PASSPHRASE);
   try {
-    const res = await server(net).submitTransaction(tx);
+    const res = await server().submitTransaction(tx);
     return res.hash;
   } catch (e: unknown) {
     const codes = (
@@ -88,7 +78,7 @@ async function submit(signedXdr: string, net?: BaktiNetworkId): Promise<string> 
       );
     }
     if (ops.includes('op_no_destination')) {
-      throw new WalletError('The recipient account does not exist on this network yet.');
+      throw new WalletError('The recipient account does not exist on the network yet.');
     }
     if (ops.includes('op_underfunded')) {
       throw new WalletError('Not enough balance for this allowance (remember the network fee).');
@@ -107,48 +97,39 @@ export async function sendAllowance(params: {
   asset: AssetCode;
   amount: string;
   memo: string;
-  memoType?: 'text' | 'id' | 'hash';
-  network?: BaktiNetworkId;
 }): Promise<string> {
-  const net = params.network;
-  const account = await loadAccount(params.from, net);
+  const account = await loadAccount(params.from);
   const tx = new TransactionBuilder(account, {
     fee: (Number(BASE_FEE) * 10).toString(),
-    networkPassphrase: passphrase(net),
+    networkPassphrase: PASSPHRASE,
   })
     .addOperation(
       Operation.payment({
         destination: params.to,
-        asset: assetFor(params.asset, net),
+        asset: assetFor(params.asset),
         amount: params.amount,
       }),
     )
-    .addMemo(
-      params.memoType === 'id'
-        ? Memo.id(params.memo)
-        : params.memoType === 'hash'
-          ? Memo.hash(Buffer.from(params.memo, 'base64').toString('hex'))
-          : Memo.text(params.memo.slice(0, 28)),
-    )
+    .addMemo(Memo.text(params.memo.slice(0, 28)))
     .setTimeout(180)
     .build();
 
-  const signed = await sign(tx.toXDR(), params.from, net);
-  return submit(signed, net);
+  const signed = await sign(tx.toXDR(), params.from);
+  return submit(signed);
 }
 
 /** Build -> sign -> submit a changeTrust so the wallet can hold USDC. */
-export async function enableUsdc(from: string, net?: BaktiNetworkId): Promise<string> {
-  const account = await loadAccount(from, net);
+export async function enableUsdc(from: string): Promise<string> {
+  const account = await loadAccount(from);
   const tx = new TransactionBuilder(account, {
     fee: (Number(BASE_FEE) * 10).toString(),
-    networkPassphrase: passphrase(net),
+    networkPassphrase: PASSPHRASE,
   })
     .addOperation(
-      Operation.changeTrust({ asset: assetFor('USDC', net) }),
+      Operation.changeTrust({ asset: new Asset(publicEnv.usdcCode, publicEnv.usdcIssuer) }),
     )
     .setTimeout(120)
     .build();
-  const signed = await sign(tx.toXDR(), from, net);
-  return submit(signed, net);
+  const signed = await sign(tx.toXDR(), from);
+  return submit(signed);
 }
