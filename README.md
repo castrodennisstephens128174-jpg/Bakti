@@ -79,12 +79,11 @@ Bakti had earlier emailed MoneyGram Ramps (a different confirmed Stellar anchor,
 | XLM | Soroban escrow and signed release | Production-reviewed contract parameters and operations |
 | USDC | Direct payment to entered recipient address | Provider-approved deposit routing where applicable |
 | Verification | Horizon verification and Soroban RPC confirmation | On-chain plus provider transaction/status reconciliation |
-| Payment link | SEP-7 direct pay URI to recipient | Provider-aware payment/deposit instructions if certified |
 | Live watcher | Horizon recipient-payment watcher | Provider webhook/polling plus user notifications |
-| Provider/KYC | SEP-10/12/31 client, tested against a local Anchor Platform stand-in and a self-hosted anchor stub — not yet wired into the live payout flow | SEP-1/10/12/31 against PeraHub itself, once they respond |
+| Provider/KYC | SEP-10/12/31 client (`src/server/anchor/sep31.ts`) talking to `bakti-anchor/`, same-network config switch as the rest of the app | SEP-1/10/12/31 against PeraHub itself — outreach underway |
+| Scheduling | Automated keeper (`keeper.service.ts`), cron-driven — needs the v2 escrow contract deployed on the target network first | Reviewed operational model once live on mainnet |
 | Cash-out | Not implemented | Licensed PHP cash-out and provider reference |
 | Collection | Not implemented | Provider-confirmed collection status |
-| Scheduling | No automatic scheduler | Only after legal, operational, and user validation |
 
 ## Implemented
 
